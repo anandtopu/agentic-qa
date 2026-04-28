@@ -1,0 +1,187 @@
+openapi: 3.1.0
+info:
+  title: QAForge AI API
+  version: 0.1.0
+  description: |
+    Control Plane API for QAForge AI. Implements the surface defined in
+    PRD §13. Phase 0 publishes the contract; endpoints are stubs and will
+    fill in across Phase 1 and Phase 2.
+  contact:
+    name: QAForge Engineering
+servers:
+  - url: http://localhost:8000
+    description: Local
+  - url: https://api.staging.qaforge.example.com
+    description: Staging
+
+tags:
+  - name: health
+  - name: workspaces
+  - name: repositories
+  - name: requirements
+  - name: test-plans
+  - name: test-runs
+  - name: agents
+  - name: failures
+  - name: risk
+  - name: approvals
+  - name: reports
+  - name: evaluations
+  - name: audit
+  - name: usage
+
+security:
+  - bearerAuth: []
+
+paths:
+  /healthz:
+    get:
+      tags: [health]
+      summary: Liveness
+      security: []
+      responses:
+        "200": { $ref: "#/components/responses/Health" }
+
+  /readyz:
+    get:
+      tags: [health]
+      summary: Readiness
+      security: []
+      responses:
+        "200": { $ref: "#/components/responses/Health" }
+
+  /api/v1/workspaces:
+    get:
+      tags: [workspaces]
+      summary: List workspaces
+      responses:
+        "200": { description: OK }
+    post:
+      tags: [workspaces]
+      summary: Create a workspace
+      responses:
+        "201": { description: Created }
+
+  /api/v1/workspaces/{workspace_id}:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+    get:
+      tags: [workspaces]
+      summary: Get a workspace
+      responses:
+        "200": { description: OK }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/repositories:
+    get: { tags: [repositories], summary: List linked repos, responses: { "200": { description: OK } } }
+    post: { tags: [repositories], summary: Link a repo, responses: { "201": { description: Created } } }
+
+  /api/v1/requirements:
+    post:
+      tags: [requirements]
+      summary: Ingest a requirement (story, AC, PR diff, OpenAPI, Postman, SQL schema)
+      responses:
+        "202": { description: Accepted }
+
+  /api/v1/test-plans:
+    post:
+      tags: [test-plans]
+      summary: Generate a test plan from a requirement
+      responses:
+        "202": { description: Accepted }
+  /api/v1/test-plans/{test_plan_id}:
+    parameters:
+      - $ref: "#/components/parameters/TestPlanId"
+    get: { tags: [test-plans], summary: Get a test plan, responses: { "200": { description: OK } } }
+
+  /api/v1/test-runs:
+    post: { tags: [test-runs], summary: Start a test run, responses: { "202": { description: Accepted } } }
+  /api/v1/test-runs/{test_run_id}:
+    parameters:
+      - $ref: "#/components/parameters/TestRunId"
+    get: { tags: [test-runs], summary: Get a test run, responses: { "200": { description: OK } } }
+
+  /api/v1/agents/tasks:
+    get: { tags: [agents], summary: List agent tasks, responses: { "200": { description: OK } } }
+
+  /api/v1/failures/classify:
+    post: { tags: [failures], summary: Classify a failure, responses: { "200": { description: OK } } }
+
+  /api/v1/risk/release:
+    post: { tags: [risk], summary: Score a release candidate, responses: { "200": { description: OK } } }
+
+  /api/v1/approvals:
+    get: { tags: [approvals], summary: List approval requests, responses: { "200": { description: OK } } }
+  /api/v1/approvals/{approval_id}:
+    parameters:
+      - $ref: "#/components/parameters/ApprovalId"
+    post:
+      tags: [approvals]
+      summary: Decide on an approval (approve / reject)
+      responses:
+        "200": { description: OK }
+        "409": { description: Conflict — already decided }
+
+  /api/v1/reports/{test_run_id}:
+    parameters:
+      - $ref: "#/components/parameters/TestRunId"
+    get: { tags: [reports], summary: Fetch the evidence report, responses: { "200": { description: OK } } }
+
+  /api/v1/evaluations:
+    get: { tags: [evaluations], summary: List eval runs, responses: { "200": { description: OK } } }
+    post: { tags: [evaluations], summary: Trigger an eval run, responses: { "202": { description: Accepted } } }
+
+  /api/v1/audit:
+    get: { tags: [audit], summary: Query audit events, responses: { "200": { description: OK } } }
+
+  /api/v1/usage:
+    get: { tags: [usage], summary: Per-workspace cost & token usage, responses: { "200": { description: OK } } }
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  parameters:
+    WorkspaceId:
+      name: workspace_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    TestPlanId:
+      name: test_plan_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    TestRunId:
+      name: test_run_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+    ApprovalId:
+      name: approval_id
+      in: path
+      required: true
+      schema: { type: string, format: uuid }
+
+  responses:
+    Health:
+      description: OK
+      content:
+        application/json:
+          schema:
+            type: object
+            required: [status, version]
+            properties:
+              status: { type: string, enum: [ok] }
+              version: { type: string }
+    NotFound:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            type: object
+            properties:
+              detail: { type: string }
