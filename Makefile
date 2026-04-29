@@ -25,9 +25,10 @@ hooks:  ## Install pre-commit hooks.
 # ---------- Dev stack ----------
 
 .PHONY: dev
-dev:  ## Bring up the local stack (Postgres + Redis + MinIO + API).
+dev:  ## Bring up the local stack (Postgres + Redis + MinIO + API + Web).
 	$(COMPOSE) up --build -d
 	@echo "API:     http://localhost:8000/healthz"
+	@echo "Web:     http://localhost:3000"
 	@echo "MinIO:   http://localhost:9001 (admin: minioadmin / minioadmin)"
 	@echo "Logs:    make logs"
 
@@ -58,7 +59,7 @@ format:  ## Format code (ruff + prettier).
 
 .PHONY: typecheck
 typecheck:  ## mypy strict + tsc.
-	$(UV) run mypy apps packages
+	$(UV) run mypy -p qaforge_api -p qaforge_agents -p qaforge_eval -p qaforge_redaction -p qaforge_tools
 	@if [ -f package.json ]; then $(PNPM) -r --if-present typecheck; fi
 
 # ---------- Tests ----------

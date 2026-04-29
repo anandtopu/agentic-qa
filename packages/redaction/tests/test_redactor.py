@@ -76,9 +76,7 @@ class TestExtraStringRedaction:
         assert secret not in r.redact(f"used token={secret} in request")
 
     def test_extra_pattern_is_applied(self) -> None:
-        r = Redactor.builtin().with_extra(
-            patterns=[("workspace_token", r"wsk_[A-Za-z0-9]{16,}")]
-        )
+        r = Redactor.builtin().with_extra(patterns=[("workspace_token", r"wsk_[A-Za-z0-9]{16,}")])
         assert "wsk_" not in r.redact("token wsk_abcdef0123456789ABC")
 
 

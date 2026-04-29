@@ -4,7 +4,26 @@
       "Bash(git init *)",
       "Bash(git config *)",
       "Bash(git branch *)",
-      "Bash(python -c ' *)"
+      "Bash(python -c ' *)",
+      "Bash(grep -oE '\"role\":\"user\",\"content\":\"[^\"]{1,500}' \"C:/Users/anand/.claude/projects/C--Users-anand-Downloads-Projects-AI-AI-Portfolio-AgenticQA/5681f160-bbec-4704-8589-b228f230b15a.jsonl\")",
+      "Bash(grep -oE '\"input\":\\\\{[^}]{0,400}' \"C:/Users/anand/.claude/projects/C--Users-anand-Downloads-Projects-AI-AI-Portfolio-AgenticQA/5681f160-bbec-4704-8589-b228f230b15a.jsonl\")",
+      "Bash(grep -oE '\"text\":\"[^\"]{200,3000}' \"C:/Users/anand/.claude/projects/C--Users-anand-Downloads-Projects-AI-AI-Portfolio-AgenticQA/5681f160-bbec-4704-8589-b228f230b15a.jsonl\")",
+      "Bash(grep -oE '\"text\":\"[^\"]{200,5000}' \"C:/Users/anand/.claude/projects/C--Users-anand-Downloads-Projects-AI-AI-Portfolio-AgenticQA/5681f160-bbec-4704-8589-b228f230b15a.jsonl\")",
+      "Bash(grep -oE '\"text\":\"[^\"]{50,}' \"C:/Users/anand/.claude/projects/C--Users-anand-Downloads-Projects-AI-AI-Portfolio-AgenticQA/5681f160-bbec-4704-8589-b228f230b15a.jsonl\")",
+      "Bash(uv sync *)",
+      "Bash(uv run *)",
+      "Bash(find apps/api/src packages/*/src -maxdepth 3 -name \"py.typed\")",
+      "Bash(git stash *)",
+      "Bash(docker --version)",
+      "Bash(docker info *)",
+      "Bash(docker run *)",
+      "Read(//c/Users/anand/AppData/Local/Temp/claude/C--Users-anand-Downloads-Projects-AI-AI-Portfolio-AgenticQA/eac12dd5-e9cc-4075-aa94-f7590b9c685d/tasks/**)",
+      "Bash(corepack enable *)",
+      "Bash(pnpm --version)",
+      "Bash(npm install *)",
+      "Bash(pnpm install *)",
+      "Bash(pnpm --filter qaforge-web typecheck)",
+      "Bash(pnpm --filter qaforge-web lint)"
     ]
   }
 }

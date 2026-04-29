@@ -7,8 +7,8 @@ bootstrap.
 
 from __future__ import annotations
 
-from contextlib import asynccontextmanager
 from collections.abc import AsyncIterator
+from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 
@@ -16,7 +16,7 @@ from qaforge_api import __version__
 from qaforge_api.config import get_settings
 from qaforge_api.logging import configure_logging, get_logger
 from qaforge_api.middleware import CorrelationIdMiddleware
-from qaforge_api.routers import health
+from qaforge_api.routers import health, workspaces
 
 
 @asynccontextmanager
@@ -45,6 +45,7 @@ def create_app() -> FastAPI:
     )
     app.add_middleware(CorrelationIdMiddleware)
     app.include_router(health.router)
+    app.include_router(workspaces.router)
     return app
 
 

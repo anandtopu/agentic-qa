@@ -8,13 +8,15 @@ from __future__ import annotations
 
 import logging
 import sys
-from typing import Any
+from typing import cast
 
 import structlog
+from structlog.types import EventDict, WrappedLogger
+
 from qaforge_redaction import default_redactor
 
 
-def _redact_processor(_: Any, __: Any, event_dict: dict[str, Any]) -> dict[str, Any]:
+def _redact_processor(_: WrappedLogger, __: str, event_dict: EventDict) -> EventDict:
     """Run the redactor over every string value in the event dict."""
     redactor = default_redactor()
     for key, value in list(event_dict.items()):
@@ -46,4 +48,4 @@ def configure_logging(level: str = "INFO") -> None:
 
 
 def get_logger(name: str | None = None) -> structlog.stdlib.BoundLogger:
-    return structlog.get_logger(name)
+    return cast("structlog.stdlib.BoundLogger", structlog.get_logger(name))

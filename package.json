@@ -1,0 +1,18 @@
+{
+  "name": "qaforge-monorepo",
+  "version": "0.0.0",
+  "private": true,
+  "description": "QAForge AI — pnpm workspace orchestrator (apps/web + future TS packages).",
+  "engines": {
+    "node": ">=20.10.0",
+    "pnpm": ">=9.0.0"
+  },
+  "scripts": {
+    "lint": "pnpm -r --if-present lint",
+    "format": "pnpm -r --if-present format",
+    "typecheck": "pnpm -r --if-present typecheck",
+    "build": "pnpm -r --if-present build",
+    "dev:web": "pnpm --filter qaforge-web dev"
+  },
+  "packageManager": "pnpm@9.12.0"
+}

@@ -53,24 +53,75 @@ paths:
   /api/v1/workspaces:
     get:
       tags: [workspaces]
-      summary: List workspaces
+      summary: List workspaces in the caller's tenant
+      parameters:
+        - $ref: "#/components/parameters/TenantHeader"
+        - $ref: "#/components/parameters/UserHeader"
+        - { name: limit, in: query, schema: { type: integer, minimum: 1, maximum: 200, default: 50 } }
+        - { name: offset, in: query, schema: { type: integer, minimum: 0, default: 0 } }
+        - { name: include_archived, in: query, schema: { type: boolean, default: false } }
       responses:
-        "200": { description: OK }
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/WorkspaceList" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
     post:
       tags: [workspaces]
       summary: Create a workspace
+      parameters:
+        - $ref: "#/components/parameters/TenantHeader"
+        - $ref: "#/components/parameters/UserHeader"
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WorkspaceCreate" }
       responses:
-        "201": { description: Created }
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Workspace" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
 
   /api/v1/workspaces/{workspace_id}:
     parameters:
       - $ref: "#/components/parameters/WorkspaceId"
+      - $ref: "#/components/parameters/TenantHeader"
+      - $ref: "#/components/parameters/UserHeader"
     get:
       tags: [workspaces]
       summary: Get a workspace
       responses:
-        "200": { description: OK }
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Workspace" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
         "404": { $ref: "#/components/responses/NotFound" }
+    patch:
+      tags: [workspaces]
+      summary: Update a workspace (partial)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/WorkspaceUpdate" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Workspace" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
 
   /api/v1/repositories:
     get: { tags: [repositories], summary: List linked repos, responses: { "200": { description: OK } } }
@@ -150,6 +201,21 @@ components:
       in: path
       required: true
       schema: { type: string, format: uuid }
+    TenantHeader:
+      name: X-QAForge-Tenant-Id
+      in: header
+      required: true
+      description: |
+        Caller's tenant id. Phase 1 reads this from a header; Phase 3
+        (Story 3.1.3) replaces the header source with verified OIDC claims
+        without changing the request shape.
+      schema: { type: string, format: uuid }
+    UserHeader:
+      name: X-QAForge-User-Id
+      in: header
+      required: false
+      description: Caller's user id (optional in Phase 1).
+      schema: { type: string, format: uuid }
     TestPlanId:
       name: test_plan_id
       in: path
@@ -181,7 +247,97 @@ components:
       description: Not found
       content:
         application/json:
-          schema:
-            type: object
-            properties:
-              detail: { type: string }
+          schema: { $ref: "#/components/schemas/Error" }
+    Unauthorized:
+      description: Missing or invalid tenant identity
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    Conflict:
+      description: Resource conflict (e.g. duplicate name within tenant)
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+    ValidationError:
+      description: Request body failed validation
+      content:
+        application/json:
+          schema: { $ref: "#/components/schemas/Error" }
+
+  schemas:
+    Error:
+      type: object
+      required: [detail]
+      properties:
+        detail: { type: string }
+    ApplicationType:
+      type: string
+      enum:
+        - web_api
+        - web_ui
+        - web_full_stack
+        - mobile_app
+        - backend_service
+        - library
+        - other
+    WorkspaceCreate:
+      type: object
+      required: [name, application_type]
+      properties:
+        name: { type: string, minLength: 1, maxLength: 200 }
+        application_type: { $ref: "#/components/schemas/ApplicationType" }
+        repo_url: { type: string, maxLength: 500, nullable: true }
+        default_branch: { type: string, default: main, minLength: 1, maxLength: 100 }
+        environments:
+          type: array
+          items: { type: string }
+          uniqueItems: true
+        description: { type: string, maxLength: 1000, nullable: true }
+    WorkspaceUpdate:
+      type: object
+      additionalProperties: false
+      properties:
+        name: { type: string, minLength: 1, maxLength: 200 }
+        application_type: { $ref: "#/components/schemas/ApplicationType" }
+        repo_url: { type: string, maxLength: 500, nullable: true }
+        default_branch: { type: string, minLength: 1, maxLength: 100 }
+        environments:
+          type: array
+          items: { type: string }
+          uniqueItems: true
+        description: { type: string, maxLength: 1000, nullable: true }
+    Workspace:
+      type: object
+      required:
+        - id
+        - tenant_id
+        - name
+        - default_branch
+        - application_type
+        - environments
+        - created_at
+        - updated_at
+      properties:
+        id: { type: string, format: uuid }
+        tenant_id: { type: string, format: uuid }
+        name: { type: string }
+        repo_url: { type: string, nullable: true }
+        default_branch: { type: string }
+        application_type: { $ref: "#/components/schemas/ApplicationType" }
+        environments:
+          type: array
+          items: { type: string }
+        description: { type: string, nullable: true }
+        created_by: { type: string, format: uuid, nullable: true }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+        archived_at: { type: string, format: date-time, nullable: true }
+    WorkspaceList:
+      type: object
+      required: [workspaces, limit, offset]
+      properties:
+        workspaces:
+          type: array
+          items: { $ref: "#/components/schemas/Workspace" }
+        limit: { type: integer }
+        offset: { type: integer }

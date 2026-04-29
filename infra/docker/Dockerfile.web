@@ -1,0 +1,28 @@
+# Multi-stage Next.js build for QAForge web.
+# Phase 0 builds the standalone output; Phase 3 hardens with non-root user
+# and tighter base image (per ADR-0006).
+
+FROM node:20.18-alpine AS deps
+WORKDIR /repo
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+COPY pnpm-workspace.yaml package.json ./
+COPY apps/web/package.json apps/web/
+RUN pnpm install --frozen-lockfile=false --filter qaforge-web
+
+FROM node:20.18-alpine AS builder
+WORKDIR /repo
+RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
+COPY --from=deps /repo/node_modules ./node_modules
+COPY --from=deps /repo/apps/web/node_modules ./apps/web/node_modules
+COPY pnpm-workspace.yaml package.json ./
+COPY apps/web ./apps/web
+RUN pnpm --filter qaforge-web build
+
+FROM node:20.18-alpine AS runner
+WORKDIR /app
+ENV NODE_ENV=production
+COPY --from=builder /repo/apps/web/.next/standalone ./
+COPY --from=builder /repo/apps/web/.next/static ./apps/web/.next/static
+COPY --from=builder /repo/apps/web/public ./apps/web/public 2>/dev/null || true
+EXPOSE 3000
+CMD ["node", "apps/web/server.js"]

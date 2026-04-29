@@ -57,6 +57,11 @@ ignore = [
 
 [tool.ruff.lint.per-file-ignores]
 "**/tests/**" = ["S", "D"]
+# Redaction patterns are dense regex strings that legitimately exceed 100 chars.
+"packages/redaction/src/qaforge_redaction/redactor.py" = ["E501"]
+# B008 (Depends() in defaults) is the canonical FastAPI dependency-injection idiom.
+"apps/api/src/qaforge_api/routers/*.py" = ["B008"]
+"apps/api/src/qaforge_api/db/session.py" = ["B008"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["qaforge_api", "qaforge_agents", "qaforge_tools", "qaforge_eval", "qaforge_redaction"]
@@ -72,7 +77,14 @@ warn_unreachable = true
 warn_unused_ignores = true
 disallow_untyped_decorators = true
 plugins = ["pydantic.mypy"]
-exclude = ["build/", "dist/", "**/migrations/**"]
+mypy_path = [
+  "apps/api/src",
+  "packages/agents/src",
+  "packages/eval/src",
+  "packages/redaction/src",
+  "packages/tools/src",
+]
+exclude = ["build/", "dist/", "/migrations/"]
 
 [[tool.mypy.overrides]]
 module = ["tests.*"]

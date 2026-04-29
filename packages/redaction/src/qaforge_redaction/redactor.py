@@ -25,11 +25,17 @@ _BUILTIN_PATTERNS: tuple[tuple[str, str], ...] = (
     ("github_pat", r"gh[posu]_[A-Za-z0-9]{36,}"),
     ("aws_access_key", r"\bAKIA[0-9A-Z]{16}\b"),
     ("aws_secret_key", r"(?i)aws_secret_access_key\s*[:=]\s*['\"]?[A-Za-z0-9/+=]{40}['\"]?"),
-    ("private_key_block", r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----"),
+    (
+        "private_key_block",
+        r"-----BEGIN [A-Z ]*PRIVATE KEY-----[\s\S]*?-----END [A-Z ]*PRIVATE KEY-----",
+    ),
     ("jwt", r"\beyJ[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\.[A-Za-z0-9_\-]{10,}\b"),
     ("authorization_bearer", r"(?i)\b(authorization\s*[:=]\s*bearer)\s+[A-Za-z0-9._\-+/=]+"),
     ("basic_auth_header", r"(?i)\b(authorization\s*[:=]\s*basic)\s+[A-Za-z0-9+/=]+"),
-    ("password_kv", r"(?i)\b(password|passwd|pwd|secret|api[_-]?key|access[_-]?token)\s*[:=]\s*['\"]?[^\s'\"]{4,}['\"]?"),
+    (
+        "password_kv",
+        r"(?i)\b(password|passwd|pwd|secret|api[_-]?key|access[_-]?token)\s*[:=]\s*['\"]?[^\s'\"]{4,}['\"]?",
+    ),
     ("url_userinfo", r"\b([a-z][a-z0-9+\-.]*://)[^\s/@]+:[^\s/@]+@"),
 )
 

@@ -34,7 +34,7 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --all-packages
-      - run: uv run mypy apps packages
+      - run: uv run mypy -p qaforge_api -p qaforge_agents -p qaforge_eval -p qaforge_redaction -p qaforge_tools
 
   test:
     name: Tests
