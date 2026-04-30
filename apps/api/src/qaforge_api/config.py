@@ -53,6 +53,7 @@ class Settings(BaseSettings):
     default_model: str = "claude-sonnet-4-6"
 
     jwt_secret: SecretStr = Field(default=SecretStr("dev-only-do-not-use-in-prod"))
+    audit_hmac_key: SecretStr = Field(default=SecretStr("dev-only-do-not-use-in-prod-audit-key"))
     oidc_issuer: str | None = None
     oidc_client_id: str | None = None
     oidc_client_secret: SecretStr | None = None
@@ -66,6 +67,8 @@ class Settings(BaseSettings):
 
     default_max_cost_usd_per_run: float = 5.00
     default_max_runtime_minutes: int = 30
+
+    eval_dataset_dir: str = "packages/eval/datasets"
 
     @property
     def is_prod(self) -> bool:

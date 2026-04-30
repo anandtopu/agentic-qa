@@ -62,6 +62,8 @@ ignore = [
 # B008 (Depends() in defaults) is the canonical FastAPI dependency-injection idiom.
 "apps/api/src/qaforge_api/routers/*.py" = ["B008"]
 "apps/api/src/qaforge_api/db/session.py" = ["B008"]
+# require_permission factory uses the same Depends() default idiom as routers.
+"apps/api/src/qaforge_api/auth/permissions.py" = ["B008"]
 
 [tool.ruff.lint.isort]
 known-first-party = ["qaforge_api", "qaforge_agents", "qaforge_tools", "qaforge_eval", "qaforge_redaction"]

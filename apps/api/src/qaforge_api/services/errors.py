@@ -24,3 +24,13 @@ class DuplicateResourceError(ServiceError):
         self.resource = resource
         self.field = field
         self.value = value
+
+
+class InvalidStateError(ServiceError):
+    """A resource cannot transition from its current state to the requested one."""
+
+    def __init__(self, resource: str, current_state: str, attempted: str) -> None:
+        super().__init__(f"{resource} cannot transition from {current_state!r} to {attempted!r}")
+        self.resource = resource
+        self.current_state = current_state
+        self.attempted = attempted

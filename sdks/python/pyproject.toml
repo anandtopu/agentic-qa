@@ -1,0 +1,21 @@
+[project]
+name = "qaforge-sdk"
+version = "0.1.0"
+description = "QAForge AI Python SDK — thin wrapper over the REST surface."
+requires-python = ">=3.12"
+readme = "README.md"
+license = { text = "MIT" }
+authors = [{ name = "QAForge AI" }]
+dependencies = [
+  "httpx>=0.27",
+]
+
+[project.optional-dependencies]
+dev = ["pytest>=8.0", "pytest-asyncio>=1.0"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build]
+include = ["qaforge_sdk/**", "qaforge_sdk/py.typed"]

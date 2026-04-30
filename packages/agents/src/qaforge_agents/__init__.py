@@ -1,10 +1,27 @@
 """QAForge specialised agents.
 
-Phase 0 ships the cross-cutting `llm` runtime (LLMClient, providers,
-cost recorder). Specialised agents (Planner, Failure Classifier, etc.)
-are introduced in Phase 1.
+Phase 0 ships the cross-cutting `llm` runtime; Phase 1 layers in the
+specialised agents (Planner, ApiTester, UiTester, FailureClassifier,
+Reporter) and the workflow runtime that drives them.
 """
 
+from qaforge_agents.api_tester import (
+    ApiTesterAgent,
+    ApiTesterInput,
+    ApiTesterOutput,
+    GeneratedTest,
+    GeneratedTestSuite,
+)
+from qaforge_agents.classifier import (
+    Classification,
+    ClassificationSource,
+    FailureCategory,
+    FailureClassifierAgent,
+    FailureClassifierOutput,
+    FailureSignal,
+    HeuristicClassifier,
+    LlmClassifier,
+)
 from qaforge_agents.llm import (
     InMemoryRecorder,
     LLMClient,
@@ -14,13 +31,94 @@ from qaforge_agents.llm import (
     Tier,
     UsageRecord,
 )
+from qaforge_agents.planner import (
+    PlannerAgent,
+    PlannerInput,
+    PlannerOutput,
+    PlannerTestCase,
+    PlannerTestPlan,
+)
+from qaforge_agents.reporter import (
+    AgentTraceLine,
+    ArtifactSummary,
+    CoverageArea,
+    FailureSummary,
+    GoNoGo,
+    MarkdownReportRenderer,
+    RunReportContext,
+    TestCaseSummary,
+)
+from qaforge_agents.runtime import (
+    InMemoryWorkflowStore,
+    RunState,
+    Step,
+    StepContext,
+    StepResult,
+    WorkflowExecutionError,
+    WorkflowGraph,
+    WorkflowRunner,
+    WorkflowRunResult,
+)
+from qaforge_agents.ui_tester import (
+    FragilityFinding,
+    FragilityReport,
+    GeneratedUiTest,
+    GeneratedUiTestSpec,
+    UiTesterAgent,
+    UiTesterInput,
+    UiTesterOutput,
+    analyse_selectors,
+)
 
 __all__ = [
+    "AgentTraceLine",
+    "ApiTesterAgent",
+    "ApiTesterInput",
+    "ApiTesterOutput",
+    "ArtifactSummary",
+    "Classification",
+    "ClassificationSource",
+    "CoverageArea",
+    "FailureCategory",
+    "FailureClassifierAgent",
+    "FailureClassifierOutput",
+    "FailureSignal",
+    "FailureSummary",
+    "FragilityFinding",
+    "FragilityReport",
+    "GeneratedTest",
+    "GeneratedTestSuite",
+    "GeneratedUiTest",
+    "GeneratedUiTestSpec",
+    "GoNoGo",
+    "HeuristicClassifier",
     "InMemoryRecorder",
+    "InMemoryWorkflowStore",
     "LLMClient",
     "LLMRequest",
     "LLMResponse",
+    "LlmClassifier",
+    "MarkdownReportRenderer",
     "Message",
+    "PlannerAgent",
+    "PlannerInput",
+    "PlannerOutput",
+    "PlannerTestCase",
+    "PlannerTestPlan",
+    "RunReportContext",
+    "RunState",
+    "Step",
+    "StepContext",
+    "StepResult",
+    "TestCaseSummary",
     "Tier",
+    "UiTesterAgent",
+    "UiTesterInput",
+    "UiTesterOutput",
     "UsageRecord",
+    "WorkflowExecutionError",
+    "WorkflowGraph",
+    "WorkflowRunResult",
+    "WorkflowRunner",
+    "analyse_selectors",
 ]

@@ -5,6 +5,12 @@ team treats as authoritative when deciding whether work is in scope. Out-
 of-scope items go to `docs/parking-lot.md` (created when first needed),
 not the backlog.
 
+> **Delivery status (2026-04-29):** All MVP-1, MVP-2, and MVP-3 scope items
+> below are shipped. Phases 4 (hardening), 5 (docs + portfolio, minus 5.5),
+> and 6 (maintenance, minus the 6.1 calendar cadence) are also shipped.
+> See [`PROGRESS.md`](PROGRESS.md) for the live dashboard and
+> [`tech-debt.md`](tech-debt.md) for deferred items.
+
 ## In scope — MVP 1 (Core Agentic QA Workflow)
 
 | Item | PRD ref | Owner |

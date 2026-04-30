@@ -19,14 +19,21 @@ from qaforge_api.auth.context import (
 
 
 def test_get_request_context_returns_none_without_tenant_header() -> None:
-    result = asyncio.run(get_request_context(None, None, None))
+    result = asyncio.run(get_request_context(None, None, None, None))
     assert result is None
 
 
 def test_get_request_context_parses_valid_uuids() -> None:
     tenant = "00000000-0000-0000-0000-00000000000a"
     user = "00000000-0000-0000-0000-00000000000b"
-    result = asyncio.run(get_request_context(tenant, user, "trace-1"))
+    result = asyncio.run(
+        get_request_context(
+            x_qaforge_tenant_id=tenant,
+            x_qaforge_user_id=user,
+            x_qaforge_role=None,
+            x_qaforge_trace_id="trace-1",
+        )
+    )
     assert result is not None
     assert result.tenant_id == UUID(tenant)
     assert result.user_id == UUID(user)
@@ -35,11 +42,11 @@ def test_get_request_context_parses_valid_uuids() -> None:
 
 def test_get_request_context_rejects_invalid_uuid() -> None:
     with pytest.raises(HTTPException) as exc_info:
-        asyncio.run(get_request_context("not-a-uuid", None, None))
+        asyncio.run(get_request_context("not-a-uuid", None, None, None))
     assert exc_info.value.status_code == 400
 
 
 def test_require_request_context_401s_when_missing() -> None:
     with pytest.raises(HTTPException) as exc_info:
-        asyncio.run(require_request_context(None, None, None, None))
+        asyncio.run(require_request_context(None, None, None, None, None))
     assert exc_info.value.status_code == 401

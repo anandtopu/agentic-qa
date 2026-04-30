@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository overview
 
-QAForge AI — an agentic software QA platform. The product spec lives in `AgenticQA_PRD.md`; the phased delivery plan lives in `docs/IMPLEMENTATION_PLAN.md`. **Treat both as authoritative.** Phase 0 (foundation) is in progress; product features start in Phase 1.
+QAForge AI — an agentic software QA platform. The product spec lives in `AgenticQA_PRD.md`; the phased delivery plan lives in `docs/IMPLEMENTATION_PLAN.md`. **Treat both as authoritative.** Live progress dashboard: `docs/PROGRESS.md` (Phases 0–4 complete, Phase 5 done except 5.5 beta-onboarding, Phase 6 code surface complete except 6.1 operational cadences as of 2026-04-29).
 
 ## Common commands
 

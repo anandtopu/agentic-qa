@@ -1,0 +1,152 @@
+name: Security
+# Story 4.4 — SAST (Semgrep), SCA (Trivy), DAST (ZAP, manual trigger),
+# SBOM (CycloneDX via Syft), image signing (Cosign).
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    # Daily nightly scan against main.
+    - cron: "0 5 * * *"
+  workflow_dispatch:
+    inputs:
+      run_dast:
+        description: "Run OWASP ZAP DAST against the dev environment"
+        type: boolean
+        default: false
+
+concurrency:
+  group: security-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  security-events: write
+  id-token: write   # required by Cosign keyless signing
+
+jobs:
+  # ---------------------------------------------------------------- SAST
+
+  semgrep:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    container:
+      image: returntocorp/semgrep
+    steps:
+      - uses: actions/checkout@v4
+      - run: semgrep ci --sarif --output semgrep.sarif
+        env:
+          SEMGREP_RULES: >-
+            p/python
+            p/typescript
+            p/security-audit
+            p/secrets
+            p/owasp-top-ten
+            p/sql-injection
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: semgrep.sarif
+
+  # ---------------------------------------------------------------- SCA
+
+  trivy-fs:
+    name: Trivy filesystem scan (SCA)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@0.24.0
+        with:
+          scan-type: fs
+          scan-ref: .
+          severity: CRITICAL,HIGH
+          exit-code: "1"
+          ignore-unfixed: true
+          format: sarif
+          output: trivy-fs.sarif
+      - uses: github/codeql-action/upload-sarif@v3
+        if: always()
+        with:
+          sarif_file: trivy-fs.sarif
+
+  # ---------------------------------------------------------------- DAST
+
+  zap-baseline:
+    name: OWASP ZAP DAST baseline
+    runs-on: ubuntu-latest
+    if: github.event_name == 'workflow_dispatch' && inputs.run_dast == true
+    steps:
+      - uses: actions/checkout@v4
+      - name: ZAP Baseline Scan
+        uses: zaproxy/action-baseline@v0.13.0
+        with:
+          target: ${{ vars.QAFORGE_DEV_BASE_URL }}
+          rules_file_name: .zap/rules.tsv
+          cmd_options: "-T 5 -m 1"
+          allow_issue_writing: false
+
+  # ---------------------------------------------------------------- SBOM + signing
+
+  sbom-and-sign:
+    name: SBOM + image sign
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    needs: [semgrep, trivy-fs]
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build + push API image
+        id: build
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: infra/docker/Dockerfile.api
+          push: true
+          tags: |
+            ghcr.io/${{ github.repository_owner }}/qaforge-api:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/qaforge-api:latest
+
+      - name: Generate CycloneDX SBOM (Syft)
+        uses: anchore/sbom-action@v0
+        with:
+          image: ghcr.io/${{ github.repository_owner }}/qaforge-api:${{ github.sha }}
+          format: cyclonedx-json
+          output-file: sbom.cdx.json
+
+      - name: Upload SBOM artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: sbom
+          path: sbom.cdx.json
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3
+        with:
+          cosign-release: v2.4.1
+
+      - name: Sign image (keyless via OIDC)
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign sign --yes \
+            ghcr.io/${{ github.repository_owner }}/qaforge-api@${{ steps.build.outputs.digest }}
+
+      - name: Attest SBOM
+        env:
+          COSIGN_EXPERIMENTAL: "1"
+        run: |
+          cosign attest --yes --predicate sbom.cdx.json --type cyclonedx \
+            ghcr.io/${{ github.repository_owner }}/qaforge-api@${{ steps.build.outputs.digest }}

@@ -1,0 +1,27 @@
+{
+  "name": "qaforge-github-action",
+  "version": "1.0.0",
+  "private": true,
+  "description": "QAForge AI GitHub Action — Stories 1.9.1 + 1.9.2 + 1.9.3.",
+  "main": "dist/index.js",
+  "scripts": {
+    "build": "ncc build src/index.ts -o dist --minify --license licenses.txt",
+    "lint": "eslint . --ext .ts",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run"
+  },
+  "engines": {
+    "node": ">=20"
+  },
+  "dependencies": {
+    "@actions/core": "1.10.1",
+    "@actions/github": "6.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "20.16.10",
+    "@vercel/ncc": "0.38.1",
+    "eslint": "8.57.1",
+    "typescript": "5.6.2",
+    "vitest": "2.1.1"
+  }
+}

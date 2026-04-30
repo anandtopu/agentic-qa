@@ -1,0 +1,77 @@
+name: "QAForge AI"
+description: |
+  Run QAForge agentic QA against a pull request: ingest the PR diff,
+  generate a test plan, kick off a test run, post the summary as a PR
+  comment, and gate merges on the configured risk threshold.
+
+  Story 1.9.1 acceptance: a sample app integrates in fewer than 10 lines
+  of YAML — see README.md for the canonical snippet.
+
+author: "QAForge AI"
+branding:
+  icon: "shield"
+  color: "blue"
+
+inputs:
+  qaforge-url:
+    description: "Base URL for the QAForge API (e.g. https://api.qaforge.ai)"
+    required: true
+  qaforge-token:
+    description: "Bearer token / API key. Pass as a secret."
+    required: true
+  workspace-id:
+    description: "Workspace UUID this PR maps to."
+    required: true
+  test-plan-id:
+    description: |
+      Optional. If set, the action skips ingestion and starts a run
+      against this plan directly. If omitted, the action POSTs the PR
+      diff via the GitHub webhook (Story 1.2.1) and waits for the
+      ingest → plan generation pipeline to complete.
+    required: false
+  risk-threshold:
+    description: |
+      Maximum number of `product_defect` failures allowed before the
+      action exits non-zero. Kept as a fallback gate; the preferred
+      Phase-2 gate is `max-risk-band` (Story 2.3.3) which uses the
+      Release Risk Scoring agent's banded recommendation.
+    required: false
+    default: "0"
+  max-risk-band:
+    description: |
+      Fail the build if the test_run summary carries a release risk
+      band higher than this. One of `low | medium | high | critical`.
+      Leave empty to skip the band gate (the legacy product-defect
+      gate still applies).
+    required: false
+    default: ""
+  poll-interval-seconds:
+    description: "Seconds between test_run status polls."
+    required: false
+    default: "10"
+  poll-timeout-seconds:
+    description: "Hard timeout (seconds) on the polling loop."
+    required: false
+    default: "1800"  # 30 min — PRD §14.5 budgets accommodate UI smoke + planning
+
+outputs:
+  test-run-id:
+    description: "UUID of the started test_run."
+  final-state:
+    description: "Terminal state of the test_run (done | failed | paused_for_approval)."
+  failure-count:
+    description: "Total failure_classifications recorded."
+  product-defect-count:
+    description: "Failures classified as product_defect."
+  pr-comment-url:
+    description: "URL of the QAForge PR comment created or updated."
+  risk-score:
+    description: "0..100 release risk score (Story 2.3.3). Empty if the backend didn't produce one."
+  risk-band:
+    description: "low | medium | high | critical band corresponding to risk-score."
+  risk-recommendation:
+    description: "go | go_with_approval | no_go recommendation surfaced by the scorer."
+
+runs:
+  using: "node20"
+  main: "dist/index.js"

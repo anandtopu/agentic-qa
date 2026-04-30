@@ -29,6 +29,9 @@ tags:
   - name: evaluations
   - name: audit
   - name: usage
+  - name: feedback
+  - name: model-registry
+  - name: compliance
 
 security:
   - bearerAuth: []
@@ -123,9 +126,187 @@ paths:
         "409": { $ref: "#/components/responses/Conflict" }
         "422": { $ref: "#/components/responses/ValidationError" }
 
-  /api/v1/repositories:
-    get: { tags: [repositories], summary: List linked repos, responses: { "200": { description: OK } } }
-    post: { tags: [repositories], summary: Link a repo, responses: { "201": { description: Created } } }
+  /api/v1/workspaces/{workspace_id}/repository:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+      - $ref: "#/components/parameters/TenantHeader"
+      - $ref: "#/components/parameters/UserHeader"
+    post:
+      tags: [repositories]
+      summary: Link a GitHub repository to a workspace
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/RepositoryLink" }
+      responses:
+        "201":
+          description: Created
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Repository" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+        "502":
+          description: Upstream GitHub error
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Error" }
+    get:
+      tags: [repositories]
+      summary: Get the active repository linkage for the workspace
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Repository" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [repositories]
+      summary: Unlink the active repository (best-effort GitHub revoke)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Repository" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/workspaces/{workspace_id}/environments:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+      - $ref: "#/components/parameters/TenantHeader"
+      - $ref: "#/components/parameters/UserHeader"
+    get:
+      tags: [workspaces]
+      summary: List environments configured on a workspace
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/EnvironmentList" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/workspaces/{workspace_id}/environments/{name}:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+      - $ref: "#/components/parameters/TenantHeader"
+      - $ref: "#/components/parameters/UserHeader"
+      - { name: name, in: path, required: true, schema: { type: string, pattern: "^[a-zA-Z0-9_-]+$", maxLength: 50 } }
+    put:
+      tags: [workspaces]
+      summary: Create or update an environment by name
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/EnvironmentUpsert" }
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Environment" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "409": { $ref: "#/components/responses/Conflict" }
+        "422": { $ref: "#/components/responses/ValidationError" }
+    get:
+      tags: [workspaces]
+      summary: Get a workspace environment by name
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/Environment" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    delete:
+      tags: [workspaces]
+      summary: Delete a workspace environment
+      responses:
+        "204": { description: Deleted }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+
+  /api/v1/workspaces/{workspace_id}/policy:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+      - $ref: "#/components/parameters/TenantHeader"
+      - $ref: "#/components/parameters/UserHeader"
+    get:
+      tags: [workspaces]
+      summary: Get the active agent policy for the workspace
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PolicyVersion" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+    put:
+      tags: [workspaces]
+      summary: Submit a new policy version (validates PRD §10.3 schema)
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema: { $ref: "#/components/schemas/PolicySet" }
+      responses:
+        "200":
+          description: Saved
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PolicyVersion" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
+        "422":
+          description: Policy schema or YAML failed validation
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PolicyValidationFailure" }
+
+  /api/v1/workspaces/{workspace_id}/policy/history:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+      - $ref: "#/components/parameters/TenantHeader"
+      - $ref: "#/components/parameters/UserHeader"
+    get:
+      tags: [workspaces]
+      summary: List historical policy versions (newest first)
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PolicyHistory" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+
+  /api/v1/workspaces/{workspace_id}/policy/activate/{version}:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+      - $ref: "#/components/parameters/TenantHeader"
+      - $ref: "#/components/parameters/UserHeader"
+      - { name: version, in: path, required: true, schema: { type: integer, minimum: 1 } }
+    post:
+      tags: [workspaces]
+      summary: Activate a previous policy version
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema: { $ref: "#/components/schemas/PolicyVersion" }
+        "401": { $ref: "#/components/responses/Unauthorized" }
+        "404": { $ref: "#/components/responses/NotFound" }
 
   /api/v1/requirements:
     post:
@@ -187,6 +368,120 @@ paths:
 
   /api/v1/usage:
     get: { tags: [usage], summary: Per-workspace cost & token usage, responses: { "200": { description: OK } } }
+
+  /api/v1/feedback:
+    post:
+      tags: [feedback]
+      summary: Record a thumbs up/down on an agent output (Story 6.3.1)
+      responses:
+        "201": { description: Created }
+
+  /api/v1/workspaces/{workspace_id}/feedback:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+    get:
+      tags: [feedback]
+      summary: List recorded agent feedback for a workspace
+      responses:
+        "200": { description: OK }
+
+  /api/v1/workspaces/{workspace_id}/feedback/low-rated-review:
+    parameters:
+      - $ref: "#/components/parameters/WorkspaceId"
+    get:
+      tags: [feedback]
+      summary: Rolling-window low-rated review summary (Epic 6.3 ritual)
+      responses:
+        "200": { description: OK }
+
+  /api/v1/feedback/{feedback_id}/convert-to-eval:
+    parameters:
+      - name: feedback_id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    post:
+      tags: [feedback]
+      summary: Promote a negatively-rated feedback row into a regression eval case
+      responses:
+        "201": { description: Created }
+        "404": { description: Not found }
+        "409": { description: Conflict — feedback rating is not 'down' }
+
+  /api/v1/model-registry:
+    get:
+      tags: [model-registry]
+      summary: List registered models for the current tenant (Story 6.2.1)
+      responses:
+        "200": { description: OK }
+    post:
+      tags: [model-registry]
+      summary: Register a candidate model release
+      responses:
+        "201": { description: Created }
+
+  /api/v1/model-registry/awaiting-decision:
+    get:
+      tags: [model-registry]
+      summary: Candidates whose go/no-go is overdue (Epic 6.2 SLA)
+      responses:
+        "200": { description: OK }
+
+  /api/v1/model-registry/{entry_id}/scorecard:
+    parameters:
+      - name: entry_id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    post:
+      tags: [model-registry]
+      summary: Attach an eval scorecard to a candidate
+      responses:
+        "200": { description: OK }
+        "404": { description: Not found }
+
+  /api/v1/model-registry/{entry_id}/decision:
+    parameters:
+      - name: entry_id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    post:
+      tags: [model-registry]
+      summary: Record go/no-go on a candidate
+      responses:
+        "200": { description: OK }
+        "404": { description: Not found }
+        "409": { description: Conflict — invalid lifecycle transition }
+
+  /api/v1/model-registry/{entry_id}/deprecate:
+    parameters:
+      - name: entry_id
+        in: path
+        required: true
+        schema: { type: string, format: uuid }
+    post:
+      tags: [model-registry]
+      summary: Schedule sunset for a previously-pinned model
+      responses:
+        "200": { description: OK }
+        "404": { description: Not found }
+        "409": { description: Conflict — model is not pinned }
+
+  /api/v1/compliance/retention/sweep:
+    post:
+      tags: [compliance]
+      summary: Run the data-class retention sweep (Story 6.5.1)
+      responses:
+        "200": { description: OK — sweep report }
+        "403": { description: Forbidden — owner-only }
+
+  /api/v1/compliance/access-review:
+    get:
+      tags: [compliance]
+      summary: Quarterly access review snapshot (Story 6.5.2)
+      responses:
+        "200": { description: OK }
 
 components:
   securitySchemes:
@@ -341,3 +636,120 @@ components:
           items: { $ref: "#/components/schemas/Workspace" }
         limit: { type: integer }
         offset: { type: integer }
+    RepositoryLink:
+      type: object
+      required: [installation_id, full_name]
+      properties:
+        installation_id:
+          type: integer
+          description: GitHub App installation id
+          minimum: 1
+        full_name:
+          type: string
+          pattern: "^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$"
+          maxLength: 400
+          description: GitHub ``owner/name`` slug
+    Repository:
+      type: object
+      required:
+        - id
+        - workspace_id
+        - github_installation_id
+        - owner
+        - name
+        - full_name
+        - default_branch
+        - private
+        - linked_at
+      properties:
+        id: { type: string, format: uuid }
+        workspace_id: { type: string, format: uuid }
+        github_installation_id: { type: integer }
+        github_repo_id: { type: integer, nullable: true }
+        owner: { type: string }
+        name: { type: string }
+        full_name: { type: string }
+        default_branch: { type: string }
+        private: { type: boolean }
+        html_url: { type: string, nullable: true }
+        linked_by: { type: string, format: uuid, nullable: true }
+        linked_at: { type: string, format: date-time }
+        unlinked_at: { type: string, format: date-time, nullable: true }
+    EnvironmentUpsert:
+      type: object
+      required: [name]
+      additionalProperties: false
+      properties:
+        name: { type: string, pattern: "^[a-zA-Z0-9_-]+$", maxLength: 50 }
+        base_url: { type: string, maxLength: 500, nullable: true }
+        is_production: { type: boolean, default: false }
+        variables:
+          type: object
+          additionalProperties: true
+        description: { type: string, maxLength: 500, nullable: true }
+    Environment:
+      type: object
+      required: [id, workspace_id, name, is_production, variables, created_at, updated_at]
+      properties:
+        id: { type: string, format: uuid }
+        workspace_id: { type: string, format: uuid }
+        name: { type: string }
+        base_url: { type: string, nullable: true }
+        is_production: { type: boolean }
+        variables:
+          type: object
+          additionalProperties: true
+        description: { type: string, nullable: true }
+        created_at: { type: string, format: date-time }
+        updated_at: { type: string, format: date-time }
+    EnvironmentList:
+      type: object
+      required: [environments]
+      properties:
+        environments:
+          type: array
+          items: { $ref: "#/components/schemas/Environment" }
+    PolicySet:
+      type: object
+      required: [source_yaml]
+      properties:
+        source_yaml: { type: string, minLength: 1, maxLength: 64000 }
+        activate: { type: boolean, default: true }
+    PolicyVersion:
+      type: object
+      required: [id, workspace_id, version, active, parsed, source_yaml, created_at]
+      properties:
+        id: { type: string, format: uuid }
+        workspace_id: { type: string, format: uuid }
+        version: { type: integer, minimum: 1 }
+        active: { type: boolean }
+        parsed:
+          type: object
+          additionalProperties: true
+        source_yaml: { type: string }
+        created_by: { type: string, format: uuid, nullable: true }
+        created_at: { type: string, format: date-time }
+    PolicyHistory:
+      type: object
+      required: [versions]
+      properties:
+        versions:
+          type: array
+          items: { $ref: "#/components/schemas/PolicyVersion" }
+    PolicyValidationFailure:
+      type: object
+      required: [detail, errors]
+      properties:
+        detail: { type: string }
+        errors:
+          type: array
+          items:
+            type: object
+            properties:
+              loc:
+                type: array
+                items: { type: string }
+              msg: { type: string }
+              type: { type: string }
+              line: { type: integer, nullable: true }
+              column: { type: integer, nullable: true }

@@ -1,9 +1,9 @@
 # QAForge AI — Comprehensive Design & Implementation Plan
 
 **Source of truth:** `AgenticQA_PRD.md`
-**Status:** Pre-implementation (no code yet)
+**Status:** Phases 0–4 ✅ · Phase 5 ✅ except 5.5 (deferred — needs hosted env) · Phase 6 ✅ except 6.1 (calendar work). See [`PROGRESS.md`](PROGRESS.md) for the live dashboard.
 **Plan owner:** Engineering lead
-**Last updated:** 2026-04-27
+**Last updated:** 2026-04-29
 
 This document operationalises the PRD into a phase-by-phase delivery plan covering the full SDLC: discovery, design, implementation, testing, DevOps, SRE, security, documentation, launch, and ongoing maintenance. It is structured as Phases → Epics → Stories → Tasks, each with explicit Acceptance Criteria. A single global Definition of Done (DoD) applies to every story unless overridden.
 

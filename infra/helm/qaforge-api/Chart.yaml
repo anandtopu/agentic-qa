@@ -1,0 +1,22 @@
+apiVersion: v2
+name: qaforge-api
+description: |
+  QAForge AI Control Plane API. Hardened to the Pod Security Standards
+  "restricted" profile (Story 3.6.2): runAsNonRoot, readOnlyRootFilesystem,
+  seccompProfile=RuntimeDefault, dropAllCaps. Network policy denies all
+  egress except DNS + Postgres + Redis + the LLM provider; ingress is
+  limited to the cluster's ingress controller namespace.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.27.0"
+maintainers:
+  - name: QAForge AI
+home: https://github.com/qaforge/qaforge
+sources:
+  - https://github.com/qaforge/qaforge
+keywords:
+  - qa
+  - testing
+  - ai
+  - agents

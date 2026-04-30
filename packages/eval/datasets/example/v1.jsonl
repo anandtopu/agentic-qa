@@ -1,0 +1,3 @@
+{"id": "example-1", "inputs": {"q": "ping"}, "expected": {"answer": "pong"}, "labels": ["smoke"], "metadata": {"expected_latency_ms": 10, "expected_cost_usd": "0.001"}}
+{"id": "example-2", "inputs": {"q": "echo"}, "expected": {"answer": "echo"}, "labels": ["smoke"], "metadata": {"expected_latency_ms": 12, "expected_cost_usd": "0.002"}}
+{"id": "example-3", "inputs": {"q": "load"}, "expected": {"answer": "load"}, "labels": ["smoke", "perf"], "metadata": {"expected_latency_ms": 25, "expected_cost_usd": "0.003"}}

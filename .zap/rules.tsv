@@ -1,0 +1,13 @@
+# OWASP ZAP baseline rules — Story 4.4.
+# Format: rule_id<TAB>action<TAB>url_regex<TAB>parameter
+# Actions: IGNORE | WARN | FAIL.
+# IGNORE entries below are *known false-positives or out-of-scope* — every
+# real finding stays as the default WARN/FAIL.
+
+# Allow CSP headers without 'unsafe-inline' to be reported (we don't ship
+# a frontend in the API container, so this is moot for the API surface).
+10038	IGNORE	(?i).*qaforge-api.*
+
+# Auth-required endpoints that ZAP can't crawl without a token. We don't
+# ship public auth in v1; mark as IGNORE rather than fail the scan.
+10202	IGNORE	(?i).*/api/v1/(workspaces|approvals|audit|usage)

@@ -16,7 +16,29 @@ from qaforge_api import __version__
 from qaforge_api.config import get_settings
 from qaforge_api.logging import configure_logging, get_logger
 from qaforge_api.middleware import CorrelationIdMiddleware
-from qaforge_api.routers import health, workspaces
+from qaforge_api.routers import (
+    agent_feedback,
+    api_tests,
+    approvals,
+    audit,
+    compliance,
+    environments,
+    failures,
+    flakiness,
+    health,
+    model_registry,
+    policies,
+    pr_comment,
+    reports,
+    repositories,
+    requirements,
+    test_plans,
+    test_runs,
+    ui_tests,
+    usage,
+    webhooks,
+    workspaces,
+)
 
 
 @asynccontextmanager
@@ -46,6 +68,28 @@ def create_app() -> FastAPI:
     app.add_middleware(CorrelationIdMiddleware)
     app.include_router(health.router)
     app.include_router(workspaces.router)
+    app.include_router(repositories.router)
+    app.include_router(environments.router)
+    app.include_router(policies.router)
+    app.include_router(requirements.per_workspace)
+    app.include_router(requirements.flat)
+    app.include_router(test_plans.flat)
+    app.include_router(test_plans.per_workspace)
+    app.include_router(api_tests.router)
+    app.include_router(ui_tests.router)
+    app.include_router(test_runs.flat)
+    app.include_router(test_runs.per_workspace)
+    app.include_router(failures.router)
+    app.include_router(flakiness.router)
+    app.include_router(reports.router)
+    app.include_router(pr_comment.router)
+    app.include_router(audit.router)
+    app.include_router(usage.router)
+    app.include_router(approvals.router)
+    app.include_router(agent_feedback.router)
+    app.include_router(model_registry.router)
+    app.include_router(compliance.router)
+    app.include_router(webhooks.router)
     return app
 
 
