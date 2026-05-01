@@ -6,7 +6,7 @@ end. Story 5.4 collects them here.
 | # | Deliverable | Where |
 |---|---|---|
 | 1 | GitHub repository | <https://github.com/aqao/aqao> (this repo) |
-| 2 | Architecture diagrams | [`architecture.md`](architecture.md) — C4 + ERD pointers |
+| 2 | Architecture diagrams | [`architecture.md`](architecture.md) — four-planes + orchestration + PR-flow + approval + eval-gate + deployment + trust-boundary diagrams (mermaid) |
 | 3 | Working demo video | [`demo-video.md`](demo-video.md) — script + storyboard (recording deferred) |
 | 4 | Sample target application | [`sample-app.md`](sample-app.md) — `examples/checkout-demo/` |
 | 5 | Generated test plans | [`generated-test-plans.md`](generated-test-plans.md) — three planner outputs |

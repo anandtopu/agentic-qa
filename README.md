@@ -4,6 +4,50 @@ Agentic software QA platform. Ten specialised AI agents plan, execute, validate,
 
 The PRD lives at [`AgenticQA_PRD.md`](AgenticQA_PRD.md). The phased delivery plan lives at [`docs/IMPLEMENTATION_PLAN.md`](docs/IMPLEMENTATION_PLAN.md).
 
+## Features
+
+**Agentic core**
+- **Ten specialised agents** — Planner, API Test, UI Test, DB Validation, Integration Test, Failure Classifier, Defect Triage, Release Risk, Report, Policy Guard (PRD §10.1).
+- **PR-driven workflow** — GitHub webhook → test plan → execution → evidence → PR comment + quality gate.
+- **Multi-tool execution layer** — Playwright (UI), Newman + `pytest`+`httpx` (API), SQL validators (DB), each sandboxed and resource-bounded.
+- **Versioned prompt registry** — A/B experiments, per-workspace pins, one-click promotion.
+
+**Quality + control**
+- **Human approval gates** — destructive SQL, production-environment runs, external issue creation, release readiness, CI changes, high-cost eval runs.
+- **Evidence-based release risk scoring** — go/no-go with top drivers; inputs spelled out in PRD §9.9.
+- **Failure classification** — five categories with rationale; heuristic + LLM ensemble.
+- **Evaluation harness with regression gate** — golden datasets per agent, scorecards, blocks merge on regression.
+- **Per-run cost + runtime caps** — pre-flight estimate, mid-flight kill switch, dashboards.
+
+**Enterprise-grade**
+- **Multi-tenant** — Postgres `FORCE ROW LEVEL SECURITY`, role matrix, OIDC + SAML SSO.
+- **External issue creation** — Jira + GitHub issues / PR reviews with 24-hour dedup.
+- **Historical flakiness detection** — 14 / 30 / 90-day windows fed back into the classifier.
+- **Append-only signed audit log** — HMAC-SHA256, queryable and exportable.
+- **Mandatory secret redaction** — applied at every text sink; property-based contract tests in `aqao_redaction`.
+
+**Reliability + ops**
+- **SRE foundations** — SLOs + error budgets, incident runbooks, postmortem template, on-call severity matrix.
+- **Reliability patterns** — circuit breaker, bulkhead, DLQ, idempotency store; chaos-tested.
+- **Security hardening** — STRIDE threat model, Semgrep + Trivy + ZAP in CI, SBOM + Cosign, signed webhooks.
+- **OpenTelemetry pipeline** — traces (Tempo) + metrics (Prom) + logs (Loki) → Grafana.
+- **Lifecycle controls** — model registry with 14-day decision SLA, 7-year audit retention lock, 90-day dormant-user access review.
+- **Deploy anywhere** — Docker Compose locally; Helm + Terraform on AWS or GCP.
+
+## What ships today
+
+| Phase | Status | Highlights |
+|---|---|---|
+| 0 — Foundation | ✅ done | Repo, ADRs, OpenAPI surface, redaction, observability, feature flags. |
+| 1 — Core agentic QA | ✅ done | Planner / API / UI agents, orchestrator, evidence store, classifier v1, GH Actions integration. |
+| 2 — Production-grade controls | ✅ done | Approval gates, DB validation, risk scoring, audit log, cost tracking, eval harness. |
+| 3 — Enterprise differentiators | ✅ done | RBAC + SSO, Jira/GitHub issues, flakiness, prompt registry, nightly eval, Helm + Terraform. |
+| 4 — Hardening | ✅ done | SLOs, incident management, reliability patterns, security hardening, perf budgets. |
+| 5 — Docs, launch, adoption | 🟡 4 / 5 | User + operator + API docs, SDKs, portfolio. Beta onboarding deferred until hosted. |
+| 6 — Maintenance | 🟡 4 / 5 code-bearing | Model lifecycle, feedback loops, tech-debt register, retention sweep + access review. |
+
+Verification (last run 2026-04-30): `ruff` clean, `mypy --strict` clean across **250 source files**, **728 unit tests passing**. Per-phase detail in [`docs/PROGRESS.md`](docs/PROGRESS.md); architecture diagrams in [`docs/architecture/`](docs/architecture/) and [`docs/portfolio/architecture.md`](docs/portfolio/architecture.md).
+
 ## Status
 
 All implementation-plan phases substantively complete. Phases 0–4 done; Phase 5 has 4 of 5 epics shipped (5.5 beta onboarding deferred until a hosted environment exists); Phase 6 has 4 of 5 code-bearing epics shipped (6.2 model lifecycle, 6.3 feedback loops, 6.4 tech-debt register, 6.5 compliance code surface). Epic 6.1 is operational cadence work that lives in `/schedule`, not the repo.
