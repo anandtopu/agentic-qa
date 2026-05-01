@@ -3,7 +3,7 @@
 [k6](https://k6.io) scripts targeting PRD §14.5 budgets at 10x
 expected concurrency. Each script exports its samples to
 `results/<scenario>.json` so the in-process
-`qaforge_api.perf.evaluate_perf_run` consumer can produce a
+`aqao_api.perf.evaluate_perf_run` consumer can produce a
 :class:`PerfBudgetReport`.
 
 ## Layout
@@ -26,7 +26,7 @@ perf-tests/
 > AC: All §14.5 targets met at 10× expected concurrency.
 
 The k6 thresholds in each scenario fail the run if p95 exceeds the
-PRD ceiling. CI runs the scenarios on a `qaforge-perf` GitHub
+PRD ceiling. CI runs the scenarios on a `aqao-perf` GitHub
 environment with a deployed dev cluster — **deferred per agreed
 Phase-4 cuts** until a dev cluster exists.
 
@@ -35,13 +35,13 @@ Phase-4 cuts** until a dev cluster exists.
 ```bash
 # Single scenario.
 k6 run perf-tests/scenarios/pr_analysis.js \
-  -e QAFORGE_BASE_URL=https://dev.api.qaforge.ai \
-  -e QAFORGE_TOKEN=$QAFORGE_TOKEN \
+  -e AQAO_BASE_URL=https://dev.api.aqao.ai \
+  -e AQAO_TOKEN=$AQAO_TOKEN \
   --summary-export results/pr_analysis.json
 
 # Whole suite.
 for f in perf-tests/scenarios/*.js; do
-  k6 run "$f" -e QAFORGE_BASE_URL=$URL -e QAFORGE_TOKEN=$TOK \
+  k6 run "$f" -e AQAO_BASE_URL=$URL -e AQAO_TOKEN=$TOK \
     --summary-export "results/$(basename $f .js).json"
 done
 ```
@@ -51,7 +51,7 @@ done
 After the k6 runs land, evaluate them with the in-process consumer:
 
 ```python
-from qaforge_api.perf import evaluate_perf_run
+from aqao_api.perf import evaluate_perf_run
 
 samples = {
     "pr_analysis": [11_500, 17_200, 22_800, 35_400, 42_100],

@@ -6,11 +6,11 @@ We don't run your tests faster — we **generate** them, classify the
 failures by category (`product_defect` vs `test_issue` vs
 `flaky_test` vs `environment_issue`), and produce a release-risk
 score from objective signals. The tests still run wherever you run
-them today; QAForge sits **above** that layer.
+them today; Agentic QA Orchestrator sits **above** that layer.
 
 ## Q: Where do my secrets go?
 
-Every text sink runs through `qaforge_redaction.default_redactor()`
+Every text sink runs through `aqao_redaction.default_redactor()`
 before it's written to logs, the audit table, the evidence report,
 or a PR comment. The property-based tests under
 `packages/redaction/tests/` are the contract.
@@ -59,16 +59,16 @@ the pin via `prompt_pin.promote` for audit-log distinction.
 
 See the [operator docs](../operator/install.md). Terraform modules
 live under `infra/terraform/`; the hardened Helm chart is under
-`infra/helm/qaforge-api/`. Both are agreed Phase-3 deferred items
+`infra/helm/aqao-api/`. Both are agreed Phase-3 deferred items
 for the cloud apply itself; the artifacts are production-shaped.
 
 ## Q: What's the SLO?
 
 API availability ≥ 99.9% over 30 days, PR analysis < 60s p95,
 classification < 60s p95. Full list in
-`apps/api/src/qaforge_api/slo/defaults.py` (Epic 4.1).
+`apps/api/src/aqao_api/slo/defaults.py` (Epic 4.1).
 
-## Q: How does QAForge handle a flood of webhook events?
+## Q: How does Agentic QA Orchestrator handle a flood of webhook events?
 
 Per-workspace bulkheads (Epic 4.3) cap concurrency on a shared
 worker pool so one tenant's burst can't starve another. Excess
@@ -81,13 +81,13 @@ test verifies this). The platform stays operational in degraded
 mode until the circuit breaker's recovery_timeout elapses; one
 trial call then decides whether to close the breaker.
 
-## Q: Can I run QAForge on-prem?
+## Q: Can I run Agentic QA Orchestrator on-prem?
 
 The Helm chart is provider-agnostic; the Terraform modules target
 AWS today. GCP / Azure parity is on the Phase-5 backlog.
 
 ## Q: Where do I file a bug?
 
-GitHub Issues against `qaforge/qaforge` with the `bug` label.
+GitHub Issues against `aqao/aqao` with the `bug` label.
 Include the test_run id and the relevant correlation id from the
 PR comment.

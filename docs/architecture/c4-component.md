@@ -8,7 +8,7 @@ ownership is itself a flag in design review.
 
 ```mermaid
 flowchart TB
-  subgraph control[apps/api — qaforge_api]
+  subgraph control[apps/api — aqao_api]
     httpApi[FastAPI router\n/api/v1/*]
     webhookHandler[GitHub Webhook Receiver]
     authn[Auth — JWT / OIDC]
@@ -16,8 +16,8 @@ flowchart TB
     policySvc[Policy & Environment Service]
     approvalSvc[Approval Service]
     auditSvc[Audit Log Writer]
-    flagsSvc[Feature Flag Client\nqaforge_api.flags]
-    dbAccess[DB Layer\nqaforge_api.db]
+    flagsSvc[Feature Flag Client\naqao_api.flags]
+    dbAccess[DB Layer\naqao_api.db]
     settings[Settings\npydantic-settings]
   end
 
@@ -44,7 +44,7 @@ flowchart TB
 | FastAPI router | Platform | PRD §13 surface |
 | Webhook receiver | Platform | Signature-verified, tenant-scoped |
 | Auth | Platform | OIDC + JWT (ADR-0008) |
-| Workspace / Policy / Approval / Audit services | Platform | One module each under `apps/api/src/qaforge_api` |
+| Workspace / Policy / Approval / Audit services | Platform | One module each under `apps/api/src/aqao_api` |
 | Feature Flag Client | Platform | Story 0.4.4 |
 | DB Layer | Platform | SQLAlchemy 2.0 + Alembic (ADR-0007 RLS) |
 
@@ -52,7 +52,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-  subgraph intel[packages/agents — qaforge_agents]
+  subgraph intel[packages/agents — aqao_agents]
     orchestrator[LangGraph Orchestrator\nADR-0002]
     plannerAgent[Planner Agent]
     apiTestAgent[API Test Agent]
@@ -63,7 +63,7 @@ flowchart TB
     risk[Release Risk]
     reportAgent[Report Agent]
     policyGuard[Policy Guard]
-    llmClient[LLMClient\nqaforge_agents.llm]
+    llmClient[LLMClient\naqao_agents.llm]
     recorder[Usage Recorder]
     promptReg[Prompt Templates]
   end
@@ -109,7 +109,7 @@ flowchart TB
 
 ```mermaid
 flowchart TB
-  subgraph exec[packages/tools — qaforge_tools]
+  subgraph exec[packages/tools — aqao_tools]
     toolRouter[Tool Router\nresource limits + timeouts]
     apiRunner[API Test Runner\npytest + httpx]
     newmanRunner[Newman Runner\npostman/newman]
@@ -145,7 +145,7 @@ flowchart TB
 
 ```mermaid
 flowchart LR
-  subgraph eval[packages/eval — qaforge_eval]
+  subgraph eval[packages/eval — aqao_eval]
     runner[Eval Runner\nADR-0010]
     datasets[(Golden Datasets\nJSONL in repo)]
     scorers[Scorers\nper-dimension]
@@ -184,7 +184,7 @@ flowchart LR
   prom[Prometheus — metrics]
   loki[Loki — logs]
   grafana[Grafana]
-  redaction[qaforge_redaction]
+  redaction[aqao_redaction]
 
   app -- traces/metrics/logs --> otelCol
   app -- text-out passes through --> redaction

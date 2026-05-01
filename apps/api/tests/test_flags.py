@@ -4,9 +4,9 @@ from uuid import UUID, uuid4
 
 import pytest
 
-from qaforge_api.flags.client import FeatureFlagClient, get_feature_flag_client
-from qaforge_api.flags.store import InMemoryFlagStore
-from qaforge_api.flags.types import FlagDefinition, FlagRule
+from aqao_api.flags.client import FeatureFlagClient, get_feature_flag_client
+from aqao_api.flags.store import InMemoryFlagStore
+from aqao_api.flags.types import FlagDefinition, FlagRule
 
 WORKSPACE_A = UUID("00000000-0000-0000-0000-00000000000a")
 WORKSPACE_B = UUID("00000000-0000-0000-0000-00000000000b")
@@ -80,7 +80,7 @@ def test_store_from_env_json_rejects_unsupported_value_type() -> None:
 
 def test_get_feature_flag_client_reads_env(monkeypatch: pytest.MonkeyPatch) -> None:
     get_feature_flag_client.cache_clear()
-    monkeypatch.setenv("QAFORGE_FEATURE_FLAGS", '{"ga_dashboard": true}')
+    monkeypatch.setenv("AQAO_FEATURE_FLAGS", '{"ga_dashboard": true}')
     client = get_feature_flag_client()
     assert client.is_enabled("ga_dashboard") is True
     get_feature_flag_client.cache_clear()

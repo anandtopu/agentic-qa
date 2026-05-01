@@ -7,12 +7,12 @@ import uuid
 
 import pytest
 
-from qaforge_agents.api_tester import ApiTesterAgent, ApiTesterInput
-from qaforge_agents.api_tester.agent import GeneratedCodeInvalid
-from qaforge_agents.llm.client import LLMClient, StructuredOutputError
-from qaforge_agents.llm.providers.mock import MockProvider, MockTurn
-from qaforge_agents.llm.recorder import InMemoryRecorder
-from qaforge_agents.llm.types import ModelSpec, Tier
+from aqao_agents.api_tester import ApiTesterAgent, ApiTesterInput
+from aqao_agents.api_tester.agent import GeneratedCodeInvalid
+from aqao_agents.llm.client import LLMClient, StructuredOutputError
+from aqao_agents.llm.providers.mock import MockProvider, MockTurn
+from aqao_agents.llm.recorder import InMemoryRecorder
+from aqao_agents.llm.types import ModelSpec, Tier
 
 _VALID_SOURCE = """\
 import os
@@ -20,7 +20,7 @@ import httpx
 import pytest
 
 
-BASE_URL = os.environ["QAFORGE_API_BASE_URL"]
+BASE_URL = os.environ["AQAO_API_BASE_URL"]
 
 
 def test_charge_succeeds() -> None:

@@ -19,7 +19,7 @@ import pytest
 from alembic.config import Config
 from alembic.script import ScriptDirectory
 
-from qaforge_api.db import metadata
+from aqao_api.db import metadata
 
 ALEMBIC_INI = Path(__file__).resolve().parents[1] / "alembic.ini"
 

@@ -10,12 +10,12 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
-from qaforge_tools.newman import (
+from aqao_tools.newman import (
     NewmanAssertion,
     NewmanResult,
     StubNewmanRunner,
 )
-from qaforge_tools.newman.runner import _flatten_assertions
+from aqao_tools.newman.runner import _flatten_assertions
 
 _FAKE_EXECUTIONS: list[dict[str, Any]] = [
     {

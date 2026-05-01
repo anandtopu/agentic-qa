@@ -20,14 +20,14 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import User
-from qaforge_api.notifications import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import User
+from aqao_api.notifications import (
     DormantUserNotification,
     LogDormantUserNotifier,
 )
-from qaforge_api.services.access_review import AccessReviewService
-from qaforge_api.services.dormant_user_review import (
+from aqao_api.services.access_review import AccessReviewService
+from aqao_api.services.dormant_user_review import (
     DormantNotificationReport,
     DormantUserReviewService,
 )

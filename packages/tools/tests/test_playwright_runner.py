@@ -10,13 +10,13 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
-from qaforge_tools.playwright_runner import (
+from aqao_tools.playwright_runner import (
     PlaywrightArtifact,
     PlaywrightResult,
     PlaywrightTestOutcome,
     StubPlaywrightRunner,
 )
-from qaforge_tools.playwright_runner.runner import _flatten_tests
+from aqao_tools.playwright_runner.runner import _flatten_tests
 
 _FAKE_REPORT: dict[str, Any] = {
     "duration": 1234,

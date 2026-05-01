@@ -2,11 +2,11 @@
 
 ## Product Name
 
-**QAForge AI — Agentic Software Quality Engineering Platform**
+**Agentic QA Orchestrator — Agentic Software Quality Engineering Platform**
 
 ## 1. Executive Summary
 
-QAForge AI is a production-ready, agentic software QA platform that orchestrates specialized AI agents to plan, execute, validate, triage, and report software testing across modern release pipelines.
+Agentic QA Orchestrator is a production-ready, agentic software QA platform that orchestrates specialized AI agents to plan, execute, validate, triage, and report software testing across modern release pipelines.
 
 The platform is designed to demonstrate practical AI engineering beyond chatbots: tool-using agents, workflow orchestration, human approval gates, CI/CD integration, test evidence generation, reliability evaluation, and enterprise-grade auditability.
 
@@ -164,7 +164,7 @@ Each workspace shall support:
 
 ### Inputs
 
-QAForge AI shall ingest:
+Agentic QA Orchestrator shall ingest:
 
 * User stories
 * Acceptance criteria
@@ -513,7 +513,7 @@ The platform shall support:
 
 ```text
 Pull Request Opened
-→ QAForge AI analyzes PR diff
+→ Agentic QA Orchestrator analyzes PR diff
 → Generates targeted test plan
 → Executes relevant tests
 → Classifies failures
@@ -888,7 +888,7 @@ Use a sample e-commerce app.
 ```text
 PR changes checkout discount logic.
 
-QAForge AI:
+Agentic QA Orchestrator:
 1. Reads PR diff and acceptance criteria.
 2. Detects affected areas: checkout API, discount validation, payment flow.
 3. Generates targeted API, UI, and DB tests.

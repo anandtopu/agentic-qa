@@ -23,9 +23,9 @@ from collections.abc import Callable
 import structlog
 from sqlalchemy import text
 
-from qaforge_api.config import get_settings
-from qaforge_api.db import get_engine
-from qaforge_api.logging import configure_logging, get_logger
+from aqao_api.config import get_settings
+from aqao_api.db import get_engine
+from aqao_api.logging import configure_logging, get_logger
 
 DEMO_WORKSPACE_NAME = "demo-workspace"
 
@@ -66,7 +66,7 @@ def _verify_migrations_at_head(log: structlog.stdlib.BoundLogger) -> None:
 def main(steps: list[Callable[[structlog.stdlib.BoundLogger], None]] | None = None) -> int:
     settings = get_settings()
     configure_logging(settings.log_level)
-    log = get_logger("qaforge_api.seed")
+    log = get_logger("aqao_api.seed")
     log.info("seed.start", env=settings.env)
 
     pipeline = steps or [

@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from qaforge_api.requirements.parsers import user_story
-from qaforge_api.requirements.parsers.base import ParseError
+from aqao_api.requirements.parsers import user_story
+from aqao_api.requirements.parsers.base import ParseError
 
 _STORY_AC_BULLETS = """
 # Login flow

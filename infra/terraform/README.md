@@ -1,6 +1,6 @@
-# QAForge AI — Terraform
+# Agentic QA Orchestrator — Terraform
 
-Infrastructure-as-code for one QAForge environment (dev / staging /
+Infrastructure-as-code for one Agentic QA Orchestrator environment (dev / staging /
 prod) on AWS. Each `environments/*/` directory is a Terraform root
 that composes the per-resource modules under `modules/`.
 
@@ -36,10 +36,10 @@ cd infra/terraform/environments/dev
 
 # 1. Configure backend (one-time per environment)
 terraform init \
-  -backend-config="bucket=qaforge-tf-state-dev" \
-  -backend-config="key=qaforge/dev/terraform.tfstate" \
+  -backend-config="bucket=aqao-tf-state-dev" \
+  -backend-config="key=aqao/dev/terraform.tfstate" \
   -backend-config="region=us-east-1" \
-  -backend-config="dynamodb_table=qaforge-tf-locks"
+  -backend-config="dynamodb_table=aqao-tf-locks"
 
 # 2. Plan
 terraform plan -var-file=terraform.tfvars -out=plan.bin
@@ -51,13 +51,13 @@ terraform apply plan.bin
 ### Required variables (terraform.tfvars)
 
 ```hcl
-project_name        = "qaforge"
+project_name        = "aqao"
 environment         = "dev"
 aws_region          = "us-east-1"
 vpc_cidr            = "10.42.0.0/16"
 eks_kubernetes_version = "1.30"
 db_password         = "..."   # or fetch from Secrets Manager
-db_username         = "qaforge"
+db_username         = "aqao"
 admin_principal_arn = "arn:aws:iam::123456789012:role/Admin"
 ```
 

@@ -6,7 +6,7 @@ public attributes are part of the contract.
 
 from __future__ import annotations
 
-from qaforge_api.services.errors import (
+from aqao_api.services.errors import (
     DuplicateResourceError,
     ResourceNotFoundError,
     ServiceError,

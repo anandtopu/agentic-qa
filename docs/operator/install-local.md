@@ -61,14 +61,14 @@ make clean       # (mutates) — also drops volumes; you'll re-seed next time
 ```text
 $ docker compose ps
 NAME                  STATE   PORTS
-qaforge-api           Up      0.0.0.0:8080->8080/tcp
-qaforge-postgres      Up      0.0.0.0:5432->5432/tcp
-qaforge-redis         Up      0.0.0.0:6379->6379/tcp
-qaforge-minio         Up      0.0.0.0:9000->9000/tcp
+aqao-api           Up      0.0.0.0:8080->8080/tcp
+aqao-postgres      Up      0.0.0.0:5432->5432/tcp
+aqao-redis         Up      0.0.0.0:6379->6379/tcp
+aqao-minio         Up      0.0.0.0:9000->9000/tcp
 ```
 
 `minio` stands in for S3 evidence; the API is configured to point
-at it via `QAFORGE_EVIDENCE_BUCKET_URL`.
+at it via `AQAO_EVIDENCE_BUCKET_URL`.
 
 ## Next
 

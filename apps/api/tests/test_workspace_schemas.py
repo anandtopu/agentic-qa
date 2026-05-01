@@ -9,8 +9,8 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from qaforge_api.db.models.workspace import ApplicationType
-from qaforge_api.schemas.workspace import (
+from aqao_api.db.models.workspace import ApplicationType
+from aqao_api.schemas.workspace import (
     WorkspaceCreateRequest,
     WorkspaceUpdateRequest,
 )

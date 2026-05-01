@@ -1,7 +1,7 @@
 """usage_records
 
 Story 2.5.1+2 — durable cost ledger. Append-only, RLS-enabled. Mirror
-of :class:`qaforge_agents.llm.types.UsageRecord` with workspace +
+of :class:`aqao_agents.llm.types.UsageRecord` with workspace +
 test_run + agent_name added so cost dashboards can slice by any of
 those.
 

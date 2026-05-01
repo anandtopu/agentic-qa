@@ -1,6 +1,6 @@
 # 5. Read your first run
 
-A QAForge `test_run` carries everything you need to act:
+An Agentic QA Orchestrator `test_run` carries everything you need to act:
 
 * failure classifications with confidence + reasoning
 * the release-risk score with top drivers + go/no-go
@@ -11,7 +11,7 @@ A QAForge `test_run` carries everything you need to act:
 ## Anatomy of the PR comment
 
 ```markdown
-## QAForge AI run #<id>
+## Agentic QA Orchestrator run #<id>
 
 **Risk:** medium (53 / 100) — go_with_approval
 **Top drivers:** fail_rate (0.18) · uncovered_acceptance (0.15) · recent_incidents (0.10)
@@ -23,7 +23,7 @@ A QAForge `test_run` carries everything you need to act:
 
 **Cost:** $0.42 of $5.00 budget · **Runtime:** 3m12s of 30m
 
-[View evidence report](https://api.qaforge.ai/api/v1/test-runs/<id>/report)
+[View evidence report](https://api.aqao.ai/api/v1/test-runs/<id>/report)
 ```
 
 ## Decoding the risk score
@@ -44,9 +44,9 @@ in the comment are ranked by `weight × raw` contribution.
 ## Drilling into a failure
 
 ```bash
-curl https://api.qaforge.ai/api/v1/test-runs/$RUN_ID/failures \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID"
+curl https://api.aqao.ai/api/v1/test-runs/$RUN_ID/failures \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID"
 ```
 
 Each failure carries:
@@ -64,9 +64,9 @@ If a failure looks suspicious, pull its rolling flakiness over 14 /
 30 / 90 days:
 
 ```bash
-curl https://api.qaforge.ai/api/v1/workspaces/$WORKSPACE_ID/flakiness/$TEST_ID \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID"
+curl https://api.aqao.ai/api/v1/workspaces/$WORKSPACE_ID/flakiness/$TEST_ID \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID"
 ```
 
 A 14-day flip-rate ≥ 0.30 means the classifier already preferred

@@ -5,7 +5,7 @@ underlying story for context.
 
 ## Pods are CrashLoopBackOff
 
-1. `kubectl logs -n qaforge deployment/qaforge-api --previous` —
+1. `kubectl logs -n aqao deployment/aqao-api --previous` —
    the boot error.
 2. Common causes:
    * Database password rotated but the `database_url` secret
@@ -18,7 +18,7 @@ underlying story for context.
 
 ## Pods are OOMKilled
 
-1. `kubectl describe pod -n qaforge $POD` — check the resource
+1. `kubectl describe pod -n aqao $POD` — check the resource
    limits.
 2. Bump `resources.limits.memory` in the Helm values and roll the
    release. The default 1Gi is sized for ~50 concurrent agent
@@ -30,18 +30,18 @@ underlying story for context.
 1. Pull `/api/v1/usage/summary` — is one provider dominating the
    spend? That usually correlates with provider-side latency.
 2. Check the circuit-breaker state via
-   `/metrics` (`qaforge_breaker_state` gauge). If a breaker is
+   `/metrics` (`aqao_breaker_state` gauge). If a breaker is
    half-open, you're recovering from a recent outage.
-3. Inspect the LRU cache hit rates — `qaforge_cache_hit_rate`. A
+3. Inspect the LRU cache hit rates — `aqao_cache_hit_rate`. A
    sudden drop means a deploy invalidated the cache; let it warm
    up for ~10 minutes before escalating.
 
 ## DLQ is growing
 
-1. `/metrics` exposes `qaforge_dlq_depth`. Drain via the admin API
+1. `/metrics` exposes `aqao_dlq_depth`. Drain via the admin API
    (deferred — Phase-5 admin UI) or directly through the service:
    ```python
-   from qaforge_api.reliability import InMemoryDeadLetterQueue
+   from aqao_api.reliability import InMemoryDeadLetterQueue
    ```
 2. Inspect the most recent failures — they all share a root cause
    90% of the time.

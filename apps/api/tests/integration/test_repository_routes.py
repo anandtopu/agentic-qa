@@ -8,13 +8,13 @@ from collections.abc import AsyncIterator, Iterator
 import httpx
 import pytest
 
-from qaforge_api.auth.context import TENANT_HEADER, USER_HEADER
-from qaforge_api.integrations.github.client import (
+from aqao_api.auth.context import TENANT_HEADER, USER_HEADER
+from aqao_api.integrations.github.client import (
     get_github_client,
     reset_github_client_cache,
 )
-from qaforge_api.integrations.github.stub_client import StubGitHubClient
-from qaforge_api.main import create_app
+from aqao_api.integrations.github.stub_client import StubGitHubClient
+from aqao_api.main import create_app
 
 pytestmark = pytest.mark.integration
 

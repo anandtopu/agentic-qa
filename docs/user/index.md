@@ -1,6 +1,6 @@
-# QAForge AI — User Guide
+# Agentic QA Orchestrator — User Guide
 
-QAForge AI is an agentic QA platform that turns a pull request into a
+Agentic QA Orchestrator is an agentic QA platform that turns a pull request into a
 green test run with **evidence**, **risk score**, and **defect
 recommendations** — without you scripting the tests.
 
@@ -12,7 +12,7 @@ By the end of this guide you'll have:
 2. A **policy** that controls cost, approval, and destructive-SQL
    behaviour.
 3. A working **GitHub Action** that comments on every PR with a
-   QAForge run, a release-risk band, and a go/no-go.
+   Agentic QA Orchestrator run, a release-risk band, and a go/no-go.
 
 **Time budget: 30 minutes.** Story 5.1's AC says a first-run user
 reaches a green run in ≤ 30 min using only this guide.
@@ -31,7 +31,7 @@ reaches a green run in ≤ 30 min using only this guide.
 
 ## Concepts in 60 seconds
 
-QAForge orchestrates **ten specialised agents** behind one API:
+Agentic QA Orchestrator orchestrates **ten specialised agents** behind one API:
 
 * **Planner** — turns a requirement + diff into a test plan.
 * **API tester / UI tester / DB validator** — generate + run tests.
@@ -47,7 +47,7 @@ version.
 ## Prerequisites
 
 * A GitHub repo you can install an Action on.
-* A QAForge workspace token (request via the demo workspace
+* A Agentic QA Orchestrator workspace token (request via the demo workspace
   signup — Phase-3 SSO deferred).
 * `pnpm` 9+ if you want to run the demo locally.
 

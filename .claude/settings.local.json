@@ -22,8 +22,8 @@
       "Bash(pnpm --version)",
       "Bash(npm install *)",
       "Bash(pnpm install *)",
-      "Bash(pnpm --filter qaforge-web typecheck)",
-      "Bash(pnpm --filter qaforge-web lint)"
+      "Bash(pnpm --filter aqao-web typecheck)",
+      "Bash(pnpm --filter aqao-web lint)"
     ]
   }
 }

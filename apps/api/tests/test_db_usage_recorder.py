@@ -13,8 +13,8 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from typing import Any
 
-from qaforge_agents.llm.types import Tier, UsageRecord
-from qaforge_api.usage import DbUsageRecorder
+from aqao_agents.llm.types import Tier, UsageRecord
+from aqao_api.usage import DbUsageRecorder
 
 
 @dataclass(slots=True)

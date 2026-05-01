@@ -1,4 +1,4 @@
-# Multi-stage Next.js build for QAForge web.
+# Multi-stage Next.js build for Agentic QA Orchestrator web.
 # Phase 0 builds the standalone output; Phase 3 hardens with non-root user
 # and tighter base image (per ADR-0006).
 
@@ -7,7 +7,7 @@ WORKDIR /repo
 RUN corepack enable && corepack prepare pnpm@9.12.0 --activate
 COPY pnpm-workspace.yaml package.json ./
 COPY apps/web/package.json apps/web/
-RUN pnpm install --frozen-lockfile=false --filter qaforge-web
+RUN pnpm install --frozen-lockfile=false --filter aqao-web
 
 FROM node:20.18-alpine AS builder
 WORKDIR /repo
@@ -16,7 +16,7 @@ COPY --from=deps /repo/node_modules ./node_modules
 COPY --from=deps /repo/apps/web/node_modules ./apps/web/node_modules
 COPY pnpm-workspace.yaml package.json ./
 COPY apps/web ./apps/web
-RUN pnpm --filter qaforge-web build
+RUN pnpm --filter aqao-web build
 
 FROM node:20.18-alpine AS runner
 WORKDIR /app

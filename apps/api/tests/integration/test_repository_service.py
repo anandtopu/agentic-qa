@@ -12,15 +12,15 @@ import pytest
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models.workspace import ApplicationType
-from qaforge_api.integrations.github.stub_client import StubGitHubClient
-from qaforge_api.services.errors import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models.workspace import ApplicationType
+from aqao_api.integrations.github.stub_client import StubGitHubClient
+from aqao_api.services.errors import (
     DuplicateResourceError,
     ResourceNotFoundError,
 )
-from qaforge_api.services.repository import RepositoryService
-from qaforge_api.services.workspace import WorkspaceCreate, WorkspaceService
+from aqao_api.services.repository import RepositoryService
+from aqao_api.services.workspace import WorkspaceCreate, WorkspaceService
 
 pytestmark = pytest.mark.integration
 

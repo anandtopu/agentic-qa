@@ -1,7 +1,7 @@
-# QAForge AI — Operator Guide
+# Agentic QA Orchestrator — Operator Guide
 
 For ops engineers responsible for installing, upgrading, monitoring,
-and recovering a QAForge cluster. **Story 5.2's AC** is that an ops
+and recovering an Agentic QA Orchestrator cluster. **Story 5.2's AC** is that an ops
 engineer not on the build team can deploy and recover from these
 docs alone.
 

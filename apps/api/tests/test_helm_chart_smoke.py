@@ -1,4 +1,4 @@
-"""Smoke tests for the qaforge-api Helm chart — Story 3.6.2.
+"""Smoke tests for the aqao-api Helm chart — Story 3.6.2.
 
 A real `helm template + kubeconform` round-trip needs the helm binary,
 which we don't assume is available on the dev machine. These tests
@@ -16,7 +16,7 @@ from typing import Any
 
 import yaml
 
-CHART_ROOT = Path(__file__).resolve().parents[3] / "infra" / "helm" / "qaforge-api"
+CHART_ROOT = Path(__file__).resolve().parents[3] / "infra" / "helm" / "aqao-api"
 
 
 def _load_yaml(path: Path) -> Any:
@@ -32,7 +32,7 @@ def test_chart_root_exists() -> None:
 
 def test_chart_yaml_declares_metadata() -> None:
     chart = _load_yaml(CHART_ROOT / "Chart.yaml")
-    assert chart["name"] == "qaforge-api"
+    assert chart["name"] == "aqao-api"
     assert chart["apiVersion"] == "v2"
     assert chart["type"] == "application"
     assert chart.get("kubeVersion", "").startswith(">=1.27")

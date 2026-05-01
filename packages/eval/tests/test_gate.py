@@ -12,7 +12,7 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from pathlib import Path
 
-from qaforge_eval import (
+from aqao_eval import (
     BaselineGate,
     DimensionAggregate,
     Scorecard,

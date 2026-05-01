@@ -11,13 +11,13 @@ checks first, integration last.
 uv sync --all-packages
 uv run ruff check .
 uv run ruff format --check .
-uv run mypy -p qaforge_api -p qaforge_agents -p qaforge_eval -p qaforge_redaction -p qaforge_tools
+uv run mypy -p aqao_api -p aqao_agents -p aqao_eval -p aqao_redaction -p aqao_tools
 
 # Web
 pnpm install
-pnpm --filter qaforge-web typecheck
-pnpm --filter qaforge-web lint
-pnpm --filter qaforge-web build
+pnpm --filter aqao-web typecheck
+pnpm --filter aqao-web lint
+pnpm --filter aqao-web build
 ```
 
 Expected: every command exits 0.
@@ -37,7 +37,7 @@ Requires Docker Desktop running.
 ```bash
 make dev                              # Postgres + Redis + MinIO + API + Web
 make migrate                          # alembic upgrade head against fresh DB
-QAFORGE_DATABASE_URL=postgresql+psycopg://qaforge:qaforge@localhost:5432/qaforge \
+AQAO_DATABASE_URL=postgresql+psycopg://aqao:aqao@localhost:5432/aqao \
   uv run pytest -m integration --no-cov
 make down
 ```
@@ -90,7 +90,7 @@ make eval       # Phase 2+ — eval harness is wired but datasets land later
 - **pytest collection "No module named 'tests.foo'"**: a stray
   `__init__.py` was added under `*/tests/` — delete it. We rely on
   pytest rootdir-based discovery.
-- **Integration suite skipped**: `QAFORGE_DATABASE_URL` not set, or
+- **Integration suite skipped**: `AQAO_DATABASE_URL` not set, or
   Postgres unreachable.
 - **Web build fails on `unrs-resolver` postinstall**: re-run
   `pnpm install` once; native binary fetch is occasionally flaky.
@@ -102,5 +102,5 @@ make eval       # Phase 2+ — eval harness is wired but datasets land later
 | `pnpm build` of `apps/web` Docker image | Docker daemon not running on dev box |
 | `make eval` real run | Eval datasets land in Phase 2 Epic 2.6 |
 | End-to-end demo (PRD §21) | Sample app + remaining Phase 1 stories |
-| Helm release in `deploy-staging.yml` | `infra/helm/qaforge` lands in Phase 3 Story 3.6.2 |
+| Helm release in `deploy-staging.yml` | `infra/helm/aqao` lands in Phase 3 Story 3.6.2 |
 | External pen-test | Phase 4 Epic 4.4 |

@@ -61,11 +61,11 @@ S3 versioning has it. Run:
 
 ```bash
 aws s3api list-object-versions \
-  --bucket qaforge-prod-evidence \
+  --bucket aqao-prod-evidence \
   --prefix "test-runs/<run-id>/"
 aws s3api copy-object \
-  --copy-source 'qaforge-prod-evidence/<key>?versionId=<vid>' \
-  --bucket qaforge-prod-evidence \
+  --copy-source 'aqao-prod-evidence/<key>?versionId=<vid>' \
+  --bucket aqao-prod-evidence \
   --key '<key>'
 ```
 

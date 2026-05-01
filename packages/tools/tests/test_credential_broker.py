@@ -5,7 +5,7 @@ from __future__ import annotations
 import asyncio
 import uuid
 
-from qaforge_tools.credentials import InMemoryCredentialBroker
+from aqao_tools.credentials import InMemoryCredentialBroker
 
 WORKSPACE = uuid.uuid4()
 

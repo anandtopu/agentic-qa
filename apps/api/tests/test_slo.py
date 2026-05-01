@@ -19,7 +19,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from qaforge_api.slo import (
+from aqao_api.slo import (
     DEFAULT_SLOS,
     ErrorBudget,
     FreezeDecision,
@@ -31,7 +31,7 @@ from qaforge_api.slo import (
     SloOutcome,
     slo_by_name,
 )
-from qaforge_api.slo.budget import FreezeLevel
+from aqao_api.slo.budget import FreezeLevel
 
 # ---------------------------------------------------------------- Slo
 

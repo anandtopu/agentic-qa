@@ -1,5 +1,5 @@
 /**
- * QAForge RDS Postgres module — Story 3.6.1.
+ * Agentic QA Orchestrator RDS Postgres module — Story 3.6.1.
  *
  * Postgres 16 with PITR (Story 3.6.3 RPO target = 5 min). Multi-AZ
  * in prod for fast failover; single-AZ in dev to keep cost down.

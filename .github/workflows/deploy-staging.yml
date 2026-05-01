@@ -4,7 +4,7 @@ name: deploy-staging
 # GHCR tagged with the commit SHA, then runs the staging deploy. The
 # deploy step is intentionally pluggable: Phase 0 ships only the build
 # + push pipeline; the Helm release step is filled in by Phase 3 Story
-# 3.6.2 once `infra/helm/qaforge` exists and a real cluster is wired.
+# 3.6.2 once `infra/helm/aqao` exists and a real cluster is wired.
 
 on:
   push:
@@ -27,8 +27,8 @@ permissions:
 
 env:
   REGISTRY: ghcr.io
-  API_IMAGE: ghcr.io/${{ github.repository_owner }}/qaforge-api
-  WEB_IMAGE: ghcr.io/${{ github.repository_owner }}/qaforge-web
+  API_IMAGE: ghcr.io/${{ github.repository_owner }}/aqao-api
+  WEB_IMAGE: ghcr.io/${{ github.repository_owner }}/aqao-web
 
 jobs:
   build-and-push:
@@ -89,18 +89,18 @@ jobs:
     needs: build-and-push
     environment:
       name: staging
-      url: ${{ vars.STAGING_URL || 'https://staging.qaforge.ai' }}
+      url: ${{ vars.STAGING_URL || 'https://staging.aqao.ai' }}
     steps:
       - uses: actions/checkout@v4
 
-      - name: Helm release (placeholder until infra/helm/qaforge exists)
-        if: ${{ hashFiles('infra/helm/qaforge/Chart.yaml') != '' }}
+      - name: Helm release (placeholder until infra/helm/aqao exists)
+        if: ${{ hashFiles('infra/helm/aqao/Chart.yaml') != '' }}
         uses: azure/setup-helm@v4
         with:
           version: v3.15.0
 
       - name: Configure kubeconfig
-        if: ${{ hashFiles('infra/helm/qaforge/Chart.yaml') != '' && env.STAGING_KUBECONFIG != '' }}
+        if: ${{ hashFiles('infra/helm/aqao/Chart.yaml') != '' && env.STAGING_KUBECONFIG != '' }}
         env:
           STAGING_KUBECONFIG: ${{ secrets.STAGING_KUBECONFIG }}
         run: |
@@ -109,12 +109,12 @@ jobs:
           chmod 600 "$HOME/.kube/config"
 
       - name: Helm upgrade --install
-        if: ${{ hashFiles('infra/helm/qaforge/Chart.yaml') != '' && env.STAGING_KUBECONFIG != '' }}
+        if: ${{ hashFiles('infra/helm/aqao/Chart.yaml') != '' && env.STAGING_KUBECONFIG != '' }}
         env:
           STAGING_KUBECONFIG: ${{ secrets.STAGING_KUBECONFIG }}
         run: |
-          helm upgrade --install qaforge infra/helm/qaforge \
-            --namespace qaforge-staging --create-namespace \
+          helm upgrade --install aqao infra/helm/aqao \
+            --namespace aqao-staging --create-namespace \
             --set image.api.repository=${{ env.API_IMAGE }} \
             --set image.api.tag=${{ needs.build-and-push.outputs.sha-short }} \
             --set image.web.repository=${{ env.WEB_IMAGE }} \
@@ -122,9 +122,9 @@ jobs:
             --wait --timeout 8m
 
       - name: Smoke test /healthz
-        if: ${{ hashFiles('infra/helm/qaforge/Chart.yaml') != '' && env.STAGING_KUBECONFIG != '' }}
+        if: ${{ hashFiles('infra/helm/aqao/Chart.yaml') != '' && env.STAGING_KUBECONFIG != '' }}
         run: |
-          URL="${{ vars.STAGING_URL || 'https://staging.qaforge.ai' }}/healthz"
+          URL="${{ vars.STAGING_URL || 'https://staging.aqao.ai' }}/healthz"
           for i in 1 2 3 4 5 6; do
             if curl -fsS "$URL" | grep -q '"ok"'; then
               echo "staging healthy at $URL"
@@ -137,8 +137,8 @@ jobs:
           exit 1
 
       - name: Note — deploy skipped
-        if: ${{ hashFiles('infra/helm/qaforge/Chart.yaml') == '' }}
+        if: ${{ hashFiles('infra/helm/aqao/Chart.yaml') == '' }}
         run: |
-          echo "::notice::Helm chart at infra/helm/qaforge/ not present yet — skipping deploy."
+          echo "::notice::Helm chart at infra/helm/aqao/ not present yet — skipping deploy."
           echo "Phase 3 Story 3.6.2 lands the chart; this workflow will deploy automatically once it exists."
           echo "Built images: ${{ needs.build-and-push.outputs.api-tag }} and ${{ needs.build-and-push.outputs.web-tag }}"

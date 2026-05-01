@@ -19,7 +19,7 @@ from datetime import UTC, datetime, timedelta
 import pytest
 import structlog
 
-from qaforge_api.incident import (
+from aqao_api.incident import (
     DEFAULT_SEVERITY_MATRIX,
     Alert,
     AlertKind,
@@ -27,7 +27,7 @@ from qaforge_api.incident import (
     LogPageNotifier,
     Severity,
 )
-from qaforge_api.incident.alert import RUNBOOK_INDEX
+from aqao_api.incident.alert import RUNBOOK_INDEX
 
 
 def _alert(kind: AlertKind, **kwargs: object) -> Alert:

@@ -51,9 +51,9 @@ a missed evaluation cycle compounds into multiple missed cycles.
 
 ## Related
 
-- `apps/api/src/qaforge_api/services/lifecycle_alerts.py` — bridge
+- `apps/api/src/aqao_api/services/lifecycle_alerts.py` — bridge
   service that emits this alert.
-- `apps/api/src/qaforge_api/services/model_lifecycle.py` — registry
+- `apps/api/src/aqao_api/services/model_lifecycle.py` — registry
   state machine and `awaiting_decision` query.
 - [`docs/IMPLEMENTATION_PLAN.md`](../IMPLEMENTATION_PLAN.md) Epic
   6.2 — the acceptance criterion this alert defends.

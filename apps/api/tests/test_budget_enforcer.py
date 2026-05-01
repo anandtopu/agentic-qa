@@ -6,11 +6,11 @@ from decimal import Decimal
 
 import pytest
 
-from qaforge_agents.llm.client import LLMClient
-from qaforge_agents.llm.providers.mock import MockProvider, MockTurn
-from qaforge_agents.llm.recorder import InMemoryRecorder
-from qaforge_agents.llm.types import LLMRequest, Message, ModelSpec, Role, Tier
-from qaforge_api.usage import BudgetEnforcer, BudgetExceededError
+from aqao_agents.llm.client import LLMClient
+from aqao_agents.llm.providers.mock import MockProvider, MockTurn
+from aqao_agents.llm.recorder import InMemoryRecorder
+from aqao_agents.llm.types import LLMRequest, Message, ModelSpec, Role, Tier
+from aqao_api.usage import BudgetEnforcer, BudgetExceededError
 
 
 def _client(*responses_with_pricing: tuple[str, str, str]) -> LLMClient:

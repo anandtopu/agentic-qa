@@ -7,18 +7,18 @@ from decimal import Decimal
 
 import pytest
 
-from qaforge_agents.classifier import (
+from aqao_agents.classifier import (
     FailureCategory,
     FailureClassifierAgent,
     FailureSignal,
     HeuristicClassifier,
     LlmClassifier,
 )
-from qaforge_agents.classifier.schema import ClassificationSource
-from qaforge_agents.llm.client import LLMClient
-from qaforge_agents.llm.providers.mock import MockProvider, MockTurn
-from qaforge_agents.llm.recorder import InMemoryRecorder
-from qaforge_agents.llm.types import ModelSpec, Tier
+from aqao_agents.classifier.schema import ClassificationSource
+from aqao_agents.llm.client import LLMClient
+from aqao_agents.llm.providers.mock import MockProvider, MockTurn
+from aqao_agents.llm.recorder import InMemoryRecorder
+from aqao_agents.llm.types import ModelSpec, Tier
 
 
 def _llm_client(*responses: str) -> LLMClient:
@@ -129,7 +129,7 @@ def test_source_summary_initialises_both_keys() -> None:
 
 
 def _stub(signal_id: str, category: FailureCategory):
-    from qaforge_agents.classifier.schema import Classification
+    from aqao_agents.classifier.schema import Classification
 
     return Classification(
         signal_id=signal_id,

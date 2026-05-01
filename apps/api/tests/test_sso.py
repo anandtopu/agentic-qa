@@ -11,8 +11,8 @@ import uuid
 
 import pytest
 
-from qaforge_api.auth import Role
-from qaforge_api.auth.sso import (
+from aqao_api.auth import Role
+from aqao_api.auth.sso import (
     GroupRoleMapper,
     SsoError,
     SsoIdentity,
@@ -27,7 +27,7 @@ def _identity(**overrides: object) -> SsoIdentity:
         "subject": "user-42",
         "email": "alice@example.com",
         "name": "Alice",
-        "groups": frozenset({"qaforge-engineers"}),
+        "groups": frozenset({"aqao-engineers"}),
         "correlation_id": "trace-1",
     }
     base.update(overrides)
@@ -55,20 +55,20 @@ def test_static_verifier_raises_on_unknown_credential() -> None:
 def test_mapper_first_match_wins() -> None:
     mapper = GroupRoleMapper(
         mapping=(
-            ("qaforge-owners", Role.OWNER),
-            ("qaforge-admins", Role.ADMIN),
-            ("qaforge-engineers", Role.ENGINEER),
+            ("aqao-owners", Role.OWNER),
+            ("aqao-admins", Role.ADMIN),
+            ("aqao-engineers", Role.ENGINEER),
         ),
         default=Role.VIEWER,
     )
-    role = mapper.resolve(frozenset({"qaforge-admins", "qaforge-engineers"}))
+    role = mapper.resolve(frozenset({"aqao-admins", "aqao-engineers"}))
     # OWNER not present -> ADMIN wins because it's earlier than ENGINEER.
     assert role is Role.ADMIN
 
 
 def test_mapper_falls_back_to_default_when_no_groups_match() -> None:
     mapper = GroupRoleMapper(
-        mapping=(("qaforge-owners", Role.OWNER),),
+        mapping=(("aqao-owners", Role.OWNER),),
         default=Role.VIEWER,
     )
     assert mapper.resolve(frozenset({"unrelated-group"})) is Role.VIEWER
@@ -83,13 +83,13 @@ def test_mapper_returns_none_when_no_default_and_no_match() -> None:
 
 
 def test_resolve_request_context_combines_verifier_and_mapper() -> None:
-    identity = _identity(groups=frozenset({"qaforge-approvers"}))
+    identity = _identity(groups=frozenset({"aqao-approvers"}))
     verifier = StaticVerifier(identities={"tok": identity})
     mapper = GroupRoleMapper(
         mapping=(
-            ("qaforge-owners", Role.OWNER),
-            ("qaforge-approvers", Role.APPROVER),
-            ("qaforge-engineers", Role.ENGINEER),
+            ("aqao-owners", Role.OWNER),
+            ("aqao-approvers", Role.APPROVER),
+            ("aqao-engineers", Role.ENGINEER),
         ),
         default=Role.VIEWER,
     )
@@ -126,7 +126,7 @@ def test_unmapped_user_gets_no_role_so_gated_endpoints_403() -> None:
     the failure mode is 'no permissions', not 'viewer everywhere'."""
     identity = _identity(groups=frozenset({"some-other-org-group"}))
     verifier = StaticVerifier(identities={"tok": identity})
-    mapper = GroupRoleMapper(mapping=(("qaforge-owners", Role.OWNER),))  # no default
+    mapper = GroupRoleMapper(mapping=(("aqao-owners", Role.OWNER),))  # no default
     ctx = resolve_request_context(
         credential="tok",
         verifier=verifier,

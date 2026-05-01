@@ -6,8 +6,8 @@ import json
 
 import pytest
 
-from qaforge_api.requirements.parsers import postman
-from qaforge_api.requirements.parsers.base import ParseError
+from aqao_api.requirements.parsers import postman
+from aqao_api.requirements.parsers.base import ParseError
 
 _COLLECTION = {
     "info": {

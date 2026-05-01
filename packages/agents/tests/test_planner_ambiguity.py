@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from qaforge_agents.planner.ambiguity import detect_open_questions
+from aqao_agents.planner.ambiguity import detect_open_questions
 
 
 def _case(

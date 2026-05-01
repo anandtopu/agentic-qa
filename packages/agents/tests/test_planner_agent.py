@@ -7,12 +7,12 @@ import uuid
 
 import pytest
 
-from qaforge_agents.llm.client import LLMClient
-from qaforge_agents.llm.providers.mock import MockProvider, MockTurn
-from qaforge_agents.llm.recorder import InMemoryRecorder
-from qaforge_agents.llm.types import ModelSpec, Tier
-from qaforge_agents.planner import PlannerAgent, PlannerInput
-from qaforge_agents.planner.schema import PlannerTestPlan, TestCaseType
+from aqao_agents.llm.client import LLMClient
+from aqao_agents.llm.providers.mock import MockProvider, MockTurn
+from aqao_agents.llm.recorder import InMemoryRecorder
+from aqao_agents.llm.types import ModelSpec, Tier
+from aqao_agents.planner import PlannerAgent, PlannerInput
+from aqao_agents.planner.schema import PlannerTestPlan, TestCaseType
 
 
 def _client(content: str) -> LLMClient:
@@ -114,7 +114,7 @@ async def test_planner_rejects_invalid_llm_output() -> None:
     """If the model returns a payload that violates the schema, LLMClient raises."""
     bad_json = json.dumps({"summary": "x", "test_cases": []})  # min_length=1 fails
     agent = PlannerAgent(_client(bad_json))
-    from qaforge_agents.llm.client import StructuredOutputError
+    from aqao_agents.llm.client import StructuredOutputError
 
     with pytest.raises(StructuredOutputError):
         await agent.plan(

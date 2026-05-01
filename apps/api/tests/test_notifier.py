@@ -14,7 +14,7 @@ from typing import Any
 
 import pytest
 
-from qaforge_api.notifications import (
+from aqao_api.notifications import (
     ApprovalNotification,
     LogNotifier,
     Notifier,

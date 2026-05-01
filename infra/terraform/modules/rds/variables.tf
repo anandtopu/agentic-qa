@@ -25,12 +25,12 @@ variable "max_allocated_storage_gb" {
 
 variable "db_name" {
   type    = string
-  default = "qaforge"
+  default = "aqao"
 }
 
 variable "db_username" {
   type    = string
-  default = "qaforge"
+  default = "aqao"
 }
 
 variable "db_password" {

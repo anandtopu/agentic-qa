@@ -1,5 +1,5 @@
 /**
- * QAForge Redis (ElastiCache) module — Story 3.6.1.
+ * Agentic QA Orchestrator Redis (ElastiCache) module — Story 3.6.1.
  *
  * Single-node in dev, replication group with one replica per AZ in
  * prod. Encryption at-rest + TLS in-transit always.
@@ -55,7 +55,7 @@ resource "aws_elasticache_subnet_group" "this" {
 
 resource "aws_elasticache_replication_group" "this" {
   replication_group_id        = "${var.project_name}-${var.environment}"
-  description                 = "QAForge Redis (${var.environment})"
+  description                 = "Agentic QA Orchestrator Redis (${var.environment})"
   engine                      = "redis"
   engine_version              = var.engine_version
   node_type                   = var.node_type

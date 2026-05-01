@@ -14,14 +14,14 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import (
     ModelDecision,
     ModelLifecycleStatus,
     ModelRegistryEntry,
 )
-from qaforge_api.services.errors import ResourceNotFoundError
-from qaforge_api.services.model_lifecycle import (
+from aqao_api.services.errors import ResourceNotFoundError
+from aqao_api.services.model_lifecycle import (
     DEFAULT_DECISION_SLA,
     InvalidLifecycleTransitionError,
     ModelLifecycleService,

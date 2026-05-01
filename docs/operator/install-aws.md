@@ -1,6 +1,6 @@
 # Install on AWS — devops runbook
 
-End-to-end procedure to stand up a QAForge environment on AWS.
+End-to-end procedure to stand up an Agentic QA Orchestrator environment on AWS.
 Targets the **Story 3.6.1 AC**: `terraform apply` from a fresh AWS
 account produces a working environment in **< 60 minutes**.
 
@@ -34,7 +34,7 @@ aws sts get-caller-identity
 
 ```bash
 export AWS_REGION=us-east-1
-export PROJECT=qaforge
+export PROJECT=aqao
 export ENV=dev
 
 aws s3 mb "s3://${PROJECT}-tf-state-${ENV}" --region "${AWS_REGION}"        # (mutates)
@@ -60,12 +60,12 @@ aws dynamodb create-table \
 Create `infra/terraform/environments/dev/terraform.tfvars`:
 
 ```hcl
-project_name           = "qaforge"
+project_name           = "aqao"
 environment            = "dev"
 aws_region             = "us-east-1"
 vpc_cidr               = "10.42.0.0/16"
 eks_kubernetes_version = "1.30"
-db_username            = "qaforge"
+db_username            = "aqao"
 admin_principal_arn    = "arn:aws:iam::123456789012:role/Admin"
 ```
 
@@ -78,7 +78,7 @@ cd infra/terraform/environments/dev
 
 terraform init \
   -backend-config="bucket=${PROJECT}-tf-state-${ENV}" \
-  -backend-config="key=qaforge/${ENV}/terraform.tfstate" \
+  -backend-config="key=aqao/${ENV}/terraform.tfstate" \
   -backend-config="region=${AWS_REGION}" \
   -backend-config="dynamodb_table=${PROJECT}-tf-locks"
 ```
@@ -105,7 +105,7 @@ terraform apply plan.bin                                                      # 
 Capture the outputs you'll need for the Helm install:
 
 ```bash
-terraform output -raw cluster_name              # → qaforge-dev
+terraform output -raw cluster_name              # → aqao-dev
 terraform output -raw cluster_endpoint
 terraform output -raw api_iam_role_arn          # → IRSA role for the pod
 terraform output -raw evidence_bucket_name
@@ -123,19 +123,19 @@ export ANTHROPIC_API_KEY="sk-ant-…"          # from the provider console
 export GITHUB_WEBHOOK_SECRET=$(openssl rand -hex 32)
 
 aws secretsmanager put-secret-value \
-  --secret-id "qaforge/${ENV}/database_url" \
-  --secret-string "postgresql+psycopg://qaforge:${DB_PASSWORD}@$(terraform output -raw rds_endpoint)/qaforge"  # (mutates)
+  --secret-id "aqao/${ENV}/database_url" \
+  --secret-string "postgresql+psycopg://aqao:${DB_PASSWORD}@$(terraform output -raw rds_endpoint)/aqao"  # (mutates)
 
 aws secretsmanager put-secret-value \
-  --secret-id "qaforge/${ENV}/audit_hmac_key" \
+  --secret-id "aqao/${ENV}/audit_hmac_key" \
   --secret-string "${AUDIT_HMAC_KEY}"                                          # (mutates)
 
 aws secretsmanager put-secret-value \
-  --secret-id "qaforge/${ENV}/anthropic_api_key" \
+  --secret-id "aqao/${ENV}/anthropic_api_key" \
   --secret-string "${ANTHROPIC_API_KEY}"                                       # (mutates)
 
 aws secretsmanager put-secret-value \
-  --secret-id "qaforge/${ENV}/github_webhook_secret" \
+  --secret-id "aqao/${ENV}/github_webhook_secret" \
   --secret-string "${GITHUB_WEBHOOK_SECRET}"                                   # (mutates)
 ```
 
@@ -202,7 +202,7 @@ ingress:
   enabled: true
   className: alb
   hosts:
-    - host: dev.api.qaforge.example.com
+    - host: dev.api.aqao.example.com
       paths:
         - path: /
   annotations:
@@ -224,10 +224,10 @@ networkPolicy:
 
 env:
   log_level: INFO
-  database_url_secret_name: qaforge/dev/database_url
-  audit_hmac_key_secret_name: qaforge/dev/audit_hmac_key
-  github_webhook_secret_name: qaforge/dev/github_webhook_secret
-  anthropic_api_key_secret_name: qaforge/dev/anthropic_api_key
+  database_url_secret_name: aqao/dev/database_url
+  audit_hmac_key_secret_name: aqao/dev/audit_hmac_key
+  github_webhook_secret_name: aqao/dev/github_webhook_secret
+  anthropic_api_key_secret_name: aqao/dev/anthropic_api_key
 ```
 
 ## Step 9 — Install the AWS Load Balancer Controller *(one-time per cluster)*
@@ -246,38 +246,38 @@ helm install aws-load-balancer-controller eks/aws-load-balancer-controller \
 The IAM role + service-account binding for ALB controller is created by
 the `eks` Terraform module.
 
-## Step 10 — Install QAForge via Helm
+## Step 10 — Install Agentic QA Orchestrator via Helm
 
 ```bash
-kubectl create namespace qaforge                                               # (mutates)
-kubectl label namespace qaforge \
+kubectl create namespace aqao                                               # (mutates)
+kubectl label namespace aqao \
   pod-security.kubernetes.io/enforce=restricted                                # (mutates)
 
-helm upgrade --install qaforge ./infra/helm/qaforge-api \
-  --namespace qaforge \
+helm upgrade --install aqao ./infra/helm/aqao-api \
+  --namespace aqao \
   --values values-dev.yaml \
   --set image.tag="$(git rev-parse HEAD)"                                      # (mutates) ~3 min
 
-kubectl rollout status -n qaforge deployment/qaforge-api --timeout=5m
+kubectl rollout status -n aqao deployment/aqao-api --timeout=5m
 ```
 
 ## Step 11 — Apply migrations
 
 ```bash
-kubectl exec -n qaforge deployment/qaforge-api -- \
+kubectl exec -n aqao deployment/aqao-api -- \
   uv run alembic upgrade head                                                  # (mutates)
 ```
 
 ## Step 12 — Smoke test
 
 ```bash
-curl https://dev.api.qaforge.example.com/api/v1/healthz
+curl https://dev.api.aqao.example.com/api/v1/healthz
 # {"status":"ok","version":"<sha>"}
 ```
 
 If you get TLS errors: confirm the ACM certificate ARN in
-`values-dev.yaml`, and that DNS for `dev.api.qaforge.example.com`
-points at the ALB hostname (`kubectl get ingress -n qaforge`).
+`values-dev.yaml`, and that DNS for `dev.api.aqao.example.com`
+points at the ALB hostname (`kubectl get ingress -n aqao`).
 
 ## Step 13 — Verify the SLO + audit + cost endpoints
 
@@ -285,24 +285,24 @@ points at the ALB hostname (`kubectl get ingress -n qaforge`).
 TENANT=$(uuidgen)                                # use the seed tenant id in real envs
 USER=$(uuidgen)
 
-curl -s https://dev.api.qaforge.example.com/api/v1/audit \
-  -H "X-QAForge-Tenant-Id: ${TENANT}" \
-  -H "X-QAForge-User-Id: ${USER}" \
-  -H "X-QAForge-Role: admin" | head
+curl -s https://dev.api.aqao.example.com/api/v1/audit \
+  -H "X-AQAO-Tenant-Id: ${TENANT}" \
+  -H "X-AQAO-User-Id: ${USER}" \
+  -H "X-AQAO-Role: admin" | head
 
-curl -s "https://dev.api.qaforge.example.com/api/v1/usage/summary?workspace_id=$(uuidgen)" \
-  -H "X-QAForge-Tenant-Id: ${TENANT}" \
-  -H "X-QAForge-Role: admin"
+curl -s "https://dev.api.aqao.example.com/api/v1/usage/summary?workspace_id=$(uuidgen)" \
+  -H "X-AQAO-Tenant-Id: ${TENANT}" \
+  -H "X-AQAO-Role: admin"
 ```
 
 ## Step 14 — Wire monitoring
 
 * Enable the chart's `serviceMonitor.enabled=true` once the
   prometheus-operator is installed.
-* Replay request samples through `qaforge_api.slo.SloCalculator` and
+* Replay request samples through `aqao_api.slo.SloCalculator` and
   emit one snapshot per default SLO into your Grafana / CloudWatch
   backend — see [`monitoring.md`](monitoring.md).
-* Hook the alert kinds from `qaforge_api.incident.RUNBOOK_INDEX`
+* Hook the alert kinds from `aqao_api.incident.RUNBOOK_INDEX`
   into your pager (PagerDuty / Opsgenie); each kind already maps to
   a runbook under `docs/runbooks/`.
 

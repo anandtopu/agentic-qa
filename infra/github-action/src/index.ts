@@ -2,8 +2,8 @@ import * as core from "@actions/core";
 import * as github from "@actions/github";
 
 interface ActionInputs {
-  qaforgeUrl: string;
-  qaforgeToken: string;
+  aqaoUrl: string;
+  aqaoToken: string;
   workspaceId: string;
   testPlanId: string | null;
   riskThreshold: number;
@@ -44,12 +44,12 @@ interface FailureRow {
   category: string;
 }
 
-const PR_COMMENT_MARKER = "<!-- qaforge:pr-comment:v1 -->";
+const PR_COMMENT_MARKER = "<!-- aqao:pr-comment:v1 -->";
 
 async function main(): Promise<void> {
   const inputs = readInputs();
   core.debug(
-    `QAForge action starting for workspace=${inputs.workspaceId} ` +
+    `Agentic QA Orchestrator action starting for workspace=${inputs.workspaceId} ` +
       `pr=${github.context.payload.pull_request?.number ?? "n/a"}`,
   );
 
@@ -70,7 +70,7 @@ async function main(): Promise<void> {
       12,
     )}`,
   });
-  const startRes = await fetch(`${inputs.qaforgeUrl}/api/v1/test-runs`, {
+  const startRes = await fetch(`${inputs.aqaoUrl}/api/v1/test-runs`, {
     method: "POST",
     headers: jsonHeaders(inputs),
     body: startBody,
@@ -93,7 +93,7 @@ async function main(): Promise<void> {
 
   // 3. Pull failure classifications for the gate
   const failuresRes = await fetch(
-    `${inputs.qaforgeUrl}/api/v1/test-runs/${testRunId}/failures`,
+    `${inputs.aqaoUrl}/api/v1/test-runs/${testRunId}/failures`,
     { headers: jsonHeaders(inputs) },
   );
   const failures = failuresRes.ok
@@ -145,7 +145,7 @@ async function main(): Promise<void> {
     );
     return;
   }
-  core.info("QAForge gate passed.");
+  core.info("Agentic QA Orchestrator gate passed.");
 }
 
 function extractRiskScore(
@@ -183,8 +183,8 @@ function readInputs(): ActionInputs {
     );
   }
   return {
-    qaforgeUrl: core.getInput("qaforge-url", { required: true }).replace(/\/$/, ""),
-    qaforgeToken: core.getInput("qaforge-token", { required: true }),
+    aqaoUrl: core.getInput("aqao-url", { required: true }).replace(/\/$/, ""),
+    aqaoToken: core.getInput("aqao-token", { required: true }),
     workspaceId: core.getInput("workspace-id", { required: true }),
     testPlanId: core.getInput("test-plan-id") || null,
     riskThreshold: Number(core.getInput("risk-threshold") || "0"),
@@ -199,8 +199,8 @@ function readInputs(): ActionInputs {
 function jsonHeaders(inputs: ActionInputs): Record<string, string> {
   return {
     "Content-Type": "application/json",
-    Authorization: `Bearer ${inputs.qaforgeToken}`,
-    "X-QAForge-Tenant-Id": inputs.workspaceId, // Phase 1 reuses workspace as tenant scope
+    Authorization: `Bearer ${inputs.aqaoToken}`,
+    "X-AQAO-Tenant-Id": inputs.workspaceId, // Phase 1 reuses workspace as tenant scope
   };
 }
 
@@ -213,7 +213,7 @@ async function pollUntilTerminal(
   const deadline = Date.now() + inputs.pollTimeoutMs;
   while (Date.now() < deadline) {
     const res = await fetch(
-      `${inputs.qaforgeUrl}/api/v1/test-runs/${testRunId}`,
+      `${inputs.aqaoUrl}/api/v1/test-runs/${testRunId}`,
       { headers: jsonHeaders(inputs) },
     );
     if (!res.ok) {
@@ -235,12 +235,12 @@ async function fetchPrComment(
   inputs: ActionInputs,
 ): Promise<PrCommentBody> {
   const res = await fetch(
-    `${inputs.qaforgeUrl}/api/v1/test-runs/${testRunId}/pr-comment`,
+    `${inputs.aqaoUrl}/api/v1/test-runs/${testRunId}/pr-comment`,
     {
       method: "POST",
       headers: jsonHeaders(inputs),
       body: JSON.stringify({
-        run_url: `${inputs.qaforgeUrl}/test-runs/${testRunId}`,
+        run_url: `${inputs.aqaoUrl}/test-runs/${testRunId}`,
       }),
     },
   );
@@ -269,15 +269,15 @@ async function upsertPrComment(body: string): Promise<string | null> {
     octokit.rest.issues.listComments,
     { owner, repo, issue_number: prNumber, per_page: 100 },
   );
-  const existingQAForge = existing.find((c) =>
+  const existingAQAO = existing.find((c) =>
     (c.body || "").includes(PR_COMMENT_MARKER),
   );
 
-  if (existingQAForge) {
+  if (existingAQAO) {
     const updated = await octokit.rest.issues.updateComment({
       owner,
       repo,
-      comment_id: existingQAForge.id,
+      comment_id: existingAQAO.id,
       body,
     });
     return updated.data.html_url;

@@ -7,14 +7,14 @@ from decimal import Decimal
 import pytest
 from pydantic import BaseModel, Field
 
-from qaforge_eval.scorers import (
+from aqao_eval.scorers import (
     CategoricalAccuracyScorer,
     CostBudgetScorer,
     FieldExactMatchScorer,
     JsonSchemaValidScorer,
     LatencyBudgetScorer,
 )
-from qaforge_eval.types import EvalCase
+from aqao_eval.types import EvalCase
 
 
 def _case(expected: dict[str, object] | None = None, **kwargs: object) -> EvalCase:

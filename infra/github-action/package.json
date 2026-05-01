@@ -1,8 +1,8 @@
 {
-  "name": "qaforge-github-action",
+  "name": "aqao-github-action",
   "version": "1.0.0",
   "private": true,
-  "description": "QAForge AI GitHub Action — Stories 1.9.1 + 1.9.2 + 1.9.3.",
+  "description": "Agentic QA Orchestrator GitHub Action — Stories 1.9.1 + 1.9.2 + 1.9.3.",
   "main": "dist/index.js",
   "scripts": {
     "build": "ncc build src/index.ts -o dist --minify --license licenses.txt",

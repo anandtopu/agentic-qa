@@ -1,4 +1,4 @@
-# QAForge AI — Progress Dashboard
+# Agentic QA Orchestrator — Progress Dashboard
 
 **Last updated:** 2026-04-30
 
@@ -45,7 +45,7 @@ trigger" so they're easy to pick up later.
 | 0.1 Requirements review & alignment | ✅ | `docs/scope-baseline.md`, `docs/journeys/`, `docs/security/data-handling.md`, `docs/prd-questions.md` |
 | 0.2 System design + ADRs | ✅ | `docs/architecture/`, `docs/adr/0001…0010`, `apis/openapi.yaml` |
 | 0.3 Repo, tooling, DevOps bootstrap | ✅ | `Makefile`, `pyproject.toml`, `pnpm-workspace.yaml`, `infra/docker/` |
-| 0.4 Cross-cutting foundations | ✅ | `qaforge_api.observability`, `qaforge_api.usage`, `qaforge_redaction`, `qaforge_api.flags` |
+| 0.4 Cross-cutting foundations | ✅ | `aqao_api.observability`, `aqao_api.usage`, `aqao_redaction`, `aqao_api.flags` |
 
 ### Phase 1 — Core Agentic QA Workflow ✅
 
@@ -87,8 +87,8 @@ trigger" so they're easy to pick up later.
 
 | Epic | Status |
 |---|---|
-| 4.1 SLOs + error budgets | ✅ `qaforge_api.slo`, `DEFAULT_SLOS` covering every PRD §14.5 capability |
-| 4.2 On-call + incident management | ✅ `qaforge_api.incident`, severity matrix, runbook index, postmortem template |
+| 4.1 SLOs + error budgets | ✅ `aqao_api.slo`, `DEFAULT_SLOS` covering every PRD §14.5 capability |
+| 4.2 On-call + incident management | ✅ `aqao_api.incident`, severity matrix, runbook index, postmortem template |
 | 4.3 Reliability patterns | ✅ circuit breaker, bulkhead, DLQ, idempotency store; chaos AC verified |
 | 4.4 Security hardening | ✅ STRIDE threat model, Semgrep + Trivy + ZAP in CI, SBOM + Cosign, webhook signing |
 | 4.5 Performance engineering | ✅ caching package, perf budgets package, k6 scripts. Real 10× concurrency soak deferred (TD-004). |

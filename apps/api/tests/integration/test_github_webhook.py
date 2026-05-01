@@ -15,14 +15,14 @@ from collections.abc import AsyncIterator
 import httpx
 import pytest
 
-from qaforge_api.auth.context import TENANT_HEADER
-from qaforge_api.config import get_settings
-from qaforge_api.integrations.github.client import (
+from aqao_api.auth.context import TENANT_HEADER
+from aqao_api.config import get_settings
+from aqao_api.integrations.github.client import (
     get_github_client,
     reset_github_client_cache,
 )
-from qaforge_api.integrations.github.stub_client import StubGitHubClient
-from qaforge_api.main import create_app
+from aqao_api.integrations.github.stub_client import StubGitHubClient
+from aqao_api.main import create_app
 
 pytestmark = pytest.mark.integration
 
@@ -39,7 +39,7 @@ def stub_github() -> StubGitHubClient:
 async def client(
     stub_github: StubGitHubClient, monkeypatch: pytest.MonkeyPatch
 ) -> AsyncIterator[httpx.AsyncClient]:
-    monkeypatch.setenv("QAFORGE_GITHUB_WEBHOOK_SECRET", WEBHOOK_SECRET)
+    monkeypatch.setenv("AQAO_GITHUB_WEBHOOK_SECRET", WEBHOOK_SECRET)
     get_settings.cache_clear()  # type: ignore[attr-defined]
     app = create_app()
     app.dependency_overrides[get_github_client] = lambda: stub_github
@@ -73,7 +73,7 @@ async def _link_repo(client: httpx.AsyncClient, tenant_id: uuid.UUID, full_name:
 async def test_signed_pull_request_event_ingests_requirement(
     client: httpx.AsyncClient, tenant_id: uuid.UUID
 ) -> None:
-    workspace_id = await _link_repo(client, tenant_id, "qaforge/sample")
+    workspace_id = await _link_repo(client, tenant_id, "aqao/sample")
 
     payload = {
         "action": "opened",
@@ -82,9 +82,9 @@ async def test_signed_pull_request_event_ingests_requirement(
             "title": "Add payment",
             "body": "",
             "head": {"sha": "abc123", "ref": "feature/pay"},
-            "base": {"ref": "main", "repo": {"full_name": "qaforge/sample"}},
+            "base": {"ref": "main", "repo": {"full_name": "aqao/sample"}},
         },
-        "repository": {"full_name": "qaforge/sample"},
+        "repository": {"full_name": "aqao/sample"},
     }
     body = json.dumps(payload).encode("utf-8")
 

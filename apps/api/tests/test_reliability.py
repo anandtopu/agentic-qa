@@ -19,7 +19,7 @@ from datetime import UTC, datetime, timedelta
 
 import pytest
 
-from qaforge_api.reliability import (
+from aqao_api.reliability import (
     BreakerOpen,
     BreakerState,
     Bulkhead,

@@ -1,6 +1,6 @@
 # Upgrade
 
-QAForge releases follow semver. The upgrade procedure is the same for
+Agentic QA Orchestrator releases follow semver. The upgrade procedure is the same for
 patch / minor releases; major releases need extra care, called out
 inline.
 
@@ -8,7 +8,7 @@ inline.
 
 - [ ] Read the release notes for any **breaking** items.
 - [ ] Take a fresh RDS snapshot (
-      `aws rds create-db-snapshot --db-instance-identifier qaforge-prod`).
+      `aws rds create-db-snapshot --db-instance-identifier aqao-prod`).
 - [ ] Verify the SLO budget for the affected window has headroom
       (Epic 4.1 — if you're already in `SOFT_FREEZE`, defer the
       upgrade).
@@ -20,20 +20,20 @@ inline.
 
 ```bash
 # 1. Update image tag in values.
-helm upgrade qaforge ./infra/helm/qaforge-api \
-  --namespace qaforge \
+helm upgrade aqao ./infra/helm/aqao-api \
+  --namespace aqao \
   --reuse-values \
   --set image.tag=v0.2.0           # (mutates)
 
 # 2. Wait for the rollout.
-kubectl rollout status -n qaforge deployment/qaforge-api --timeout=5m
+kubectl rollout status -n aqao deployment/aqao-api --timeout=5m
 
 # 3. Run migrations from the new image.
-kubectl exec -n qaforge deployment/qaforge-api -- \
+kubectl exec -n aqao deployment/aqao-api -- \
   uv run alembic upgrade head      # (mutates)
 
 # 4. Smoke.
-curl https://dev.api.qaforge.example.com/api/v1/healthz
+curl https://dev.api.aqao.example.com/api/v1/healthz
 ```
 
 The HPA + PDB combo (Story 3.6.2) ensures zero-downtime rollouts at
@@ -45,7 +45,7 @@ Major versions may include destructive migrations (column drops,
 table renames). The release notes will flag them. Procedure:
 
 1. Take an RDS snapshot **and** a final Postgres dump:
-   `pg_dump -Fc -h <endpoint> -U qaforge qaforge > prod-pre-vN.dump`.
+   `pg_dump -Fc -h <endpoint> -U aqao aqao > prod-pre-vN.dump`.
 2. Apply migrations in a maintenance window — even though they're
    designed to be online-safe, holding traffic still feels safer
    for the first major.
@@ -55,7 +55,7 @@ table renames). The release notes will flag them. Procedure:
 ## Rolling back
 
 ```bash
-helm rollback qaforge -n qaforge   # (mutates)
+helm rollback aqao -n aqao   # (mutates)
 ```
 
 Rollback restores the previous image but **does not** automatically

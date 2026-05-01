@@ -4,7 +4,7 @@ This file provides guidance to Codex (Codex.ai/code) when working with code in t
 
 ## Repository overview
 
-QAForge AI — an agentic software QA platform. The product spec lives in `AgenticQA_PRD.md`; the phased delivery plan lives in `docs/IMPLEMENTATION_PLAN.md`. **Treat both as authoritative.** Live progress dashboard: `docs/PROGRESS.md` (Phases 0–4 complete, Phase 5 done except 5.5 beta-onboarding, Phase 6 code surface complete except 6.1 operational cadences as of 2026-04-29).
+Agentic QA Orchestrator — an agentic software QA platform. The product spec lives in `AgenticQA_PRD.md`; the phased delivery plan lives in `docs/IMPLEMENTATION_PLAN.md`. **Treat both as authoritative.** Live progress dashboard: `docs/PROGRESS.md` (Phases 0–4 complete, Phase 5 done except 5.5 beta-onboarding, Phase 6 code surface complete except 6.1 operational cadences as of 2026-04-29).
 
 ## Common commands
 
@@ -48,7 +48,7 @@ docs/security/            Data handling, threat model
 
 ## Architecture (big picture)
 
-QAForge AI is structured as four planes (PRD §11). Keep boundaries crisp — code that mixes planes is a smell.
+Agentic QA Orchestrator is structured as four planes (PRD §11). Keep boundaries crisp — code that mixes planes is a smell.
 
 - **Control Plane** (`apps/api`) — workspaces, users, policies, environments, approval workflows, audit logs.
 - **Execution Plane** (`packages/tools`) — test runners (Playwright, Newman, pytest, SQL validators) sandboxed and resource-bounded.
@@ -65,7 +65,7 @@ These come from the PRD and apply to every change:
 
 - **DB read-only by default.** Destructive SQL (`DELETE/UPDATE/DROP/TRUNCATE/ALTER`) requires a human approval gate.
 - **Approval gates are required for**: destructive SQL, production-environment tests, external Jira/GitHub issue creation, release readiness approval, CI pipeline modifications, high-cost eval runs (PRD §9.10).
-- **Secret redaction is mandatory** at every text sink. Use `qaforge_redaction.redact()` or a derived `Redactor`. Property-based tests in `packages/redaction/tests/test_redactor.py` are the contract — do not weaken them.
+- **Secret redaction is mandatory** at every text sink. Use `aqao_redaction.redact()` or a derived `Redactor`. Property-based tests in `packages/redaction/tests/test_redactor.py` are the contract — do not weaken them.
 - **Per-run cost / runtime caps** are enforced by the Policy Guard agent. Defaults: `$5.00`, `30 min`. Exceeding by > 5% is a regression.
 - **Every agent decision is auditable.** Tool inputs/outputs (redacted), token usage, and stage latency must be traced.
 - **Risk score is evidence-based**, not vibes — inputs in PRD §9.9, with top drivers and a go/no-go.

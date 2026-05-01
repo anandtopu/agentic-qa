@@ -7,18 +7,18 @@ import uuid
 
 import pytest
 
-from qaforge_agents.llm.client import LLMClient, StructuredOutputError
-from qaforge_agents.llm.providers.mock import MockProvider, MockTurn
-from qaforge_agents.llm.recorder import InMemoryRecorder
-from qaforge_agents.llm.types import ModelSpec, Tier
-from qaforge_agents.ui_tester import UiTesterAgent, UiTesterInput
-from qaforge_agents.ui_tester.ts_validator import GeneratedSpecInvalid
+from aqao_agents.llm.client import LLMClient, StructuredOutputError
+from aqao_agents.llm.providers.mock import MockProvider, MockTurn
+from aqao_agents.llm.recorder import InMemoryRecorder
+from aqao_agents.llm.types import ModelSpec, Tier
+from aqao_agents.ui_tester import UiTesterAgent, UiTesterInput
+from aqao_agents.ui_tester.ts_validator import GeneratedSpecInvalid
 
 _VALID_SOURCE = """\
 import { test, expect } from '@playwright/test';
 
 test('login succeeds', async ({ page }) => {
-  const baseUrl = process.env.QAFORGE_UI_BASE_URL!;
+  const baseUrl = process.env.AQAO_UI_BASE_URL!;
   await page.goto(baseUrl + '/login');
   await page.getByRole('button', { name: 'Sign in' }).click();
   await expect(page.getByText('Welcome')).toBeVisible();
@@ -29,7 +29,7 @@ _BRITTLE_SOURCE = """\
 import { test, expect } from '@playwright/test';
 
 test('settings page', async ({ page }) => {
-  const baseUrl = process.env.QAFORGE_UI_BASE_URL!;
+  const baseUrl = process.env.AQAO_UI_BASE_URL!;
   await page.goto(baseUrl);
   await page.locator('xpath=//a[1]').click();
   await page.locator('main > div > div > div > div > .label').click();

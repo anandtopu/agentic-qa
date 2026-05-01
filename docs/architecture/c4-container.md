@@ -5,14 +5,14 @@ Maps the four planes from PRD §11 to containers.
 ```mermaid
 flowchart TB
   subgraph control[Control Plane]
-    api[FastAPI / qaforge-api]
+    api[FastAPI / aqao-api]
     db[(PostgreSQL)]
     cache[(Redis)]
   end
 
   subgraph intel[Intelligence Plane]
     orch[Orchestrator (Celery / Temporal)]
-    agentRuntime[Agent Runtime (qaforge-agents)]
+    agentRuntime[Agent Runtime (aqao-agents)]
     promptReg[Prompt Registry]
   end
 
@@ -24,7 +24,7 @@ flowchart TB
   end
 
   subgraph eval[Evaluation Plane]
-    evalHarness[Eval Harness (qaforge-eval)]
+    evalHarness[Eval Harness (aqao-eval)]
     goldenDS[(Golden Datasets)]
     scoreboard[Scoreboard]
   end

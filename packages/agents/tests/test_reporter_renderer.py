@@ -16,7 +16,7 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_agents.reporter import (
+from aqao_agents.reporter import (
     AgentTraceLine,
     ArtifactSummary,
     CoverageArea,
@@ -60,7 +60,7 @@ def renderer() -> MarkdownReportRenderer:
 
 def test_renders_minimal_run(renderer: MarkdownReportRenderer) -> None:
     out = renderer.render(_base_ctx(state="planned"))
-    assert "# QAForge Run Report — Payments" in out
+    assert "# Agentic QA Orchestrator Run Report — Payments" in out
     assert "**State:** `planned`" in out
     assert "_No coverage areas declared._" in out
     assert "_No test cases recorded._" in out

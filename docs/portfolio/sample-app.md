@@ -1,7 +1,7 @@
 # Sample target application
 
 The demo runs against `examples/checkout-demo/` — a tiny e-commerce
-checkout API that ships with deliberately-buggy paths so QAForge has
+checkout API that ships with deliberately-buggy paths so Agentic QA Orchestrator has
 something real to find.
 
 ## Layout
@@ -42,7 +42,7 @@ Each bug exists to demonstrate one classifier category:
 The PRD §21 scenario was chosen because:
 
 * It's small enough to fit in a 90-second demo.
-* It exercises three of QAForge's tool runners (Newman API, pytest,
+* It exercises three of Agentic QA Orchestrator's tool runners (Newman API, pytest,
   Playwright UI).
 * It has a "destructive SQL" path (`DELETE FROM expired_carts`)
   that demonstrates Epic 2.1 + 2.2's approval gate.

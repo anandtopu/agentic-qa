@@ -1,4 +1,4 @@
-# QAForge AI — Comprehensive Design & Implementation Plan
+# Agentic QA Orchestrator — Comprehensive Design & Implementation Plan
 
 **Source of truth:** `AgenticQA_PRD.md`
 **Status:** Phases 0–4 ✅ · Phase 5 ✅ except 5.5 (deferred — needs hosted env) · Phase 6 ✅ except 6.1 (calendar work). See [`PROGRESS.md`](PROGRESS.md) for the live dashboard.
@@ -143,7 +143,7 @@ Every story must satisfy ALL of the following before being marked complete. Phas
 #### Story 0.3.4 — CD pipeline (staging)
 - **Tasks**
   - Add `deploy-staging.yml` triggered on `main` merge.
-  - Use Helm chart in `infra/helm/qaforge`.
+  - Use Helm chart in `infra/helm/aqao`.
 - **Acceptance Criteria**
   - Staging URL serves `/healthz` with the new image SHA within 10 min of merge.
 
@@ -170,7 +170,7 @@ Every story must satisfy ALL of the following before being marked complete. Phas
 #### Story 0.4.1 — Observability skeleton
 - **Tasks**
   - Add `structlog` JSON logging, OpenTelemetry tracing, Prometheus metrics.
-  - Define correlation ID middleware (`x-qaforge-trace-id`).
+  - Define correlation ID middleware (`x-aqao-trace-id`).
   - Provision Grafana dashboards for golden signals (latency, errors, saturation, traffic).
 - **Acceptance Criteria**
   - A request from the web app produces a single trace spanning Web → API → Worker → LLM call.
@@ -332,7 +332,7 @@ Every story must satisfy ALL of the following before being marked complete. Phas
 ### Epic 1.9 — GitHub Actions Integration
 
 #### Story 1.9.1 — Reusable workflow
-- **Tasks**: publish `qaforge/qaforge-action@v1`; inputs for workspace, env, gates.
+- **Tasks**: publish `aqao/aqao-action@v1`; inputs for workspace, env, gates.
 - **AC**: Sample app integrates in < 10 lines of YAML.
 
 #### Story 1.9.2 — PR comment summarizer
@@ -482,7 +482,7 @@ Every story must satisfy ALL of the following before being marked complete. Phas
 
 #### Story 3.2.2 — GitHub issue / PR review integration
 - **Tasks**: issue creation; PR review-comment with code-line anchoring where possible.
-- **AC**: Closing the upstream issue reflects in the QAForge defect record within 60 s.
+- **AC**: Closing the upstream issue reflects in the Agentic QA Orchestrator defect record within 60 s.
 
 ---
 
@@ -583,7 +583,7 @@ Every story must satisfy ALL of the following before being marked complete. Phas
 ### Epic 5.3 — API & SDK Reference
 
 - **Tasks**: published OpenAPI; auto-generated TS + Python SDKs; example notebooks.
-- **AC**: SDKs published to npm + PyPI under `@qaforge/*` and `qaforge-*`.
+- **AC**: SDKs published to npm + PyPI under `@aqao/*` and `aqao-*`.
 
 ### Epic 5.4 — Portfolio Deliverables (PRD §20)
 

@@ -5,7 +5,7 @@ from __future__ import annotations
 import hashlib
 import hmac
 
-from qaforge_api.webhooks.github import verify_signature
+from aqao_api.webhooks.github import verify_signature
 
 
 def _signed(body: bytes, secret: str) -> str:

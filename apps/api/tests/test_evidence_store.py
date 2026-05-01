@@ -9,7 +9,7 @@ from pathlib import Path
 
 import pytest
 
-from qaforge_api.evidence import (
+from aqao_api.evidence import (
     EvidenceStoreError,
     FilesystemEvidenceStore,
     HashMismatchError,

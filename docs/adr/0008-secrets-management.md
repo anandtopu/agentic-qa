@@ -8,7 +8,7 @@
 
 ## Context
 
-QAForge AI handles three classes of secrets:
+Agentic QA Orchestrator handles three classes of secrets:
 
 1. **Platform secrets** — DB passwords, broker credentials, LLM provider API keys, GitHub App private key, SSO client secrets.
 2. **Per-workspace secrets** — customer-supplied API tokens for systems-under-test (Postman auth, target API tokens, DB read-only credentials).

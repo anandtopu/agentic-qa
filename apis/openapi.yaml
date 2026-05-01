@@ -1,17 +1,17 @@
 openapi: 3.1.0
 info:
-  title: QAForge AI API
+  title: Agentic QA Orchestrator API
   version: 0.1.0
   description: |
-    Control Plane API for QAForge AI. Implements the surface defined in
+    Control Plane API for Agentic QA Orchestrator. Implements the surface defined in
     PRD §13. Phase 0 publishes the contract; endpoints are stubs and will
     fill in across Phase 1 and Phase 2.
   contact:
-    name: QAForge Engineering
+    name: Agentic QA Orchestrator Engineering
 servers:
   - url: http://localhost:8000
     description: Local
-  - url: https://api.staging.qaforge.example.com
+  - url: https://api.staging.aqao.example.com
     description: Staging
 
 tags:
@@ -497,7 +497,7 @@ components:
       required: true
       schema: { type: string, format: uuid }
     TenantHeader:
-      name: X-QAForge-Tenant-Id
+      name: X-AQAO-Tenant-Id
       in: header
       required: true
       description: |
@@ -506,7 +506,7 @@ components:
         without changing the request shape.
       schema: { type: string, format: uuid }
     UserHeader:
-      name: X-QAForge-User-Id
+      name: X-AQAO-User-Id
       in: header
       required: false
       description: Caller's user id (optional in Phase 1).

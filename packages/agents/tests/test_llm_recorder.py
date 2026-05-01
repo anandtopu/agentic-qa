@@ -2,8 +2,8 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from qaforge_agents.llm.recorder import InMemoryRecorder
-from qaforge_agents.llm.types import Tier, UsageRecord
+from aqao_agents.llm.recorder import InMemoryRecorder
+from aqao_agents.llm.types import Tier, UsageRecord
 
 
 def _record(prefix: str = "x") -> UsageRecord:

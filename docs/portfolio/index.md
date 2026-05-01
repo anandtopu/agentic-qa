@@ -5,7 +5,7 @@ end. Story 5.4 collects them here.
 
 | # | Deliverable | Where |
 |---|---|---|
-| 1 | GitHub repository | <https://github.com/qaforge/qaforge> (this repo) |
+| 1 | GitHub repository | <https://github.com/aqao/aqao> (this repo) |
 | 2 | Architecture diagrams | [`architecture.md`](architecture.md) — C4 + ERD pointers |
 | 3 | Working demo video | [`demo-video.md`](demo-video.md) — script + storyboard (recording deferred) |
 | 4 | Sample target application | [`sample-app.md`](sample-app.md) — `examples/checkout-demo/` |

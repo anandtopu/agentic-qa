@@ -4,7 +4,7 @@ from decimal import Decimal
 
 import pytest
 
-from qaforge_agents.llm.pricing import ModelPricing, default_pricing
+from aqao_agents.llm.pricing import ModelPricing, default_pricing
 
 
 def test_cost_zero_when_no_tokens() -> None:

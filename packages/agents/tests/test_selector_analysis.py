@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from qaforge_agents.ui_tester.selector_analysis import analyse_selectors
+from aqao_agents.ui_tester.selector_analysis import analyse_selectors
 
 
 def test_flags_xpath_locator() -> None:
@@ -62,7 +62,7 @@ def test_clean_spec_returns_no_findings() -> None:
 import { test, expect } from '@playwright/test';
 
 test('login', async ({ page }) => {
-  await page.goto(process.env.QAFORGE_UI_BASE_URL!);
+  await page.goto(process.env.AQAO_UI_BASE_URL!);
   await page.getByRole('button', { name: 'Sign in' }).click();
   await page.getByTestId('email-input').fill('user@example.com');
   await expect(page.getByText('Welcome')).toBeVisible();

@@ -7,7 +7,7 @@ from typing import Any
 
 import pytest
 
-from qaforge_agents.db_validator import (
+from aqao_agents.db_validator import (
     DESTRUCTIVE_VERBS,
     AuditSignatureValidator,
     Finding,
@@ -131,7 +131,7 @@ def test_report_summary_lines_describe_findings() -> None:
             row_count=3,
         ),
     )
-    from qaforge_agents.db_validator import DbValidationReport
+    from aqao_agents.db_validator import DbValidationReport
 
     text = "\n".join(DbValidationReport(findings=findings).summary_lines())
     assert "[error]" in text

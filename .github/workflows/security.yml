@@ -83,7 +83,7 @@ jobs:
       - name: ZAP Baseline Scan
         uses: zaproxy/action-baseline@v0.13.0
         with:
-          target: ${{ vars.QAFORGE_DEV_BASE_URL }}
+          target: ${{ vars.AQAO_DEV_BASE_URL }}
           rules_file_name: .zap/rules.tsv
           cmd_options: "-T 5 -m 1"
           allow_issue_writing: false
@@ -116,13 +116,13 @@ jobs:
           file: infra/docker/Dockerfile.api
           push: true
           tags: |
-            ghcr.io/${{ github.repository_owner }}/qaforge-api:${{ github.sha }}
-            ghcr.io/${{ github.repository_owner }}/qaforge-api:latest
+            ghcr.io/${{ github.repository_owner }}/aqao-api:${{ github.sha }}
+            ghcr.io/${{ github.repository_owner }}/aqao-api:latest
 
       - name: Generate CycloneDX SBOM (Syft)
         uses: anchore/sbom-action@v0
         with:
-          image: ghcr.io/${{ github.repository_owner }}/qaforge-api:${{ github.sha }}
+          image: ghcr.io/${{ github.repository_owner }}/aqao-api:${{ github.sha }}
           format: cyclonedx-json
           output-file: sbom.cdx.json
 
@@ -142,11 +142,11 @@ jobs:
           COSIGN_EXPERIMENTAL: "1"
         run: |
           cosign sign --yes \
-            ghcr.io/${{ github.repository_owner }}/qaforge-api@${{ steps.build.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/aqao-api@${{ steps.build.outputs.digest }}
 
       - name: Attest SBOM
         env:
           COSIGN_EXPERIMENTAL: "1"
         run: |
           cosign attest --yes --predicate sbom.cdx.json --type cyclonedx \
-            ghcr.io/${{ github.repository_owner }}/qaforge-api@${{ steps.build.outputs.digest }}
+            ghcr.io/${{ github.repository_owner }}/aqao-api@${{ steps.build.outputs.digest }}

@@ -1,6 +1,6 @@
 # 4. Approve, reject, replay
 
-QAForge's six approval gates (PRD §9.10) pause a workflow on actions
+The Agentic QA Orchestrator's six approval gates (PRD §9.10) pause a workflow on actions
 that need a human. Same flow for all six: workflow pauses → reviewer
 hits an endpoint → workflow resumes (approved) or fails (rejected).
 
@@ -20,10 +20,10 @@ Configure which gates fire in your [policy](policy.md)'s
 ## Inspect the queue
 
 ```bash
-curl 'https://api.qaforge.ai/api/v1/approvals?state=pending' \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID" \
-  -H "X-QAForge-Role: approver"
+curl 'https://api.aqao.ai/api/v1/approvals?state=pending' \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID" \
+  -H "X-AQAO-Role: approver"
 ```
 
 Filter by `workspace_id`, `event_type`, or limit; results are newest
@@ -33,10 +33,10 @@ first.
 
 ```bash
 curl -X POST \
-  https://api.qaforge.ai/api/v1/approvals/$ID/approve \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID" \
-  -H "X-QAForge-Role: approver" \
+  https://api.aqao.ai/api/v1/approvals/$ID/approve \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID" \
+  -H "X-AQAO-Role: approver" \
   -H "Content-Type: application/json" \
   -d '{"comment": "verified rollback path"}'
 ```

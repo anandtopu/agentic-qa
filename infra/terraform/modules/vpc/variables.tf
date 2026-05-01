@@ -1,6 +1,6 @@
 variable "project_name" {
   type        = string
-  description = "Project tag prefix (typically 'qaforge')."
+  description = "Project tag prefix (typically 'aqao')."
 }
 
 variable "environment" {

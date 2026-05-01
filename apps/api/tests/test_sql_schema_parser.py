@@ -4,8 +4,8 @@ from __future__ import annotations
 
 import pytest
 
-from qaforge_api.requirements.parsers import sql_schema
-from qaforge_api.requirements.parsers.base import ParseError
+from aqao_api.requirements.parsers import sql_schema
+from aqao_api.requirements.parsers.base import ParseError
 
 _DDL = """
 CREATE TABLE users (

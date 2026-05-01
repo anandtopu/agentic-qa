@@ -14,8 +14,8 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.db.models import FlakinessObservation
-from qaforge_api.services.flakiness import (
+from aqao_api.db.models import FlakinessObservation
+from aqao_api.services.flakiness import (
     FlakinessService,
     TestOutcome,
 )

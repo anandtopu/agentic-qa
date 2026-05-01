@@ -8,8 +8,8 @@ knows what each screenshot is meant to show.
 
 | Image | Caption |
 |---|---|
-| `pr-comment.png` | The single QAForge PR comment. Shows risk band (medium 53/100), top-3 drivers, 5 failures classified, evidence-report link. |
-| `actions-tab.png` | GitHub Actions run summary — `qaforge-action@v1` job status + the structured outputs (`risk-score`, `risk-band`, `risk-recommendation`). |
+| `pr-comment.png` | The single Agentic QA Orchestrator PR comment. Shows risk band (medium 53/100), top-3 drivers, 5 failures classified, evidence-report link. |
+| `actions-tab.png` | GitHub Actions run summary — `aqao-action@v1` job status + the structured outputs (`risk-score`, `risk-band`, `risk-recommendation`). |
 | `gate-block.png` | A `max-risk-band: medium` workflow that **failed** because the run came back HIGH. The action's `Failed` summary surfaces the band + the score. |
 | `approval-flow.png` | Reviewer hitting `POST /api/v1/approvals/{id}/approve` from the Phase-3 admin queue. Screenshot includes the pre/post audit-log entry with HMAC signature. |
 | `evidence-report.png` | The Markdown evidence report rendered in GitHub: scope, coverage matrix, pass/fail summary, classification breakdown, screenshots, API evidence, DB validation, agent confidence, cost+latency, approvals, go/no-go. |

@@ -29,7 +29,7 @@ Concretely:
 - Every tenant-scoped table has `tenant_id UUID NOT NULL` with an FK to `tenants.id` and an index `(tenant_id, created_at DESC)` (or the natural lookup key prepended).
 - Application sets a per-request session variable: `SET LOCAL app.current_tenant_id = '<uuid>';` from the validated JWT, in a single FastAPI dependency that owns the DB session.
 - Every tenant-scoped table has an `RLS` policy `USING (tenant_id = current_setting('app.current_tenant_id')::uuid)`. A connection without the variable set sees nothing.
-- Two DB roles: `qaforge_app` (RLS enforced; the API uses this) and `qaforge_migrate` (RLS bypassed; only Alembic uses this).
+- Two DB roles: `aqao_app` (RLS enforced; the API uses this) and `aqao_migrate` (RLS bypassed; only Alembic uses this).
 - `tenants` itself, `users`, and a small set of platform tables are exempt from RLS and accessed only via privileged queries.
 - Every test in Story 3.1.1 attempts cross-tenant reads/writes and asserts they fail.
 

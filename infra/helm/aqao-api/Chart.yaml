@@ -1,0 +1,22 @@
+apiVersion: v2
+name: aqao-api
+description: |
+  Agentic QA Orchestrator Control Plane API. Hardened to the Pod Security Standards
+  "restricted" profile (Story 3.6.2): runAsNonRoot, readOnlyRootFilesystem,
+  seccompProfile=RuntimeDefault, dropAllCaps. Network policy denies all
+  egress except DNS + Postgres + Redis + the LLM provider; ingress is
+  limited to the cluster's ingress controller namespace.
+type: application
+version: 0.1.0
+appVersion: "0.1.0"
+kubeVersion: ">=1.27.0"
+maintainers:
+  - name: Agentic QA Orchestrator
+home: https://github.com/aqao/aqao
+sources:
+  - https://github.com/aqao/aqao
+keywords:
+  - qa
+  - testing
+  - ai
+  - agents

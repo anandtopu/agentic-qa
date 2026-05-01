@@ -6,12 +6,12 @@ variable "oidc_provider_url" { type = string }
 variable "namespace" {
   type        = string
   description = "Kubernetes namespace where the API service account lives."
-  default     = "qaforge"
+  default     = "aqao"
 }
 
 variable "service_account_name" {
   type    = string
-  default = "qaforge-api"
+  default = "aqao-api"
 }
 
 variable "secret_arns" {

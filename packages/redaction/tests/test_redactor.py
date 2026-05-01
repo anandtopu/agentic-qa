@@ -6,7 +6,7 @@ import pytest
 from hypothesis import given
 from hypothesis import strategies as st
 
-from qaforge_redaction import REDACTED, Redactor, redact
+from aqao_redaction import REDACTED, Redactor, redact
 
 
 class TestBuiltinPatterns:

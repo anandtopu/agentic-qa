@@ -10,8 +10,8 @@ import asyncio
 
 import pytest
 
-from qaforge_api.integrations.github.client import GitHubError
-from qaforge_api.integrations.github.stub_client import StubGitHubClient
+from aqao_api.integrations.github.client import GitHubError
+from aqao_api.integrations.github.stub_client import StubGitHubClient
 
 
 def test_get_repository_returns_canned_when_registered() -> None:

@@ -1,7 +1,7 @@
 export default function HomePage(): JSX.Element {
   return (
     <main className="mx-auto flex min-h-screen max-w-3xl flex-col justify-center gap-6 px-6 py-16">
-      <h1 className="text-3xl font-semibold tracking-tight">QAForge AI</h1>
+      <h1 className="text-3xl font-semibold tracking-tight">Agentic QA Orchestrator</h1>
       <p className="text-lg text-slate-600 dark:text-slate-300">
         Agentic software QA platform — dashboard skeleton (Phase 0).
       </p>

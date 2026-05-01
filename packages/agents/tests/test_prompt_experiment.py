@@ -18,7 +18,7 @@ from collections import Counter
 
 import pytest
 
-from qaforge_agents.prompts import (
+from aqao_agents.prompts import (
     ExperimentSelector,
     PromptExperiment,
     PromptRegistry,

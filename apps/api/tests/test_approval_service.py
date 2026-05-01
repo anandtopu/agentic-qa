@@ -18,15 +18,15 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import (
     ApprovalEventType,
     ApprovalRequest,
     ApprovalState,
     AuditEvent,
 )
-from qaforge_api.services.approval import ApprovalService
-from qaforge_api.services.errors import (
+from aqao_api.services.approval import ApprovalService
+from aqao_api.services.errors import (
     InvalidStateError,
     ResourceNotFoundError,
 )

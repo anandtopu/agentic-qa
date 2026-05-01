@@ -17,9 +17,9 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import AgentFeedback, FeedbackRating
-from qaforge_api.services.agent_feedback import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import AgentFeedback, FeedbackRating
+from aqao_api.services.agent_feedback import (
     AgentFeedbackService,
     FeedbackNotConvertibleError,
 )
@@ -367,7 +367,7 @@ def test_convert_to_eval_rejects_thumbs_up(service: AgentFeedbackService) -> Non
 def test_convert_to_eval_unknown_id_raises_not_found(
     service: AgentFeedbackService,
 ) -> None:
-    from qaforge_api.services.errors import ResourceNotFoundError
+    from aqao_api.services.errors import ResourceNotFoundError
 
     with pytest.raises(ResourceNotFoundError):
         service.convert_to_eval_case(context=_ctx(), feedback_id=uuid.uuid4())

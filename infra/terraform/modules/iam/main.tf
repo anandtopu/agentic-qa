@@ -1,5 +1,5 @@
 /**
- * QAForge IAM (IRSA) module — Story 3.6.1.
+ * Agentic QA Orchestrator IAM (IRSA) module — Story 3.6.1.
  *
  * Creates the IAM role the API service account assumes via OIDC,
  * with read access to the runtime secrets and read/write to the

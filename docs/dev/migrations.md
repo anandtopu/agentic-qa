@@ -2,13 +2,13 @@
 
 Migrations are managed by **Alembic 1.13+** and live under
 `apps/api/migrations/versions/`. The database URL is resolved at runtime
-from `QAFORGE_DATABASE_URL` via `qaforge_api.config` — never hard-coded
+from `AQAO_DATABASE_URL` via `aqao_api.config` — never hard-coded
 in `alembic.ini`.
 
 ## Running migrations
 
 ```bash
-make migrate                                # upgrade head against $QAFORGE_DATABASE_URL
+make migrate                                # upgrade head against $AQAO_DATABASE_URL
 uv run alembic -c apps/api/alembic.ini current
 uv run alembic -c apps/api/alembic.ini history --verbose
 uv run alembic -c apps/api/alembic.ini -x url=postgresql+psycopg://...  upgrade head  # ad-hoc URL
@@ -34,7 +34,7 @@ Then:
   When `downgrade` is genuinely impossible (irreversible data transform),
   raise `NotImplementedError` with a one-line reason.
 - **Naming:** the constraint naming convention is set on
-  `qaforge_api.db.base.NAMING_CONVENTION`. Do not deviate — Alembic
+  `aqao_api.db.base.NAMING_CONVENTION`. Do not deviate — Alembic
   reversibility depends on it.
 - **Tenancy column:** every tenant-scoped table carries
   `tenant_id UUID NOT NULL REFERENCES tenants(id)`. Place `tenant_id` as

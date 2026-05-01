@@ -6,7 +6,7 @@ import uuid
 
 import pytest
 
-from qaforge_agents.runtime import (
+from aqao_agents.runtime import (
     InMemoryWorkflowStore,
     RunState,
     StepContext,
@@ -15,7 +15,7 @@ from qaforge_agents.runtime import (
     WorkflowGraph,
     WorkflowRunner,
 )
-from qaforge_agents.runtime.step import FunctionStep
+from aqao_agents.runtime.step import FunctionStep
 
 WS = uuid.uuid4()
 

@@ -1,7 +1,7 @@
 # Generated test plans
 
 Three real planner outputs, each demonstrating a different angle.
-The plans are produced by `qaforge_agents.planner.PlannerAgent`
+The plans are produced by `aqao_agents.planner.PlannerAgent`
 against the sample requirements; format follows PRD §9.3.
 
 ## Plan 1 — checkout discount regression

@@ -1,6 +1,6 @@
 // SDK error hierarchy mirroring HTTP status codes.
 
-export class QAForgeError extends Error {
+export class AQAOError extends Error {
   constructor(
     message: string,
     public readonly statusCode: number | undefined,
@@ -12,12 +12,12 @@ export class QAForgeError extends Error {
   }
 }
 
-export class AuthError extends QAForgeError {}
-export class ForbiddenError extends QAForgeError {}
-export class NotFoundError extends QAForgeError {}
-export class ConflictError extends QAForgeError {}
-export class ValidationError extends QAForgeError {}
-export class RateLimitError extends QAForgeError {
+export class AuthError extends AQAOError {}
+export class ForbiddenError extends AQAOError {}
+export class NotFoundError extends AQAOError {}
+export class ConflictError extends AQAOError {}
+export class ValidationError extends AQAOError {}
+export class RateLimitError extends AQAOError {
   constructor(
     message: string,
     statusCode: number | undefined,
@@ -29,7 +29,7 @@ export class RateLimitError extends QAForgeError {
   }
 }
 
-const STATUS_TO_ERROR: Record<number, new (...args: ConstructorParameters<typeof QAForgeError>) => QAForgeError> = {
+const STATUS_TO_ERROR: Record<number, new (...args: ConstructorParameters<typeof AQAOError>) => AQAOError> = {
   401: AuthError,
   403: ForbiddenError,
   404: NotFoundError,
@@ -43,7 +43,7 @@ export function errorForStatus(args: {
   traceId?: string | undefined;
   details?: ReadonlyArray<Record<string, unknown>>;
   retryAfterSeconds?: number | undefined;
-}): QAForgeError {
+}): AQAOError {
   const { statusCode, message, traceId, details = [], retryAfterSeconds } = args;
   if (statusCode === 429) {
     return new RateLimitError(message, statusCode, traceId, details, retryAfterSeconds);
@@ -52,5 +52,5 @@ export function errorForStatus(args: {
   if (Cls !== undefined) {
     return new Cls(message, statusCode, traceId, details);
   }
-  return new QAForgeError(message, statusCode, traceId, details);
+  return new AQAOError(message, statusCode, traceId, details);
 }

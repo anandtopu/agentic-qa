@@ -1,16 +1,16 @@
 # 3. Wire the GitHub Action
 
-The QAForge action ships from `infra/github-action/` and is published
-as `qaforge/qaforge-action@v1`. Story 1.9.1's AC was a sample app
+The Agentic QA Orchestrator action ships from `infra/github-action/` and is published
+as `aqao/aqao-action@v1`. Story 1.9.1's AC was a sample app
 integrating in fewer than 10 lines of YAML — that's the spec your
 workflow file should hit.
 
 ## The minimal workflow
 
-`.github/workflows/qaforge.yml`:
+`.github/workflows/aqao.yml`:
 
 ```yaml
-name: QAForge AI
+name: Agentic QA Orchestrator
 on:
   pull_request:
     types: [opened, synchronize, reopened]
@@ -20,23 +20,23 @@ permissions:
   pull-requests: write
 
 jobs:
-  qaforge:
+  aqao:
     runs-on: ubuntu-latest
     steps:
-      - uses: qaforge/qaforge-action@v1
+      - uses: aqao/aqao-action@v1
         with:
-          qaforge-url: https://api.qaforge.ai
-          qaforge-token: ${{ secrets.QAFORGE_TOKEN }}
-          workspace-id: ${{ vars.QAFORGE_WORKSPACE_ID }}
+          aqao-url: https://api.aqao.ai
+          aqao-token: ${{ secrets.AQAO_TOKEN }}
+          workspace-id: ${{ vars.AQAO_WORKSPACE_ID }}
           max-risk-band: medium
 ```
 
-That's the whole thing. Store `QAFORGE_TOKEN` as a repo secret and
-`QAFORGE_WORKSPACE_ID` as a repo variable.
+That's the whole thing. Store `AQAO_TOKEN` as a repo secret and
+`AQAO_WORKSPACE_ID` as a repo variable.
 
 ## What the action does
 
-1. Forwards the PR diff to QAForge's webhook endpoint (HMAC-signed).
+1. Forwards the PR diff to Agentic QA Orchestrator's webhook endpoint (HMAC-signed).
 2. Polls the resulting `test_run` until it reaches a terminal state
    (`done | failed | paused_for_approval`).
 3. Pulls failure classifications + the **release-risk band**
@@ -67,7 +67,7 @@ graph.
 ## Verify
 
 Open a PR and watch the Actions tab. Within ≤ 60s (Phase-4 SLO) you
-should see a QAForge comment land with:
+should see a Agentic QA Orchestrator comment land with:
 
 * score + band (`low/medium/high/critical`)
 * top three drivers

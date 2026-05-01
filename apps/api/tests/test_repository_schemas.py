@@ -5,7 +5,7 @@ from __future__ import annotations
 import pytest
 from pydantic import ValidationError
 
-from qaforge_api.schemas.repository import RepositoryLinkRequest
+from aqao_api.schemas.repository import RepositoryLinkRequest
 
 
 def test_link_request_accepts_owner_repo() -> None:

@@ -1,6 +1,6 @@
 variable "project_name" {
   type    = string
-  default = "qaforge"
+  default = "aqao"
 }
 
 variable "environment" {
@@ -25,7 +25,7 @@ variable "eks_kubernetes_version" {
 
 variable "db_username" {
   type    = string
-  default = "qaforge"
+  default = "aqao"
 }
 
 variable "db_password" {

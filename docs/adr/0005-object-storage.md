@@ -27,7 +27,7 @@ Use the **S3 API as the single object-storage interface**, accessed via `boto3` 
 
 Conventions:
 
-- One bucket per environment, prefixed by tenant: `qaforge-<env>` and keys `t/<tenant>/w/<workspace>/r/<run>/<sha256>/<filename>`.
+- One bucket per environment, prefixed by tenant: `aqao-<env>` and keys `t/<tenant>/w/<workspace>/r/<run>/<sha256>/<filename>`.
 - Content addressing: every artifact write computes SHA-256 client-side; the SHA is part of the key; we reject writes whose computed hash doesn't match the declared one.
 - Sharing: pre-signed URLs with **15-minute TTL** by default, capped at 24h; access generates an `audit_events` row.
 - Encryption: SSE-S3 (AES-256) for prod buckets; server-side; KMS-managed keys at Phase 3 hardening (ADR-0008).

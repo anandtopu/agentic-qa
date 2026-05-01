@@ -33,8 +33,8 @@ make lint format   # before pushing
 
 ## Troubleshooting
 
-- **Port conflicts:** override `QAFORGE_API_PORT` in `.env` or stop the conflicting process.
-- **Postgres won't start:** `docker volume rm qaforge_pgdata` and retry.
+- **Port conflicts:** override `AQAO_API_PORT` in `.env` or stop the conflicting process.
+- **Postgres won't start:** `docker volume rm aqao_pgdata` and retry.
 - **`uv sync` fails on Windows:** use the `uv` Windows installer (not pipx); ensure `LongPathsEnabled` is on.
 - **Pre-commit complains about line endings:** run `git config core.autocrlf input` once.
 

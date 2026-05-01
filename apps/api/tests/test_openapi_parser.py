@@ -6,8 +6,8 @@ import json
 
 import pytest
 
-from qaforge_api.requirements.parsers import openapi
-from qaforge_api.requirements.parsers.base import ParseError
+from aqao_api.requirements.parsers import openapi
+from aqao_api.requirements.parsers.base import ParseError
 
 _OPENAPI_3_0 = """
 openapi: 3.0.3

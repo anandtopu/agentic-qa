@@ -1,7 +1,7 @@
 // Shared thresholds + helpers — Epic 4.5.
 //
 // PRD §14.5 ceilings, mirrored from
-// apps/api/src/qaforge_api/perf/budgets.py. Keep both in sync; the
+// apps/api/src/aqao_api/perf/budgets.py. Keep both in sync; the
 // Python smoke-test asserts the values match.
 
 export const BUDGETS = {
@@ -23,9 +23,9 @@ export function envOrFail(name) {
 
 export function authHeaders() {
   return {
-    Authorization: `Bearer ${envOrFail("QAFORGE_TOKEN")}`,
-    "X-QAForge-Tenant-Id": envOrFail("QAFORGE_TENANT_ID"),
-    "X-QAForge-Role": "engineer",
+    Authorization: `Bearer ${envOrFail("AQAO_TOKEN")}`,
+    "X-AQAO-Tenant-Id": envOrFail("AQAO_TENANT_ID"),
+    "X-AQAO-Role": "engineer",
     "Content-Type": "application/json",
   };
 }

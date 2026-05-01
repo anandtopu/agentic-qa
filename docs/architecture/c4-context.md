@@ -8,7 +8,7 @@ flowchart LR
     rm[Release Manager]
   end
 
-  subgraph qaforge[QAForge AI]
+  subgraph aqao[Agentic QA Orchestrator]
     web[Web Dashboard]
     api[API / Control Plane]
     orch[Workflow Orchestrator]

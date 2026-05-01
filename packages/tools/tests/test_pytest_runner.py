@@ -5,12 +5,12 @@ from __future__ import annotations
 import asyncio
 from typing import Any
 
-from qaforge_tools.pytest_runner import (
+from aqao_tools.pytest_runner import (
     PytestResult,
     StubPytestRunner,
     TestOutcome,
 )
-from qaforge_tools.pytest_runner.runner import _extract_tests
+from aqao_tools.pytest_runner.runner import _extract_tests
 
 _FAKE_REPORT: dict[str, Any] = {
     "summary": {"total": 3, "passed": 2, "failed": 1, "error": 0, "skipped": 0},

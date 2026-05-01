@@ -11,7 +11,7 @@ Story 1.8 ships the Jinja2 renderer that produces them.
 
 ### Release summary
 
-* **Repository**: `qaforge-demo/checkout`
+* **Repository**: `aqao-demo/checkout`
 * **PR**: #142 — "Reduce free-ship threshold from $50 to $0"
 * **Author**: @kim (engineer)
 * **Run**: tr-2026-05-01-checkout-7f3a
@@ -111,4 +111,4 @@ pre-Story-2.4.1 rows (warning, not error).
 |---|---|
 | Sample report shape | ✅ Story 5.4 (this page) |
 | Live S3-stored sample | ⏳ deferred until a hosted run exists |
-| Renderer implementation | ✅ Story 1.8 — `qaforge_agents.reporter.MarkdownRenderer` |
+| Renderer implementation | ✅ Story 1.8 — `aqao_agents.reporter.MarkdownRenderer` |

@@ -8,7 +8,7 @@ Covers:
   first call and reuses the same link on a second call within the
   dedup window (PRD AC: "deduplicated within 24 h window").
 * The Jira webhook handler routes a status flip to ``CLOSED`` end-to-
-  end (PRD AC: "closing the upstream issue reflects in the QAForge
+  end (PRD AC: "closing the upstream issue reflects in the Agentic QA Orchestrator
   defect record within 60 s" — the time bound is operational; the
   correctness bound is the sync producing the right ``IssueStatus``).
 """
@@ -22,13 +22,13 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import (
     AuditEvent,
     ExternalIssue,
     IssueStatus,
 )
-from qaforge_api.integrations.external_issues import (
+from aqao_api.integrations.external_issues import (
     DEFAULT_GITHUB_TEMPLATE,
     DEFAULT_JIRA_TEMPLATE,
     ExternalIssueError,
@@ -38,9 +38,9 @@ from qaforge_api.integrations.external_issues import (
     StubJiraClient,
     render_issue_body,
 )
-from qaforge_api.services.errors import ResourceNotFoundError
-from qaforge_api.services.external_issue import ExternalIssueService
-from qaforge_api.webhooks.external_issues import (
+from aqao_api.services.errors import ResourceNotFoundError
+from aqao_api.services.external_issue import ExternalIssueService
+from aqao_api.webhooks.external_issues import (
     MalformedWebhookPayload,
     process_github_issues_event,
     process_jira_event,
@@ -122,7 +122,7 @@ def service(session: _StubSession) -> ExternalIssueService:
 def _draft(
     *,
     project_key: str = "PROJ",
-    title: str = "[QAForge] Login broken",
+    title: str = "[Agentic QA Orchestrator] Login broken",
     body: str = "Body",
 ) -> IssueDraft:
     return IssueDraft(project_key=project_key, title=title, body_markdown=body)
@@ -203,7 +203,7 @@ def test_default_jira_template_renders_with_strict_undefined() -> None:
     )
     assert "test_login" in body
     assert "product_defect" in body
-    assert "QAForge correlation: sig-1" in body
+    assert "Agentic QA Orchestrator correlation: sig-1" in body
     assert "Verify the click handler" in body
 
 
@@ -424,7 +424,7 @@ def test_jira_webhook_routes_close_through_to_sync(
     service: ExternalIssueService,
     context: RequestContext,
 ) -> None:
-    """AC: closing the upstream issue reflects in the QAForge defect
+    """AC: closing the upstream issue reflects in the Agentic QA Orchestrator defect
     record. The webhook handler is the seam — give it a Jira payload
     and the link's status flips to CLOSED."""
     client = StubJiraClient()

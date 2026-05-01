@@ -13,8 +13,8 @@ from typing import Any
 
 import structlog
 
-from qaforge_api.auth import emit_resource_miss
-from qaforge_api.auth.context import RequestContext
+from aqao_api.auth import emit_resource_miss
+from aqao_api.auth.context import RequestContext
 
 
 def _ctx(**overrides: Any) -> RequestContext:

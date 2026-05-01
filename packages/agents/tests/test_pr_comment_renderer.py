@@ -6,13 +6,13 @@ from datetime import UTC, datetime
 from decimal import Decimal
 from uuid import UUID
 
-from qaforge_agents.reporter import (
+from aqao_agents.reporter import (
     FailureSummary,
     GoNoGo,
     PrCommentRenderer,
     RunReportContext,
 )
-from qaforge_agents.reporter.pr_comment import PR_COMMENT_MARKER
+from aqao_agents.reporter.pr_comment import PR_COMMENT_MARKER
 
 _RUN_ID = UUID("11111111-2222-3333-4444-555555555555")
 _PINNED_GENERATED_AT = datetime(2026, 5, 1, 12, 0, 0, tzinfo=UTC)
@@ -80,10 +80,10 @@ def test_signed_url_is_linked_when_provided() -> None:
     out = PrCommentRenderer().render(
         _ctx(),
         report_signed_url="https://signed.example/run.md",
-        run_url="https://qaforge.ai/runs/abc",
+        run_url="https://aqao.ai/runs/abc",
     )
     assert "[Full evidence report](https://signed.example/run.md)" in out
-    assert "[Run details](https://qaforge.ai/runs/abc)" in out
+    assert "[Run details](https://aqao.ai/runs/abc)" in out
 
 
 def test_render_is_deterministic_for_same_context() -> None:

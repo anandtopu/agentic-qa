@@ -8,7 +8,7 @@ from pathlib import Path
 
 import pytest
 
-from qaforge_eval import (
+from aqao_eval import (
     AgentInvocation,
     EvalCase,
     EvalDataset,

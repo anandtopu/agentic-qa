@@ -1,5 +1,5 @@
 [project]
-name = "qaforge-redaction"
+name = "aqao-redaction"
 version = "0.0.0"
 description = "Secret redaction utility used across logs, evidence, and reports"
 requires-python = ">=3.12"
@@ -10,4 +10,4 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [tool.hatch.build.targets.wheel]
-packages = ["src/qaforge_redaction"]
+packages = ["src/aqao_redaction"]

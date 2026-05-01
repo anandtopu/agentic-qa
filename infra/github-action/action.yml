@@ -1,22 +1,22 @@
-name: "QAForge AI"
+name: "Agentic QA Orchestrator"
 description: |
-  Run QAForge agentic QA against a pull request: ingest the PR diff,
+  Run Agentic QA Orchestrator against a pull request: ingest the PR diff,
   generate a test plan, kick off a test run, post the summary as a PR
   comment, and gate merges on the configured risk threshold.
 
   Story 1.9.1 acceptance: a sample app integrates in fewer than 10 lines
   of YAML — see README.md for the canonical snippet.
 
-author: "QAForge AI"
+author: "Agentic QA Orchestrator"
 branding:
   icon: "shield"
   color: "blue"
 
 inputs:
-  qaforge-url:
-    description: "Base URL for the QAForge API (e.g. https://api.qaforge.ai)"
+  aqao-url:
+    description: "Base URL for the Agentic QA Orchestrator API (e.g. https://api.aqao.ai)"
     required: true
-  qaforge-token:
+  aqao-token:
     description: "Bearer token / API key. Pass as a secret."
     required: true
   workspace-id:
@@ -64,7 +64,7 @@ outputs:
   product-defect-count:
     description: "Failures classified as product_defect."
   pr-comment-url:
-    description: "URL of the QAForge PR comment created or updated."
+    description: "URL of the Agentic QA Orchestrator PR comment created or updated."
   risk-score:
     description: "0..100 release risk score (Story 2.3.3). Empty if the backend didn't produce one."
   risk-band:

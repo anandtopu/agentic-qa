@@ -1,4 +1,4 @@
-# QAForge AI — API & SDK Reference
+# Agentic QA Orchestrator — API & SDK Reference
 
 The canonical contract is the OpenAPI document at
 [`apis/openapi.yaml`](../../apis/openapi.yaml). This page is the
@@ -12,9 +12,9 @@ Every request needs three headers:
 | Header | Purpose | Example |
 |---|---|---|
 | `Authorization` | Bearer token | `Bearer eyJhbG...` |
-| `X-QAForge-Tenant-Id` | Workspace tenant | `aaaa-bbbb-cccc-dddd` |
-| `X-QAForge-Role` | Workspace RBAC role | `engineer` |
-| `X-QAForge-Trace-Id` | Optional correlation id | `abc-123` |
+| `X-AQAO-Tenant-Id` | Workspace tenant | `aaaa-bbbb-cccc-dddd` |
+| `X-AQAO-Role` | Workspace RBAC role | `engineer` |
+| `X-AQAO-Trace-Id` | Optional correlation id | `abc-123` |
 
 The role header is a Phase-1 shim; Phase-3 SSO swaps it for verified
 OIDC claims behind the same dependency (Story 3.1.3).
@@ -68,14 +68,14 @@ Response carries `next_cursor` if more pages exist.
 Per-workspace concurrency is capped by the bulkhead registry
 (Epic 4.3); excess requests get 429 immediately rather than
 queueing. Tune `default_capacity` per environment in
-`apps/api/src/qaforge_api/config.py`.
+`apps/api/src/aqao_api/config.py`.
 
 ## SDKs
 
 | Language | Package | Status |
 |---|---|---|
-| Python | [`qaforge-sdk`](python.md) | Reference impl in `sdks/python/` |
-| TypeScript | [`@qaforge/sdk`](typescript.md) | Reference impl in `sdks/typescript/` |
+| Python | [`aqao-sdk`](python.md) | Reference impl in `sdks/python/` |
+| TypeScript | [`@aqao/sdk`](typescript.md) | Reference impl in `sdks/typescript/` |
 
 Both are thin wrappers around the OpenAPI surface — they handle
 auth + retries + idempotency-key generation but don't add custom

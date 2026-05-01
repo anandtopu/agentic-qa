@@ -12,7 +12,7 @@ from uuid import UUID
 import pytest
 from fastapi import HTTPException
 
-from qaforge_api.auth.context import (
+from aqao_api.auth.context import (
     get_request_context,
     require_request_context,
 )
@@ -28,10 +28,10 @@ def test_get_request_context_parses_valid_uuids() -> None:
     user = "00000000-0000-0000-0000-00000000000b"
     result = asyncio.run(
         get_request_context(
-            x_qaforge_tenant_id=tenant,
-            x_qaforge_user_id=user,
-            x_qaforge_role=None,
-            x_qaforge_trace_id="trace-1",
+            x_aqao_tenant_id=tenant,
+            x_aqao_user_id=user,
+            x_aqao_role=None,
+            x_aqao_trace_id="trace-1",
         )
     )
     assert result is not None

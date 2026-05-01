@@ -22,7 +22,7 @@ from pathlib import Path
 
 import pytest
 
-from qaforge_eval import (
+from aqao_eval import (
     AgentInvocation,
     BaselineGate,
     EvalCase,
@@ -277,8 +277,8 @@ def test_emitter_fires_trend_decline_after_window_of_drops(
     emitter = RegressionAlertEmitter(store=store, sink=sink, window=3)
     # Build a synthetic NightlyReport with no per-run regression so we
     # only check the trend path.
-    from qaforge_eval.nightly import NightlyAgentResult, NightlyReport
-    from qaforge_eval.types import Scorecard
+    from aqao_eval.nightly import NightlyAgentResult, NightlyReport
+    from aqao_eval.types import Scorecard
 
     card = Scorecard(
         agent_name="planner",
@@ -328,8 +328,8 @@ def test_emitter_does_not_alert_when_window_not_yet_full(tmp_path: Path) -> None
     sink = _StubSink()
     emitter = RegressionAlertEmitter(store=store, sink=sink, window=3)
 
-    from qaforge_eval.nightly import NightlyAgentResult, NightlyReport
-    from qaforge_eval.types import Scorecard
+    from aqao_eval.nightly import NightlyAgentResult, NightlyReport
+    from aqao_eval.types import Scorecard
 
     card = Scorecard(
         agent_name="planner",
@@ -382,8 +382,8 @@ def test_emitter_does_not_alert_when_decline_below_threshold(
 
     sink = _StubSink()
     emitter = RegressionAlertEmitter(store=store, sink=sink, window=3, decline_threshold=0.05)
-    from qaforge_eval.nightly import NightlyAgentResult, NightlyReport
-    from qaforge_eval.types import DimensionAggregate, Scorecard
+    from aqao_eval.nightly import NightlyAgentResult, NightlyReport
+    from aqao_eval.types import DimensionAggregate, Scorecard
 
     card = Scorecard(
         agent_name="planner",

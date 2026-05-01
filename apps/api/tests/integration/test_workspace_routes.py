@@ -12,8 +12,8 @@ from collections.abc import AsyncIterator
 import httpx
 import pytest
 
-from qaforge_api.auth.context import TENANT_HEADER, USER_HEADER
-from qaforge_api.main import create_app
+from aqao_api.auth.context import TENANT_HEADER, USER_HEADER
+from aqao_api.main import create_app
 
 pytestmark = pytest.mark.integration
 

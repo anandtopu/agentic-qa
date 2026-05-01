@@ -12,10 +12,10 @@ import pytest
 from sqlalchemy import text
 from sqlalchemy.orm import Session
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models.workspace import ApplicationType
-from qaforge_api.services.errors import DuplicateResourceError, ResourceNotFoundError
-from qaforge_api.services.workspace import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models.workspace import ApplicationType
+from aqao_api.services.errors import DuplicateResourceError, ResourceNotFoundError
+from aqao_api.services.workspace import (
     WorkspaceCreate,
     WorkspaceService,
     WorkspaceUpdate,

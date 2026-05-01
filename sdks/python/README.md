@@ -1,22 +1,22 @@
-# qaforge-sdk
+# aqao-sdk
 
-Python SDK for QAForge AI. Thin client over the REST surface
+Python SDK for Agentic QA Orchestrator. Thin client over the REST surface
 documented at [`apis/openapi.yaml`](../../apis/openapi.yaml).
 
 ## Install
 
 ```bash
-pip install qaforge-sdk    # PyPI publish deferred; use a path install today:
+pip install aqao-sdk    # PyPI publish deferred; use a path install today:
 pip install -e sdks/python
 ```
 
 ## Usage
 
 ```python
-from qaforge_sdk import QAForgeClient
+from aqao_sdk import AQAOClient
 
-client = QAForgeClient(
-    base_url="https://api.qaforge.ai",
+client = AQAOClient(
+    base_url="https://api.aqao.ai",
     token="...",
     tenant_id="...",
     role="engineer",

@@ -15,7 +15,7 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_agents.runtime import (
+from aqao_agents.runtime import (
     ApprovalDecision,
     ApprovalDenied,
     ApprovalGateStep,
@@ -261,7 +261,7 @@ async def test_runner_records_failed_workflow_on_denial() -> None:
     request_id = gate.requests[0]["request_id"]
     gate.set_decision(request_id, state="rejected", comment="not safe")
 
-    from qaforge_agents.runtime import WorkflowExecutionError
+    from aqao_agents.runtime import WorkflowExecutionError
 
     with pytest.raises(WorkflowExecutionError):
         await runner.run(graph=graph, workflow_id=workflow_id, workspace_id=workspace_id)

@@ -1,8 +1,8 @@
 {
-  "name": "qaforge-web",
+  "name": "aqao-web",
   "version": "0.0.0",
   "private": true,
-  "description": "QAForge AI dashboard (Next.js 14 App Router).",
+  "description": "Agentic QA Orchestrator dashboard (Next.js 14 App Router).",
   "scripts": {
     "dev": "next dev --port 3000",
     "build": "next build",

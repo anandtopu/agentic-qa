@@ -1,6 +1,6 @@
 """Alembic migration environment.
 
-Reads the database URL from ``QAFORGE_DATABASE_URL`` via the application
+Reads the database URL from ``AQAO_DATABASE_URL`` via the application
 settings (ADR-0008: secrets never live in alembic.ini). Imports the ORM
 model registry so autogeneration sees every mapped entity.
 """
@@ -12,9 +12,9 @@ from logging.config import fileConfig
 from alembic import context
 from sqlalchemy import engine_from_config, pool
 
-from qaforge_api.config import get_settings
-from qaforge_api.db import metadata
-from qaforge_api.db import models as _models  # noqa: F401  (registers ORM classes)
+from aqao_api.config import get_settings
+from aqao_api.db import metadata
+from aqao_api.db import models as _models  # noqa: F401  (registers ORM classes)
 
 config = context.config
 

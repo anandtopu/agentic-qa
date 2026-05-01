@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import pytest
 
-from qaforge_agents.release_risk import (
+from aqao_agents.release_risk import (
     DEFAULT_DRIVER_WEIGHTS,
     OwnershipSignal,
     Recommendation,

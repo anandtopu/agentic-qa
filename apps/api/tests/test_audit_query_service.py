@@ -14,8 +14,8 @@ from dataclasses import dataclass
 from datetime import UTC, datetime
 from typing import Any
 
-from qaforge_api.audit.signing import AuditSignatureStatus
-from qaforge_api.services.audit_query import (
+from aqao_api.audit.signing import AuditSignatureStatus
+from aqao_api.services.audit_query import (
     AuditQueryService,
     VerifiedAuditEvent,
 )

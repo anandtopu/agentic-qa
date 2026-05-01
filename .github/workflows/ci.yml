@@ -34,7 +34,7 @@ jobs:
         with:
           enable-cache: true
       - run: uv sync --all-packages
-      - run: uv run mypy -p qaforge_api -p qaforge_agents -p qaforge_eval -p qaforge_redaction -p qaforge_tools
+      - run: uv run mypy -p aqao_api -p aqao_agents -p aqao_eval -p aqao_redaction -p aqao_tools
 
   test:
     name: Tests
@@ -75,6 +75,6 @@ jobs:
           context: .
           file: infra/docker/Dockerfile.api
           push: false
-          tags: qaforge-api:ci
+          tags: aqao-api:ci
           cache-from: type=gha
           cache-to: type=gha,mode=max

@@ -5,11 +5,11 @@ from decimal import Decimal
 import pytest
 from pydantic import BaseModel
 
-from qaforge_agents.llm.client import LLMClient, StructuredOutputError
-from qaforge_agents.llm.providers.base import ProviderError
-from qaforge_agents.llm.providers.mock import MockProvider, MockTurn
-from qaforge_agents.llm.recorder import InMemoryRecorder
-from qaforge_agents.llm.types import LLMRequest, Message, ModelSpec, Role, Tier
+from aqao_agents.llm.client import LLMClient, StructuredOutputError
+from aqao_agents.llm.providers.base import ProviderError
+from aqao_agents.llm.providers.mock import MockProvider, MockTurn
+from aqao_agents.llm.recorder import InMemoryRecorder
+from aqao_agents.llm.types import LLMRequest, Message, ModelSpec, Role, Tier
 
 
 def _request(**kwargs: object) -> LLMRequest:

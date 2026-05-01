@@ -1,5 +1,5 @@
 /**
- * QAForge evidence-store S3 bucket — Story 3.6.1.
+ * Agentic QA Orchestrator evidence-store S3 bucket — Story 3.6.1.
  *
  * Versioned + SSE-KMS + bucket-owner-enforced ACLs + lifecycle:
  *
@@ -27,13 +27,13 @@ locals {
       Project     = var.project_name
       Environment = var.environment
       ManagedBy   = "terraform"
-      Purpose     = "qaforge-evidence-store"
+      Purpose     = "aqao-evidence-store"
     }
   )
 }
 
 resource "aws_kms_key" "evidence" {
-  description             = "QAForge evidence-store encryption key (${var.environment})"
+  description             = "Agentic QA Orchestrator evidence-store encryption key (${var.environment})"
   deletion_window_in_days = 30
   enable_key_rotation     = true
   tags                    = local.common_tags

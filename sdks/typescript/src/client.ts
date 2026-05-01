@@ -1,8 +1,8 @@
-// QAForgeClient — Story 5.3.
+// AQAOClient — Story 5.3.
 
-import { errorForStatus, QAForgeError } from "./errors.js";
+import { errorForStatus, AQAOError } from "./errors.js";
 
-export interface QAForgeClientOptions {
+export interface AQAOClientOptions {
   baseUrl: string;
   token: string;
   tenantId: string;
@@ -38,7 +38,7 @@ function newIdempotencyKey(): string {
   ).join("");
 }
 
-export class QAForgeClient {
+export class AQAOClient {
   private readonly baseUrl: string;
   private readonly token: string;
   private readonly tenantId: string;
@@ -51,7 +51,7 @@ export class QAForgeClient {
   readonly approvals: ApprovalsResource;
   readonly usage: UsageResource;
 
-  constructor(opts: QAForgeClientOptions) {
+  constructor(opts: AQAOClientOptions) {
     this.baseUrl = opts.baseUrl.replace(/\/$/, "");
     this.token = opts.token;
     this.tenantId = opts.tenantId;
@@ -77,12 +77,12 @@ export class QAForgeClient {
     }
     const headers: Record<string, string> = {
       Authorization: `Bearer ${this.token}`,
-      "X-QAForge-Tenant-Id": this.tenantId,
+      "X-AQAO-Tenant-Id": this.tenantId,
       "Content-Type": "application/json",
       Accept: "application/json",
     };
     if (this.role !== undefined) {
-      headers["X-QAForge-Role"] = this.role;
+      headers["X-AQAO-Role"] = this.role;
     }
     if (args.idempotencyKey !== undefined) {
       headers["Idempotency-Key"] = args.idempotencyKey;
@@ -111,7 +111,7 @@ export class QAForgeClient {
     return (await response.json()) as T;
   }
 
-  private async toError(response: Response): Promise<QAForgeError> {
+  private async toError(response: Response): Promise<AQAOError> {
     let payload: Record<string, unknown> = {};
     try {
       payload = (await response.json()) as Record<string, unknown>;
@@ -131,7 +131,7 @@ export class QAForgeClient {
     return errorForStatus({
       statusCode: response.status,
       message: String(payload["detail"] ?? `HTTP ${response.status}`),
-      traceId: response.headers.get("X-QAForge-Trace-Id") ?? undefined,
+      traceId: response.headers.get("X-AQAO-Trace-Id") ?? undefined,
       details,
       retryAfterSeconds,
     });
@@ -139,7 +139,7 @@ export class QAForgeClient {
 }
 
 class WorkspacesResource {
-  constructor(private readonly c: QAForgeClient) {}
+  constructor(private readonly c: AQAOClient) {}
 
   create(opts: { name: string; applicationType: string }): Promise<{ id: string } & Record<string, unknown>> {
     return this.c.request({
@@ -168,7 +168,7 @@ class WorkspacesResource {
 }
 
 class TestRunsResource {
-  constructor(private readonly c: QAForgeClient) {}
+  constructor(private readonly c: AQAOClient) {}
 
   create(opts: {
     workspaceId: string;
@@ -202,7 +202,7 @@ class TestRunsResource {
 }
 
 class ApprovalsResource {
-  constructor(private readonly c: QAForgeClient) {}
+  constructor(private readonly c: AQAOClient) {}
 
   list(opts: { state?: string; workspaceId?: string; limit?: number } = {}): Promise<Record<string, unknown>> {
     return this.c.request({
@@ -226,7 +226,7 @@ class ApprovalsResource {
 }
 
 class UsageResource {
-  constructor(private readonly c: QAForgeClient) {}
+  constructor(private readonly c: AQAOClient) {}
 
   summary(opts: { workspaceId?: string; since?: string; until?: string } = {}): Promise<Record<string, unknown>> {
     return this.c.request({

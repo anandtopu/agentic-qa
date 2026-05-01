@@ -1,7 +1,7 @@
 """Fixtures for DB-backed integration tests.
 
 Requires ``make dev`` to be running (or at least Postgres reachable at
-``QAFORGE_DATABASE_URL``). Tests are marked ``integration`` so unit-only
+``AQAO_DATABASE_URL``). Tests are marked ``integration`` so unit-only
 runs (``make test-unit``) skip them.
 """
 
@@ -16,7 +16,7 @@ from alembic import command
 from alembic.config import Config
 from sqlalchemy import text
 
-from qaforge_api.db import (
+from aqao_api.db import (
     get_engine,
     get_sessionmaker,
     reset_session_factory_cache,
@@ -28,8 +28,8 @@ ALEMBIC_INI = pytest.importorskip("pathlib").Path(__file__).resolve().parents[3]
 @pytest.fixture(scope="session", autouse=True)
 def _migrations_at_head() -> Iterator[None]:
     """Bring the test DB to head once per session."""
-    if not os.getenv("QAFORGE_DATABASE_URL"):
-        pytest.skip("QAFORGE_DATABASE_URL not set; skipping integration suite")
+    if not os.getenv("AQAO_DATABASE_URL"):
+        pytest.skip("AQAO_DATABASE_URL not set; skipping integration suite")
     reset_session_factory_cache()
     cfg = Config(str(ALEMBIC_INI))
     cfg.set_main_option("script_location", str(ALEMBIC_INI.parent / "migrations"))

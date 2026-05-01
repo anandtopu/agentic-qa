@@ -18,7 +18,7 @@ from pathlib import Path
 
 import yaml
 
-from qaforge_api.webhooks.jira_signing import (
+from aqao_api.webhooks.jira_signing import (
     JIRA_SIGNATURE_HEADER,
     verify_jira_signature,
 )
@@ -151,7 +151,7 @@ def test_jira_signature_constant_time_compare_via_hmac_module() -> None:
     """Smoke-check the impl uses hmac.compare_digest, not == — a
     timing-attack regression would re-introduce ==."""
     src = (
-        REPO_ROOT / "apps" / "api" / "src" / "qaforge_api" / "webhooks" / "jira_signing.py"
+        REPO_ROOT / "apps" / "api" / "src" / "aqao_api" / "webhooks" / "jira_signing.py"
     ).read_text(encoding="utf-8")
     assert "hmac.compare_digest" in src
 
@@ -167,7 +167,7 @@ def test_redactor_module_still_exposed() -> None:
     """Information-disclosure mitigations rely on the redactor —
     verify the public import surface didn't drift away from the
     threat-model expectations."""
-    from qaforge_redaction import default_redactor
+    from aqao_redaction import default_redactor
 
     assert default_redactor is not None
 

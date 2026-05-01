@@ -9,8 +9,8 @@ A developer opens a pull request.
 
 ## Steps
 
-1. PR opened → GitHub webhook hits QAForge.
-2. QAForge analyses diff, generates a targeted test plan, runs API/UI/DB tests, classifies failures.
+1. PR opened → GitHub webhook hits Agentic QA Orchestrator.
+2. Agentic QA Orchestrator analyses diff, generates a targeted test plan, runs API/UI/DB tests, classifies failures.
 3. A single PR comment summarises: risk badge, top failures with evidence links, recommended action.
 4. If the risk gate is breached, the merge is blocked.
 5. Developer clicks the evidence link; reviews trace, request/response, and suggested fix.

@@ -1,7 +1,7 @@
 # Python SDK
 
-Reference impl ships at [`sdks/python/qaforge_sdk/`](../../sdks/python/qaforge_sdk).
-PyPI publish (`qaforge-sdk`) is queued behind a real release cadence
+Reference impl ships at [`sdks/python/aqao_sdk/`](../../sdks/python/aqao_sdk).
+PyPI publish (`aqao-sdk`) is queued behind a real release cadence
 — the source is usable today via a path install:
 
 ```bash
@@ -11,10 +11,10 @@ pip install -e sdks/python
 ## Hello, run
 
 ```python
-from qaforge_sdk import QAForgeClient
+from aqao_sdk import AQAOClient
 
-client = QAForgeClient(
-    base_url="https://api.qaforge.ai",
+client = AQAOClient(
+    base_url="https://api.aqao.ai",
     token="eyJhbG...",
     tenant_id="aaaa-bbbb-cccc-dddd",
     role="engineer",
@@ -72,9 +72,9 @@ double-create.
 ## Async variant
 
 ```python
-from qaforge_sdk import AsyncQAForgeClient
+from aqao_sdk import AsyncAQAOClient
 
-async with AsyncQAForgeClient(...) as client:
+async with AsyncAQAOClient(...) as client:
     run = await client.test_runs.create(...)
 ```
 
@@ -84,8 +84,8 @@ asynchronously, the sync one wraps `httpx.Client`.
 ## Errors
 
 ```python
-from qaforge_sdk import (
-    QAForgeError,
+from aqao_sdk import (
+    AQAOError,
     AuthError,            # 401
     PermissionError_,     # 403
     NotFoundError,        # 404
@@ -96,7 +96,7 @@ from qaforge_sdk import (
 ```
 
 Every error carries the original response body + the
-`X-QAForge-Trace-Id` for cross-referencing in the audit log.
+`X-AQAO-Trace-Id` for cross-referencing in the audit log.
 
 ## Validation status
 

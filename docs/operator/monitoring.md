@@ -1,6 +1,6 @@
 # Monitoring
 
-QAForge ships SLOs (Epic 4.1), structured logs (Story 0.4), audit
+Agentic QA Orchestrator ships SLOs (Epic 4.1), structured logs (Story 0.4), audit
 events (Epic 2.4), and per-agent cost (Epic 2.5). This page is the
 operator's wiring guide — what to scrape, what to alert on, and
 where the runbooks live.
@@ -18,7 +18,7 @@ where the runbooks live.
 
 ## Default SLOs
 
-From `qaforge_api.slo.DEFAULT_SLOS`:
+From `aqao_api.slo.DEFAULT_SLOS`:
 
 | SLO | Target | Window |
 |---|---|---|
@@ -66,9 +66,9 @@ within 5 business days per the
 A weekly digest worth running:
 
 ```bash
-curl 'https://api.qaforge.ai/api/v1/usage/summary?since=$(date -v -7d +%Y-%m-%d)' \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID"
+curl 'https://api.aqao.ai/api/v1/usage/summary?since=$(date -v -7d +%Y-%m-%d)' \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID"
 ```
 
 The `by_agent` breakdown is the leading indicator for prompt /

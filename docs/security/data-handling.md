@@ -38,7 +38,7 @@ Security; updated when new data types or integrations land.
 
 ## Redaction guarantees
 
-- Every sink that persists or surfaces text routes through `qaforge_redaction.redact` (Story 0.4.3).
+- Every sink that persists or surfaces text routes through `aqao_redaction.redact` (Story 0.4.3).
 - Property-based tests assert redaction is idempotent and never produces a residual pattern match.
 - Workspace-injected secrets (e.g., a configured API key) are also exact-string scrubbed via `Redactor.with_extra(strings=…)`.
 

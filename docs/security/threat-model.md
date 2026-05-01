@@ -1,4 +1,4 @@
-# QAForge AI — STRIDE Threat Model
+# Agentic QA Orchestrator — STRIDE Threat Model
 
 **Story 4.4** — applies the STRIDE framework (Spoofing, Tampering,
 Repudiation, Information disclosure, Denial of service, Elevation of
@@ -51,7 +51,7 @@ threats per arrow + the mitigation per threat.
 | Threat | Mitigation | Story |
 |---|---|---|
 | Forged GitHub webhook | HMAC-SHA256 signature verification on every ingress | 1.2.1 |
-| Spoofed tenant via header | OIDC verification (Phase-3 deferred); for now `X-QAForge-Tenant-Id` header is the trust boundary, gated by a network ingress policy | 3.1.3 |
+| Spoofed tenant via header | OIDC verification (Phase-3 deferred); for now `X-AQAO-Tenant-Id` header is the trust boundary, gated by a network ingress policy | 3.1.3 |
 | Compromised LLM provider response | TLS pinning; sandboxed agent execution + structured output validation | 1.7 / 4.4 |
 | Forged Jira/GitHub webhook | Per-provider HMAC signatures, verified before `process_*_event` | 3.2.2 |
 
@@ -77,7 +77,7 @@ threats per arrow + the mitigation per threat.
 | Threat | Mitigation | Story |
 |---|---|---|
 | Cross-tenant data leak | Postgres RLS + `FORCE ROW LEVEL SECURITY` on every tenant-scoped table; 404 (not 403) on miss | 0.x / 3.1.1 |
-| Secrets in logs | `qaforge_redaction.default_redactor()` at every text sink; property-based tests | 0.x |
+| Secrets in logs | `aqao_redaction.default_redactor()` at every text sink; property-based tests | 0.x |
 | Secrets in error messages | Same redactor + structured-log allow-list | 0.x |
 | Eval dataset leak | Golden datasets are in-tree under MIT license; no PII | 2.6 |
 | Evidence in PR comments | Body sanitized via the redactor before posting | 1.9 |

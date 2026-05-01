@@ -20,10 +20,10 @@ SEED_PATH = REPO_ROOT / "scripts" / "seed.py"
 
 
 def _load_seed_module() -> Any:
-    spec = importlib.util.spec_from_file_location("qaforge_seed_under_test", SEED_PATH)
+    spec = importlib.util.spec_from_file_location("aqao_seed_under_test", SEED_PATH)
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
-    sys.modules["qaforge_seed_under_test"] = module
+    sys.modules["aqao_seed_under_test"] = module
     spec.loader.exec_module(module)
     return module
 

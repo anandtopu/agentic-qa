@@ -19,11 +19,11 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_agents.db_validator import (
+from aqao_agents.db_validator import (
     DestructiveSqlBlocked,
     DestructiveSqlGuard,
 )
-from qaforge_agents.runtime.approval import ApprovalDecision
+from aqao_agents.runtime.approval import ApprovalDecision
 
 
 class _FakeGate:
@@ -103,7 +103,7 @@ def test_guard_step_invokes_gate_with_destructive_context() -> None:
     # Drive the step manually to capture the request.
     import asyncio
 
-    from qaforge_agents.runtime import StepContext
+    from aqao_agents.runtime import StepContext
 
     ctx = StepContext(
         workflow_id=uuid.uuid4(),

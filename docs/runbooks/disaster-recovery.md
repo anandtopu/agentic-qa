@@ -1,6 +1,6 @@
 # Disaster Recovery Runbook
 
-**Story 3.6.3** — covers the QAForge AI Control Plane and its hard
+**Story 3.6.3** — covers the Agentic QA Orchestrator Control Plane and its hard
 state stores (Postgres, S3 evidence). The agent code is immutable and
 re-deployable from container images, so DR focuses on recovering
 **data** and **configuration**, not workloads.
@@ -38,15 +38,15 @@ ransomware):
 
 ```bash
 # 1. Identify the last-good timestamp.
-aws rds describe-db-instances --db-instance-identifier qaforge-prod \
+aws rds describe-db-instances --db-instance-identifier aqao-prod \
   --query 'DBInstances[0].LatestRestorableTime'
 
 # 2. Restore to a NEW instance at a chosen point in time (5-min granularity).
 aws rds restore-db-instance-to-point-in-time \
-  --source-db-instance-identifier qaforge-prod \
-  --target-db-instance-identifier qaforge-prod-restore-$(date +%Y%m%dT%H%M) \
+  --source-db-instance-identifier aqao-prod \
+  --target-db-instance-identifier aqao-prod-restore-$(date +%Y%m%dT%H%M) \
   --restore-time 2026-05-01T11:55:00Z \
-  --db-subnet-group-name qaforge-prod-db \
+  --db-subnet-group-name aqao-prod-db \
   --vpc-security-group-ids sg-xxxxxxxx \
   --no-publicly-accessible
 
@@ -55,9 +55,9 @@ aws rds restore-db-instance-to-point-in-time \
 #    DbValidator suites against the restored DB.
 
 # 4. Cut over: update the connection-string secret in Secrets Manager
-#    (qaforge/prod/database_url) to point at the restored endpoint, then
+#    (aqao/prod/database_url) to point at the restored endpoint, then
 #    rolling-restart the API Deployment so pods pick up the new endpoint.
-kubectl -n qaforge rollout restart deployment/qaforge-api
+kubectl -n aqao rollout restart deployment/aqao-api
 
 # 5. Once the new instance is the live target, retain the old instance
 #    (final-snapshot) for 30 days before deletion in case the cutover
@@ -76,13 +76,13 @@ a specific evidence artifact:
 ```bash
 # List versions for the object.
 aws s3api list-object-versions \
-  --bucket qaforge-prod-evidence \
+  --bucket aqao-prod-evidence \
   --prefix "test-runs/<run-id>/"
 
 # Restore a specific version by copying it on top of the current.
 aws s3api copy-object \
-  --copy-source 'qaforge-prod-evidence/<key>?versionId=<vid>' \
-  --bucket qaforge-prod-evidence \
+  --copy-source 'aqao-prod-evidence/<key>?versionId=<vid>' \
+  --bucket aqao-prod-evidence \
   --key '<key>'
 ```
 

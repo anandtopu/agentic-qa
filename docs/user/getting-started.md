@@ -1,14 +1,14 @@
 # 1. Get a workspace
 
-A **workspace** is QAForge's tenancy unit — one workspace per
+A **workspace** is the Agentic QA Orchestrator's tenancy unit — one workspace per
 product/repo, isolated by Postgres RLS (ADR-0007).
 
 ## Create one
 
 ```bash
-curl -X POST https://api.qaforge.ai/api/v1/workspaces \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID" \
+curl -X POST https://api.aqao.ai/api/v1/workspaces \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "name": "Payments",
@@ -26,9 +26,9 @@ The first user in a workspace must have the `owner` role
 when you use the bearer-token flow above; verify with:
 
 ```bash
-curl https://api.qaforge.ai/api/v1/workspaces/$WORKSPACE_ID \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID"
+curl https://api.aqao.ai/api/v1/workspaces/$WORKSPACE_ID \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID"
 ```
 
 You should see `"role": "owner"` in your user record.
@@ -37,9 +37,9 @@ You should see `"role": "owner"` in your user record.
 
 ```bash
 curl -X POST \
-  https://api.qaforge.ai/api/v1/workspaces/$WORKSPACE_ID/repositories \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID" \
+  https://api.aqao.ai/api/v1/workspaces/$WORKSPACE_ID/repositories \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID" \
   -H "Content-Type: application/json" \
   -d '{
     "provider": "github",

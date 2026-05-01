@@ -14,8 +14,8 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.db.models import User
-from qaforge_api.services.access_review import (
+from aqao_api.db.models import User
+from aqao_api.services.access_review import (
     DEFAULT_REVIEW_WINDOW,
     AccessReviewService,
 )

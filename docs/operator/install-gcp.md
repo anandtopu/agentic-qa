@@ -1,6 +1,6 @@
 # Install on GCP — devops runbook
 
-End-to-end procedure to stand up a QAForge environment on Google
+End-to-end procedure to stand up an Agentic QA Orchestrator environment on Google
 Cloud Platform. Targets parity with the AWS runbook: a healthy API
 pod behind an HTTPS hostname, with secrets mounted from Secret
 Manager, in **< 60 minutes**.
@@ -48,19 +48,19 @@ gcloud config get-value project
 ## Step 1 — Define environment variables
 
 ```bash
-export PROJECT_ID="qaforge-dev-12345"
+export PROJECT_ID="aqao-dev-12345"
 export REGION="us-central1"
 export ZONE="us-central1-a"
 export ENV="dev"
-export CLUSTER_NAME="qaforge-${ENV}"
-export NETWORK="qaforge-${ENV}-vpc"
-export SUBNET="qaforge-${ENV}-subnet"
-export DB_INSTANCE="qaforge-${ENV}-pg"
-export REDIS_INSTANCE="qaforge-${ENV}-redis"
-export EVIDENCE_BUCKET="qaforge-${ENV}-evidence-${PROJECT_ID}"
-export KSA_NAMESPACE="qaforge"
-export KSA_NAME="qaforge-api"
-export GSA_NAME="qaforge-api"
+export CLUSTER_NAME="aqao-${ENV}"
+export NETWORK="aqao-${ENV}-vpc"
+export SUBNET="aqao-${ENV}-subnet"
+export DB_INSTANCE="aqao-${ENV}-pg"
+export REDIS_INSTANCE="aqao-${ENV}-redis"
+export EVIDENCE_BUCKET="aqao-${ENV}-evidence-${PROJECT_ID}"
+export KSA_NAMESPACE="aqao"
+export KSA_NAME="aqao-api"
+export GSA_NAME="aqao-api"
 ```
 
 ## Step 2 — Enable the required APIs *(one-time per project)*
@@ -126,9 +126,9 @@ gcloud sql users set-password postgres \
   --instance="${DB_INSTANCE}" \
   --password="${DB_PASSWORD}"                                                  # (mutates)
 
-gcloud sql databases create qaforge --instance="${DB_INSTANCE}"                # (mutates)
+gcloud sql databases create aqao --instance="${DB_INSTANCE}"                # (mutates)
 
-gcloud sql users create qaforge \
+gcloud sql users create aqao \
   --instance="${DB_INSTANCE}" \
   --password="${DB_PASSWORD}"                                                  # (mutates)
 
@@ -217,7 +217,7 @@ Identity rewrites token requests at admission.
 
 ```bash
 gcloud iam service-accounts create "${GSA_NAME}" \
-  --display-name="QAForge API"                                                 # (mutates)
+  --display-name="Agentic QA Orchestrator API"                                 # (mutates)
 
 GSA_EMAIL="${GSA_NAME}@${PROJECT_ID}.iam.gserviceaccount.com"
 
@@ -250,7 +250,7 @@ export GITHUB_WEBHOOK_SECRET=$(openssl rand -hex 32)
 export ANTHROPIC_API_KEY="sk-ant-…"           # from the provider console
 
 # Use the Cloud SQL Auth Proxy host (127.0.0.1:5432) since the API talks via the proxy sidecar.
-DATABASE_URL="postgresql+psycopg://qaforge:${DB_PASSWORD}@127.0.0.1:5432/qaforge"
+DATABASE_URL="postgresql+psycopg://aqao:${DB_PASSWORD}@127.0.0.1:5432/aqao"
 
 create_secret() {
   local name="$1" value="$2"
@@ -259,10 +259,10 @@ create_secret() {
   || printf '%s' "${value}" | gcloud secrets versions add "${name}" --data-file=-
 }
 
-create_secret "qaforge-${ENV}-database-url"          "${DATABASE_URL}"          # (mutates)
-create_secret "qaforge-${ENV}-audit-hmac-key"        "${AUDIT_HMAC_KEY}"        # (mutates)
-create_secret "qaforge-${ENV}-anthropic-api-key"     "${ANTHROPIC_API_KEY}"     # (mutates)
-create_secret "qaforge-${ENV}-github-webhook-secret" "${GITHUB_WEBHOOK_SECRET}" # (mutates)
+create_secret "aqao-${ENV}-database-url"          "${DATABASE_URL}"          # (mutates)
+create_secret "aqao-${ENV}-audit-hmac-key"        "${AUDIT_HMAC_KEY}"        # (mutates)
+create_secret "aqao-${ENV}-anthropic-api-key"     "${ANTHROPIC_API_KEY}"     # (mutates)
+create_secret "aqao-${ENV}-github-webhook-secret" "${GITHUB_WEBHOOK_SECRET}" # (mutates)
 ```
 
 > **Reminder**: never log these values. The redactor (Story 0.4.3)
@@ -323,21 +323,21 @@ through a small values override:
 # values-dev.yaml — GCP dev environment overrides
 serviceAccount:
   create: true
-  name: qaforge-api
+  name: aqao-api
   awsRoleArn: ""                              # AWS-only — leave empty on GCP
   annotations:
-    iam.gke.io/gcp-service-account: qaforge-api@${PROJECT_ID}.iam.gserviceaccount.com
+    iam.gke.io/gcp-service-account: aqao-api@${PROJECT_ID}.iam.gserviceaccount.com
 
 ingress:
   enabled: true
   className: gce                              # GKE managed L7
   hosts:
-    - host: dev.api.qaforge.example.com
+    - host: dev.api.aqao.example.com
       paths:
         - path: /
   annotations:
-    kubernetes.io/ingress.global-static-ip-name: qaforge-dev-ip
-    networking.gke.io/managed-certificates: qaforge-dev-cert
+    kubernetes.io/ingress.global-static-ip-name: aqao-dev-ip
+    networking.gke.io/managed-certificates: aqao-dev-cert
 
 networkPolicy:
   egress:
@@ -352,14 +352,14 @@ networkPolicy:
 
 env:
   log_level: INFO
-  database_url_secret_name: qaforge-${ENV}-database-url
-  audit_hmac_key_secret_name: qaforge-${ENV}-audit-hmac-key
-  github_webhook_secret_name: qaforge-${ENV}-github-webhook-secret
-  anthropic_api_key_secret_name: qaforge-${ENV}-anthropic-api-key
+  database_url_secret_name: aqao-${ENV}-database-url
+  audit_hmac_key_secret_name: aqao-${ENV}-audit-hmac-key
+  github_webhook_secret_name: aqao-${ENV}-github-webhook-secret
+  anthropic_api_key_secret_name: aqao-${ENV}-anthropic-api-key
 
 # Cloud SQL Auth Proxy sidecar — added via Helm `extraContainers` (not yet
 # templated in the chart; tracked as TD-014). Until then, post-process the
-# rendered deployment with the patch in `infra/helm/qaforge-api/patches/gcp-sqlproxy.yaml`.
+# rendered deployment with the patch in `infra/helm/aqao-api/patches/gcp-sqlproxy.yaml`.
 ```
 
 > The Helm chart does not yet expose `extraContainers` — until that
@@ -367,12 +367,12 @@ env:
 > the sidecar via `kubectl patch`, and apply. Procedure:
 
 ```bash
-helm template qaforge ./infra/helm/qaforge-api \
-  --namespace qaforge \
-  --values values-dev.yaml > /tmp/qaforge.yaml
+helm template aqao ./infra/helm/aqao-api \
+  --namespace aqao \
+  --values values-dev.yaml > /tmp/aqao.yaml
 
 # Patch the Deployment to add the Cloud SQL Auth Proxy sidecar.
-kubectl patch -f /tmp/qaforge.yaml --local --type=strategic --patch "$(cat <<EOF
+kubectl patch -f /tmp/aqao.yaml --local --type=strategic --patch "$(cat <<EOF
 spec:
   template:
     spec:
@@ -391,62 +391,62 @@ spec:
             requests: { cpu: 50m, memory: 64Mi }
             limits:   { cpu: 500m, memory: 256Mi }
 EOF
-)" -o yaml > /tmp/qaforge-patched.yaml
+)" -o yaml > /tmp/aqao-patched.yaml
 ```
 
 ## Step 12 — Reserve a static IP + managed certificate for ingress
 
 ```bash
-gcloud compute addresses create qaforge-dev-ip --global                        # (mutates)
+gcloud compute addresses create aqao-dev-ip --global                        # (mutates)
 
 cat <<EOF | kubectl apply -f -                                                 # (mutates)
 apiVersion: networking.gke.io/v1
 kind: ManagedCertificate
 metadata:
-  name: qaforge-dev-cert
-  namespace: qaforge
+  name: aqao-dev-cert
+  namespace: aqao
 spec:
   domains:
-    - dev.api.qaforge.example.com
+    - dev.api.aqao.example.com
 EOF
 ```
 
-Point `dev.api.qaforge.example.com` (Cloud DNS or wherever you host
-DNS) at the static IP from `gcloud compute addresses describe qaforge-dev-ip --global`.
+Point `dev.api.aqao.example.com` (Cloud DNS or wherever you host
+DNS) at the static IP from `gcloud compute addresses describe aqao-dev-ip --global`.
 
-## Step 13 — Install QAForge via Helm
+## Step 13 — Install Agentic QA Orchestrator via Helm
 
 ```bash
-kubectl create namespace qaforge                                               # (mutates)
-kubectl label namespace qaforge \
+kubectl create namespace aqao                                               # (mutates)
+kubectl label namespace aqao \
   pod-security.kubernetes.io/enforce=restricted                                # (mutates)
 
 # Once TD-014 lands, this will be a single command:
-# helm upgrade --install qaforge ./infra/helm/qaforge-api \
-#   --namespace qaforge --values values-dev.yaml --set image.tag=$(git rev-parse HEAD)
+# helm upgrade --install aqao ./infra/helm/aqao-api \
+#   --namespace aqao --values values-dev.yaml --set image.tag=$(git rev-parse HEAD)
 
 # For now, apply the patched manifest:
-kubectl apply -n qaforge -f /tmp/qaforge-patched.yaml                          # (mutates)
+kubectl apply -n aqao -f /tmp/aqao-patched.yaml                          # (mutates)
 
-kubectl rollout status -n qaforge deployment/qaforge-api --timeout=5m
+kubectl rollout status -n aqao deployment/aqao-api --timeout=5m
 ```
 
 ## Step 14 — Apply migrations
 
 ```bash
-kubectl exec -n qaforge deployment/qaforge-api -c qaforge-api -- \
+kubectl exec -n aqao deployment/aqao-api -c aqao-api -- \
   uv run alembic upgrade head                                                  # (mutates)
 ```
 
 ## Step 15 — Smoke test
 
 ```bash
-curl https://dev.api.qaforge.example.com/api/v1/healthz
+curl https://dev.api.aqao.example.com/api/v1/healthz
 # {"status":"ok","version":"<sha>"}
 ```
 
 The managed certificate takes ~10–30 minutes to provision the first
-time. Until it's ready, `kubectl get managedcertificate -n qaforge`
+time. Until it's ready, `kubectl get managedcertificate -n aqao`
 shows `Provisioning`; once `Active`, the curl above succeeds.
 
 ## Step 16 — Verify the SLO + audit + cost endpoints
@@ -454,13 +454,13 @@ shows `Provisioning`; once `Active`, the curl above succeeds.
 ```bash
 TENANT=$(uuidgen)
 
-curl -s https://dev.api.qaforge.example.com/api/v1/audit \
-  -H "X-QAForge-Tenant-Id: ${TENANT}" \
-  -H "X-QAForge-Role: admin" | head
+curl -s https://dev.api.aqao.example.com/api/v1/audit \
+  -H "X-AQAO-Tenant-Id: ${TENANT}" \
+  -H "X-AQAO-Role: admin" | head
 
-curl -s "https://dev.api.qaforge.example.com/api/v1/usage/summary?workspace_id=$(uuidgen)" \
-  -H "X-QAForge-Tenant-Id: ${TENANT}" \
-  -H "X-QAForge-Role: admin"
+curl -s "https://dev.api.aqao.example.com/api/v1/usage/summary?workspace_id=$(uuidgen)" \
+  -H "X-AQAO-Tenant-Id: ${TENANT}" \
+  -H "X-AQAO-Role: admin"
 ```
 
 ## Step 17 — Wire monitoring
@@ -477,7 +477,7 @@ gcloud container clusters update "${CLUSTER_NAME}" \
 ```
 
 Then set `serviceMonitor.enabled=true` in `values-dev.yaml` and roll
-out. Replay request samples through `qaforge_api.slo.SloCalculator`
+out. Replay request samples through `aqao_api.slo.SloCalculator`
 and emit one snapshot per default SLO into Cloud Monitoring custom
 metrics — see [`monitoring.md`](monitoring.md).
 
@@ -526,13 +526,13 @@ Production (regional Memorystore STANDARD_HA, Cloud SQL HA,
 
 | Symptom | Likely cause | Fix |
 |---|---|---|
-| Pod stuck `CreateContainerConfigError` | ESO hasn't synced the secret yet | `kubectl get externalsecret -n qaforge`; wait or force `kubectl annotate externalsecret qaforge-api force-sync=$(date +%s) --overwrite` |
-| `connection refused` to `127.0.0.1:5432` | Cloud SQL Auth Proxy sidecar didn't start | `kubectl logs -n qaforge -l app=qaforge-api -c cloud-sql-proxy`; check the GSA has `roles/cloudsql.client` |
-| Ingress stays on `Provisioning` for > 30 min | DNS not pointing at the reserved IP | `gcloud compute addresses describe qaforge-dev-ip --global`; update DNS A record |
+| Pod stuck `CreateContainerConfigError` | ESO hasn't synced the secret yet | `kubectl get externalsecret -n aqao`; wait or force `kubectl annotate externalsecret aqao-api force-sync=$(date +%s) --overwrite` |
+| `connection refused` to `127.0.0.1:5432` | Cloud SQL Auth Proxy sidecar didn't start | `kubectl logs -n aqao -l app=aqao-api -c cloud-sql-proxy`; check the GSA has `roles/cloudsql.client` |
+| Ingress stays on `Provisioning` for > 30 min | DNS not pointing at the reserved IP | `gcloud compute addresses describe aqao-dev-ip --global`; update DNS A record |
 | 503 from the LB during rollout | Readiness probe path mismatch | Confirm `probes.readiness.path: /api/v1/healthz` matches the API |
 
 For deeper issues, the alert kinds in
-`qaforge_api.incident.RUNBOOK_INDEX` map to runbooks under
+`aqao_api.incident.RUNBOOK_INDEX` map to runbooks under
 [`docs/runbooks/`](../runbooks/index.md) — same playbooks as AWS.
 
 ## Next

@@ -5,7 +5,7 @@ Pick your provider:
 * **[AWS](install-aws.md)** — Terraform modules at
   [`infra/terraform/`](../../infra/terraform/) (Story 3.6.1) provision
   VPC + EKS + RDS + ElastiCache + S3 + Secrets Manager + IRSA. The
-  hardened Helm chart at [`infra/helm/qaforge-api/`](../../infra/helm/qaforge-api/)
+  hardened Helm chart at [`infra/helm/aqao-api/`](../../infra/helm/aqao-api/)
   (Story 3.6.2) deploys the API on top.
 * **[GCP](install-gcp.md)** — Terraform modules for GCP are not yet
   in the repo (tracked as **TD-012** in
@@ -53,7 +53,7 @@ secret store. From there:
 
 1. **Apply database migrations** (one-time per release):
    ```bash
-   kubectl exec -n qaforge deployment/qaforge-api -- \
+   kubectl exec -n aqao deployment/aqao-api -- \
      uv run alembic upgrade head     # (mutates)
    ```
 2. **Smoke**:
@@ -66,7 +66,7 @@ secret store. From there:
    [user/getting-started.md](../user/getting-started.md)).
 4. **Wire monitoring** — see [`monitoring.md`](monitoring.md). The
    Helm chart ships an opt-in `ServiceMonitor` for prometheus-operator;
-   the SLOs from `qaforge_api.slo.DEFAULT_SLOS` are what to alert on.
+   the SLOs from `aqao_api.slo.DEFAULT_SLOS` are what to alert on.
 5. **Schedule the DR drill** — see
    [`backup-restore.md`](backup-restore.md) and the
    [disaster-recovery runbook](../runbooks/disaster-recovery.md).

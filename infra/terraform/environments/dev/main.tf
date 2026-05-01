@@ -1,5 +1,5 @@
 /**
- * QAForge dev environment — Story 3.6.1.
+ * Agentic QA Orchestrator dev environment — Story 3.6.1.
  *
  * Smallest viable footprint: single NAT, single-AZ Redis, no Multi-AZ
  * RDS. 60-minute apply target met with default `terraform apply -auto-approve`.
@@ -105,8 +105,8 @@ module "iam" {
   environment          = var.environment
   oidc_provider_arn    = module.eks.oidc_provider_arn
   oidc_provider_url    = module.eks.oidc_provider_url
-  namespace            = "qaforge"
-  service_account_name = "qaforge-api"
+  namespace            = "aqao"
+  service_account_name = "aqao-api"
   secret_arns          = module.secrets.secret_arns
   evidence_bucket_arn  = module.evidence.bucket_arn
   evidence_kms_key_arn = module.evidence.kms_key_arn

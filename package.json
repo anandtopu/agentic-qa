@@ -1,8 +1,8 @@
 {
-  "name": "qaforge-monorepo",
+  "name": "aqao-monorepo",
   "version": "0.0.0",
   "private": true,
-  "description": "QAForge AI — pnpm workspace orchestrator (apps/web + future TS packages).",
+  "description": "Agentic QA Orchestrator — pnpm workspace orchestrator (apps/web + future TS packages).",
   "engines": {
     "node": ">=20.10.0",
     "pnpm": ">=9.0.0"
@@ -12,7 +12,7 @@
     "format": "pnpm -r --if-present format",
     "typecheck": "pnpm -r --if-present typecheck",
     "build": "pnpm -r --if-present build",
-    "dev:web": "pnpm --filter qaforge-web dev"
+    "dev:web": "pnpm --filter aqao-web dev"
   },
   "packageManager": "pnpm@9.12.0"
 }

@@ -1,9 +1,9 @@
-// QAForge TypeScript SDK — Story 5.3.
+// Agentic QA Orchestrator TypeScript SDK — Story 5.3.
 
-export { QAForgeClient } from "./client.js";
-export type { QAForgeClientOptions, FetchSender } from "./client.js";
+export { AQAOClient } from "./client.js";
+export type { AQAOClientOptions, FetchSender } from "./client.js";
 export {
-  QAForgeError,
+  AQAOError,
   AuthError,
   ForbiddenError,
   NotFoundError,

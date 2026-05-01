@@ -21,21 +21,21 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import ModelRegistryEntry
-from qaforge_api.incident import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import ModelRegistryEntry
+from aqao_api.incident import (
     AlertKind,
     IncidentRouter,
     LogPageNotifier,
     PageDecision,
     Severity,
 )
-from qaforge_api.incident.router import RoutingDecision
-from qaforge_api.services.lifecycle_alerts import (
+from aqao_api.incident.router import RoutingDecision
+from aqao_api.services.lifecycle_alerts import (
     ModelLifecycleAlertService,
     OverdueCheckReport,
 )
-from qaforge_api.services.model_lifecycle import ModelLifecycleService
+from aqao_api.services.model_lifecycle import ModelLifecycleService
 
 _TENANT = uuid.UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
 _USER = uuid.UUID("bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb")
@@ -315,7 +315,7 @@ def test_multiple_breaches_pluralise_and_track_oldest() -> None:
 def test_decided_candidate_drops_out_of_breach_set() -> None:
     """Once a decision is recorded, the bridge should not re-page on
     that row even if it was previously breached."""
-    from qaforge_api.db.models import ModelDecision
+    from aqao_api.db.models import ModelDecision
 
     lifecycle, bridge, _notifier = _build()
     overdue = _register(

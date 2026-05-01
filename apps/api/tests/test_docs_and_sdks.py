@@ -149,7 +149,7 @@ def test_api_index_lists_every_resource_group() -> None:
 
 
 def test_python_sdk_layout_present() -> None:
-    sdk = REPO_ROOT / "sdks" / "python" / "qaforge_sdk"
+    sdk = REPO_ROOT / "sdks" / "python" / "aqao_sdk"
     assert (sdk / "__init__.py").is_file()
     assert (sdk / "client.py").is_file()
     assert (sdk / "errors.py").is_file()
@@ -160,7 +160,7 @@ def test_python_sdk_layout_present() -> None:
 def test_python_sdk_client_dispatches_through_injected_sender() -> None:
     sys.path.insert(0, str(REPO_ROOT / "sdks" / "python"))
     try:
-        from qaforge_sdk import QAForgeClient
+        from aqao_sdk import AQAOClient
 
         recorded: dict[str, Any] = {}
 
@@ -168,8 +168,8 @@ def test_python_sdk_client_dispatches_through_injected_sender() -> None:
             recorded.update(kwargs)
             return {"id": "ws-1", "name": "Payments"}
 
-        client = QAForgeClient(
-            base_url="https://api.qaforge.ai",
+        client = AQAOClient(
+            base_url="https://api.aqao.ai",
             token="t",
             tenant_id="aaaa",
             role="engineer",
@@ -180,8 +180,8 @@ def test_python_sdk_client_dispatches_through_injected_sender() -> None:
         assert recorded["method"] == "POST"
         assert recorded["url"].endswith("/api/v1/workspaces")
         assert recorded["headers"]["Authorization"] == "Bearer t"
-        assert recorded["headers"]["X-QAForge-Tenant-Id"] == "aaaa"
-        assert recorded["headers"]["X-QAForge-Role"] == "engineer"
+        assert recorded["headers"]["X-AQAO-Tenant-Id"] == "aaaa"
+        assert recorded["headers"]["X-AQAO-Role"] == "engineer"
         assert "Idempotency-Key" in recorded["headers"]
     finally:
         sys.path.pop(0)
@@ -190,18 +190,18 @@ def test_python_sdk_client_dispatches_through_injected_sender() -> None:
 def test_python_sdk_error_for_status_dispatches_correct_subclass() -> None:
     sys.path.insert(0, str(REPO_ROOT / "sdks" / "python"))
     try:
-        from qaforge_sdk.errors import (
+        from aqao_sdk.errors import (
+            AQAOError,
             AuthError,
             ConflictError,
             NotFoundError,
             PermissionError_,
-            QAForgeError,
             RateLimitError,
             ValidationError,
             error_for_status,
         )
 
-        def make(status: int, **kw: Any) -> QAForgeError:
+        def make(status: int, **kw: Any) -> AQAOError:
             return error_for_status(
                 status_code=status,
                 message="x",
@@ -219,7 +219,7 @@ def test_python_sdk_error_for_status_dispatches_correct_subclass() -> None:
         assert isinstance(rl, RateLimitError)
         assert rl.retry_after_seconds == 5.0
         # Unknown status falls back to the base class.
-        assert type(make(500)) is QAForgeError
+        assert type(make(500)) is AQAOError
     finally:
         sys.path.pop(0)
 

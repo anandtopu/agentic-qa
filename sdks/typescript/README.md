@@ -1,24 +1,24 @@
-# @qaforge/sdk
+# @aqao/sdk
 
-TypeScript SDK for QAForge AI. Thin client over the REST surface
+TypeScript SDK for Agentic QA Orchestrator. Thin client over the REST surface
 documented at [`apis/openapi.yaml`](../../apis/openapi.yaml).
 
 ## Install
 
 ```bash
-pnpm add @qaforge/sdk           # npm publish deferred; workspace-link today:
+pnpm add @aqao/sdk           # npm publish deferred; workspace-link today:
 pnpm add file:../../sdks/typescript
 ```
 
 ## Usage
 
 ```ts
-import { QAForgeClient } from "@qaforge/sdk";
+import { AQAOClient } from "@aqao/sdk";
 
-const client = new QAForgeClient({
-  baseUrl: "https://api.qaforge.ai",
-  token: process.env.QAFORGE_TOKEN!,
-  tenantId: process.env.QAFORGE_TENANT_ID!,
+const client = new AQAOClient({
+  baseUrl: "https://api.aqao.ai",
+  token: process.env.AQAO_TOKEN!,
+  tenantId: process.env.AQAO_TENANT_ID!,
   role: "engineer",
 });
 

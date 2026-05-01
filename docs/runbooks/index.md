@@ -1,8 +1,8 @@
 # Runbook Index
 
 **Story 4.2** — every alert kind in
-`qaforge_api.incident.AlertKind` maps to one runbook here. The
-:data:`RUNBOOK_INDEX` constant in `qaforge_api.incident.alert` is the
+`aqao_api.incident.AlertKind` maps to one runbook here. The
+:data:`RUNBOOK_INDEX` constant in `aqao_api.incident.alert` is the
 machine-readable copy of this table; keep them in sync.
 
 ## Severity-driven response

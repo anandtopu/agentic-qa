@@ -42,7 +42,7 @@ logs:  ## Tail logs from the local stack.
 
 .PHONY: api
 api:  ## Run the API directly with uvicorn (no docker).
-	$(UV) run uvicorn qaforge_api.main:app --reload --host 0.0.0.0 --port 8000
+	$(UV) run uvicorn aqao_api.main:app --reload --host 0.0.0.0 --port 8000
 
 # ---------- Quality ----------
 
@@ -59,7 +59,7 @@ format:  ## Format code (ruff + prettier).
 
 .PHONY: typecheck
 typecheck:  ## mypy strict + tsc.
-	$(UV) run mypy -p qaforge_api -p qaforge_agents -p qaforge_eval -p qaforge_redaction -p qaforge_tools
+	$(UV) run mypy -p aqao_api -p aqao_agents -p aqao_eval -p aqao_redaction -p aqao_tools
 	@if [ -f package.json ]; then $(PNPM) -r --if-present typecheck; fi
 
 # ---------- Tests ----------
@@ -90,7 +90,7 @@ seed:  ## Seed a demo workspace.
 
 .PHONY: eval
 eval:  ## Run the agent evaluation harness.
-	$(UV) run python -m qaforge_eval.cli run --baseline=docs/eval/baseline.json
+	$(UV) run python -m aqao_eval.cli run --baseline=docs/eval/baseline.json
 
 # ---------- Browsers ----------
 

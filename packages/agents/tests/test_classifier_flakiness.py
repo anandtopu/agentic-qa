@@ -15,8 +15,8 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-from qaforge_agents.classifier import FailureCategory, FailureSignal
-from qaforge_agents.classifier.heuristic import (
+from aqao_agents.classifier import FailureCategory, FailureSignal
+from aqao_agents.classifier.heuristic import (
     FLAKINESS_FLIP_THRESHOLD,
     HeuristicClassifier,
 )

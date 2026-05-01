@@ -2,7 +2,7 @@
 
 Reference impl ships at
 [`sdks/typescript/`](../../sdks/typescript). npm publish
-(`@qaforge/sdk`) deferred per Phase-5 cuts; usable via a workspace
+(`@aqao/sdk`) deferred per Phase-5 cuts; usable via a workspace
 link today.
 
 ## Install (workspace-linked)
@@ -14,12 +14,12 @@ pnpm add file:../../sdks/typescript
 ## Hello, run
 
 ```ts
-import { QAForgeClient } from "@qaforge/sdk";
+import { AQAOClient } from "@aqao/sdk";
 
-const client = new QAForgeClient({
-  baseUrl: "https://api.qaforge.ai",
-  token: process.env.QAFORGE_TOKEN!,
-  tenantId: process.env.QAFORGE_TENANT_ID!,
+const client = new AQAOClient({
+  baseUrl: "https://api.aqao.ai",
+  token: process.env.AQAO_TOKEN!,
+  tenantId: process.env.AQAO_TENANT_ID!,
   role: "engineer",
 });
 
@@ -59,14 +59,14 @@ client.audit.exportCsv({ since, until })
 
 ```ts
 import {
-  QAForgeError,
+  AQAOError,
   AuthError,           // 401
   ForbiddenError,      // 403
   NotFoundError,       // 404
   ConflictError,       // 409
   RateLimitError,      // 429
   ValidationError,     // 422
-} from "@qaforge/sdk";
+} from "@aqao/sdk";
 ```
 
 Every error carries `cause` (the underlying `Response`),

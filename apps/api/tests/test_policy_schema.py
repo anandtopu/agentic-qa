@@ -11,14 +11,14 @@ from decimal import Decimal
 
 import pytest
 
-from qaforge_api.policies import (
+from aqao_api.policies import (
     DEFAULT_POLICY_YAML,
     AgentPolicy,
     PolicyParseError,
     PolicyValidationError,
     load_policy_yaml,
 )
-from qaforge_api.policies.schema import ApprovalGate
+from aqao_api.policies.schema import ApprovalGate
 
 
 def test_default_policy_yaml_round_trips() -> None:

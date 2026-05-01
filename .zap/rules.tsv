@@ -6,7 +6,7 @@
 
 # Allow CSP headers without 'unsafe-inline' to be reported (we don't ship
 # a frontend in the API container, so this is moot for the API surface).
-10038	IGNORE	(?i).*qaforge-api.*
+10038	IGNORE	(?i).*aqao-api.*
 
 # Auth-required endpoints that ZAP can't crawl without a token. We don't
 # ship public auth in v1; mark as IGNORE rather than fail the scan.

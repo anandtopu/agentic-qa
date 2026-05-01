@@ -21,7 +21,7 @@ export const options = {
   },
 };
 
-const BASE_URL = envOrFail("QAFORGE_BASE_URL").replace(/\/$/, "");
+const BASE_URL = envOrFail("AQAO_BASE_URL").replace(/\/$/, "");
 
 export default function () {
   const body = JSON.stringify({

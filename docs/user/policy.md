@@ -25,7 +25,7 @@ risk tolerance.
 |---|---|---|
 | `allow_write_operations` | DB writes off by default | PRD §11.2 |
 | `require_approval_for` | Lists the gates that need a human | PRD §9.10 |
-| `redact_secrets` | Runs every text sink through the redactor | `qaforge_redaction` |
+| `redact_secrets` | Runs every text sink through the redactor | `aqao_redaction` |
 | `max_cost_usd_per_run` | Mid-flight kill switch with 5% slack | Epic 2.5 |
 | `max_runtime_minutes` | Wallclock budget per run | Epic 2.5 |
 
@@ -33,9 +33,9 @@ risk tolerance.
 
 ```bash
 curl -X PUT \
-  https://api.qaforge.ai/api/v1/workspaces/$WORKSPACE_ID/policy \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID" \
+  https://api.aqao.ai/api/v1/workspaces/$WORKSPACE_ID/policy \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID" \
   -H "Content-Type: application/yaml" \
   --data-binary @policy.yaml
 ```
@@ -46,9 +46,9 @@ moves to the new version atomically.
 ## Inspect history
 
 ```bash
-curl https://api.qaforge.ai/api/v1/workspaces/$WORKSPACE_ID/policy/history \
-  -H "Authorization: Bearer $QAFORGE_TOKEN" \
-  -H "X-QAForge-Tenant-Id: $QAFORGE_TENANT_ID"
+curl https://api.aqao.ai/api/v1/workspaces/$WORKSPACE_ID/policy/history \
+  -H "Authorization: Bearer $AQAO_TOKEN" \
+  -H "X-AQAO-Tenant-Id: $AQAO_TENANT_ID"
 ```
 
 Every change is audit-logged; you can roll back by activating an

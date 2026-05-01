@@ -12,7 +12,7 @@ from __future__ import annotations
 
 import pytest
 
-from qaforge_agents.prompts import (
+from aqao_agents.prompts import (
     PromptRegistry,
     PromptVersion,
     UnknownPromptVersion,

@@ -1,6 +1,6 @@
-# `qaforge/qaforge-action@v1`
+# `aqao/aqao-action@v1`
 
-Run QAForge agentic QA on every pull request. The action:
+Run Agentic QA Orchestrator on every pull request. The action:
 
 1. Starts a `test_run` against an existing `test_plan_id`.
 2. Polls until the run reaches a terminal state (`done` / `failed` /
@@ -17,18 +17,18 @@ Run QAForge agentic QA on every pull request. The action:
 ## Sample workflow (Story 1.9.1 AC: < 10 lines)
 
 ```yaml
-name: qaforge
+name: aqao
 on: { pull_request: { types: [opened, synchronize] } }
 jobs:
   qa:
     runs-on: ubuntu-latest
     steps:
-      - uses: qaforge/qaforge-action@v1
+      - uses: aqao/aqao-action@v1
         with:
-          qaforge-url: https://api.qaforge.ai
-          qaforge-token: ${{ secrets.QAFORGE_TOKEN }}
-          workspace-id: ${{ vars.QAFORGE_WORKSPACE_ID }}
-          test-plan-id: ${{ vars.QAFORGE_TEST_PLAN_ID }}
+          aqao-url: https://api.aqao.ai
+          aqao-token: ${{ secrets.AQAO_TOKEN }}
+          workspace-id: ${{ vars.AQAO_WORKSPACE_ID }}
+          test-plan-id: ${{ vars.AQAO_TEST_PLAN_ID }}
 ```
 
 Eight non-comment lines. Story 1.9.1 AC met.
@@ -37,8 +37,8 @@ Eight non-comment lines. Story 1.9.1 AC met.
 
 | Input | Required | Default | Notes |
 |---|---|---|---|
-| `qaforge-url` | yes | — | Trailing slashes stripped automatically. |
-| `qaforge-token` | yes | — | Bearer token. Pass as a secret. |
+| `aqao-url` | yes | — | Trailing slashes stripped automatically. |
+| `aqao-token` | yes | — | Bearer token. Pass as a secret. |
 | `workspace-id` | yes | — | UUID. Phase 1 reuses this as the tenant header. |
 | `test-plan-id` | yes (Phase 1) | — | Phase 2 makes this optional. |
 | `risk-threshold` | no | `0` | Maximum `product_defect` count before the gate fails. Phase 2 swaps to a 0–1 score. |
@@ -62,7 +62,7 @@ permissions:
 | `final-state` | `done` / `failed` / `paused_for_approval`. |
 | `failure-count` | Total `failure_classifications` recorded. |
 | `product-defect-count` | Subset gating the merge. |
-| `pr-comment-url` | URL of the QAForge PR comment. |
+| `pr-comment-url` | URL of the Agentic QA Orchestrator PR comment. |
 
 ## Quality gate (Story 1.9.3)
 
@@ -79,7 +79,7 @@ human approval (Phase 2 Approvals).
 
 The action's exit code drives a required check on the protected branch.
 Bypass requires admin per GitHub's existing branch-protection model — no
-QAForge-side setting affects this. Story 1.9.3 AC: gate respects branch
+Agentic QA Orchestrator-side setting affects this. Story 1.9.3 AC: gate respects branch
 protection, bypass requires admin.
 
 ## Building locally

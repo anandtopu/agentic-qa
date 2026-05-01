@@ -3,7 +3,7 @@ from __future__ import annotations
 import httpx
 import pytest
 
-from qaforge_api.middleware import TRACE_HEADER
+from aqao_api.middleware import TRACE_HEADER
 
 
 @pytest.mark.asyncio

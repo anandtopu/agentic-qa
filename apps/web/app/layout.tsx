@@ -4,7 +4,7 @@ import type { ReactNode } from "react";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  title: "QAForge AI",
+  title: "Agentic QA Orchestrator",
   description: "Agentic software QA platform — control plane.",
 };
 

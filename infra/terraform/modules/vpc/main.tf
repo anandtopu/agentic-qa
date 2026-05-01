@@ -1,5 +1,5 @@
 /**
- * QAForge VPC module — Story 3.6.1.
+ * Agentic QA Orchestrator VPC module — Story 3.6.1.
  *
  * 3 AZs, with one /20 public + one /20 private + one /24 database
  * subnet per AZ. NAT gateway per AZ in prod (HA), shared NAT in

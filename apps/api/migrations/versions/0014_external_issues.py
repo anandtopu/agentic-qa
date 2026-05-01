@@ -1,6 +1,6 @@
 """external_issues
 
-Story 3.2.x — links from QAForge defect classifications to issues
+Story 3.2.x — links from Agentic QA Orchestrator defect classifications to issues
 created in external trackers (Jira, GitHub Issues). Used for:
 
 * dedup: "we already opened a Jira for this signal_id within 24h —

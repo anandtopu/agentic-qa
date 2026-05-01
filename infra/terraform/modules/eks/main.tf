@@ -1,5 +1,5 @@
 /**
- * QAForge EKS module — Story 3.6.1.
+ * Agentic QA Orchestrator EKS module — Story 3.6.1.
  *
  * Managed EKS cluster + one managed node group + IRSA-friendly
  * OIDC provider hookup. The IAM module attaches roles to this

@@ -5,7 +5,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from uuid import UUID
 
-from qaforge_api.audit.signing import (
+from aqao_api.audit.signing import (
     AUDIT_SIGNATURE_VERSION,
     AuditSignatureStatus,
     canonical_payload,

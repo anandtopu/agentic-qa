@@ -1,0 +1,131 @@
+# Agentic QA Orchestrator Run Report — {{ ctx.workspace_name }}
+
+- **Run id:** `{{ ctx.test_run_id }}`
+- **State:** `{{ ctx.state }}`
+- **Plan:** {{ ctx.test_plan_summary or "—" }}
+- **Started:** {{ ctx.started_at | dt }}
+- **Finished:** {{ ctx.finished_at | dt }}
+- **Duration:** {{ ctx.duration_ms | duration_ms }}
+- **Generated:** {{ ctx.generated_at | dt }} (template `{{ ctx.template_version }}`)
+
+## Recommendation
+
+**{{ ctx.recommendation | upper }}** — {{ ctx.recommendation_reasoning or "no rationale provided" }}
+
+{% if ctx.risk_score is not none %}
+**Risk score:** `{{ "%.2f"|format(ctx.risk_score) }}`
+{% if ctx.risk_drivers %}
+
+Top drivers:
+{% for driver in ctx.risk_drivers %}
+- {{ driver }}
+{% endfor %}
+{% endif %}
+{% else %}
+**Risk score:** _not yet scored (Phase 2)._
+{% endif %}
+
+## Pass / fail summary
+
+| Total | Passed | Failed | Skipped |
+|---|---|---|---|
+| {{ ctx.total }} | {{ ctx.passed }} | {{ ctx.failed }} | {{ ctx.skipped }} |
+
+## Scope tested
+
+{% if ctx.coverage_areas %}
+| Area | Cases | Passed | Failed |
+|---|---|---|---|
+{% for area in ctx.coverage_areas %}
+| {{ area.name }} | {{ area.case_count }} | {{ area.passed }} | {{ area.failed }} |
+{% endfor %}
+{% else %}
+_No coverage areas declared._
+{% endif %}
+
+## Test cases
+
+{% if ctx.test_cases %}
+| Title | Type | Priority | Status | Automatable |
+|---|---|---|---|---|
+{% for case in ctx.test_cases %}
+| {{ case.title }} | `{{ case.type }}` | `{{ case.priority }}` | `{{ case.status }}` | {{ "yes" if case.automation_candidate else "no" }} |
+{% endfor %}
+{% else %}
+_No test cases recorded._
+{% endif %}
+
+## Failure classification
+
+{% if ctx.failures %}
+**Heuristic ratio:** {{ ctx.heuristic_ratio | decimal_pct }} of failures classified pre-LLM.
+
+{% if ctx.failure_category_counts %}
+| Category | Count |
+|---|---|
+{% for category, count in ctx.failure_category_counts.items() %}
+| `{{ category }}` | {{ count }} |
+{% endfor %}
+
+{% endif %}
+### Per-failure detail
+
+{% for failure in ctx.failures %}
+- **`{{ failure.signal_id }}`** — `{{ failure.category }}` (confidence `{{ failure.confidence }}`, via `{{ failure.classified_by }}`{% if failure.rule %}, rule `{{ failure.rule }}`{% endif %}).
+  {{ failure.reasoning }}
+{% if failure.suggested_fix %}
+  _Suggested fix:_ {{ failure.suggested_fix }}
+{% endif %}
+{% endfor %}
+{% else %}
+_No failure classifications recorded._
+{% endif %}
+
+## Evidence artifacts
+
+{% if ctx.artifacts %}
+| Kind | Filename | SHA-256 | Size | Link |
+|---|---|---|---|---|
+{% for art in ctx.artifacts %}
+| `{{ art.kind }}` | `{{ art.filename }}` | `{{ art.sha256[:12] }}…` | {{ art.size_bytes }} B | {% if art.signed_url %}[fetch]({{ art.signed_url }}){% else %}—{% endif %} |
+{% endfor %}
+{% else %}
+_No artifacts recorded._
+{% endif %}
+
+## Agent trace
+
+{% if ctx.agent_trace %}
+| # | Agent | State | Duration | Attempts |
+|---|---|---|---|---|
+{% for line in ctx.agent_trace %}
+| {{ line.step_index }} | `{{ line.agent_name }}` | `{{ line.state }}` | {{ line.duration_ms | duration_ms }} | {{ line.attempt }} |
+{% endfor %}
+{% else %}
+_No agent steps recorded._
+{% endif %}
+
+## Cost & latency
+
+- **Total cost:** {{ ctx.total_usd_cost_cents | cents }}
+- **Total latency:** {{ ctx.total_latency_ms | duration_ms }}
+
+## Human approvals
+
+{% if ctx.approvals %}
+{% for approval in ctx.approvals %}
+- {{ approval }}
+{% endfor %}
+{% else %}
+_None — no approval gates triggered (Phase 2 surfaces them here)._
+{% endif %}
+
+## Open questions
+
+{% if ctx.open_questions %}
+{% for question in ctx.open_questions %}
+- {{ question }}
+{% endfor %}
+{% else %}
+_None._
+{% endif %}

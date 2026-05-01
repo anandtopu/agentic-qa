@@ -10,13 +10,13 @@
 
 PRD §14.4 demands tracing every agent step, structured logging with redaction, latency by workflow stage, and token/cost tracking. Story 0.4.1 already specifies "structlog JSON logging, OpenTelemetry tracing, Prometheus metrics, Grafana dashboards" — this ADR pins the concrete choices and the data model.
 
-A QAForge run spans Web → API → Celery worker → LangGraph node → LLM provider → Tool subprocess. A single trace must connect them or we lose the ability to debug latency or attribute cost.
+A Agentic QA Orchestrator run spans Web → API → Celery worker → LangGraph node → LLM provider → Tool subprocess. A single trace must connect them or we lose the ability to debug latency or attribute cost.
 
 ## Decision
 
 Use **OpenTelemetry SDKs** (Python and TypeScript) as the only instrumentation API. Backends:
 
-- **Traces** — OpenTelemetry Collector → **Grafana Tempo**. One trace per workflow, propagated via W3C `traceparent` and our own `qaforge_trace_id` (request-scoped UUID generated at the edge).
+- **Traces** — OpenTelemetry Collector → **Grafana Tempo**. One trace per workflow, propagated via W3C `traceparent` and our own `aqao_trace_id` (request-scoped UUID generated at the edge).
 - **Metrics** — OpenTelemetry Collector → **Prometheus**. Histograms for latency by stage; counters for runs, failures, retries; gauges for queue depth.
 - **Logs** — `structlog` in Python and `pino` in Node; emitted as JSON; OpenTelemetry Collector → **Loki**. Logs include `trace_id`, `span_id`, `tenant_id`, `workspace_id`, `run_id`, `correlation_id`.
 - **Visualisation** — **Grafana** (already used elsewhere in the stack); dashboards version-controlled as JSON in `infra/grafana/`.
@@ -25,10 +25,10 @@ Use **OpenTelemetry SDKs** (Python and TypeScript) as the only instrumentation A
 Standard span attributes (every agent/tool span sets them):
 
 ```
-qaforge.tenant_id, qaforge.workspace_id, qaforge.run_id,
-qaforge.agent, qaforge.tool, qaforge.model,
-qaforge.tokens.prompt, qaforge.tokens.completion,
-qaforge.usd_cost, qaforge.policy.gate
+aqao.tenant_id, aqao.workspace_id, aqao.run_id,
+aqao.agent, aqao.tool, aqao.model,
+aqao.tokens.prompt, aqao.tokens.completion,
+aqao.usd_cost, aqao.policy.gate
 ```
 
 Sampling: 100% for traces in dev/staging; head-based sampling in prod at 10%, with **always-sample** for traces that touch an approval gate or exceed cost/runtime budgets. Logs are unsampled.

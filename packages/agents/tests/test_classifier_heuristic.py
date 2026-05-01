@@ -4,8 +4,8 @@ from __future__ import annotations
 
 from decimal import Decimal
 
-from qaforge_agents.classifier import FailureCategory, FailureSignal
-from qaforge_agents.classifier.heuristic import HeuristicClassifier
+from aqao_agents.classifier import FailureCategory, FailureSignal
+from aqao_agents.classifier.heuristic import HeuristicClassifier
 
 
 def _signal(**kwargs: object) -> FailureSignal:

@@ -17,9 +17,9 @@ from typing import Any
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import AgentFeedback, AuditEvent, TestRun
-from qaforge_api.services.retention import (
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import AgentFeedback, AuditEvent, TestRun
+from aqao_api.services.retention import (
     SEVEN_YEARS_DAYS,
     RetentionClass,
     RetentionSweepService,

@@ -1,18 +1,18 @@
-name: qaforge
+name: aqao
 
 services:
   postgres:
     image: postgres:16-alpine
     environment:
-      POSTGRES_USER: qaforge
-      POSTGRES_PASSWORD: qaforge
-      POSTGRES_DB: qaforge
+      POSTGRES_USER: aqao
+      POSTGRES_PASSWORD: aqao
+      POSTGRES_DB: aqao
     ports:
       - "5432:5432"
     volumes:
       - pgdata:/var/lib/postgresql/data
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U qaforge -d qaforge"]
+      test: ["CMD-SHELL", "pg_isready -U aqao -d aqao"]
       interval: 5s
       timeout: 3s
       retries: 10
@@ -55,7 +55,7 @@ services:
     entrypoint: >
       /bin/sh -c "
       mc alias set local http://minio:9000 minioadmin minioadmin &&
-      mc mb --ignore-existing local/qaforge-evidence &&
+      mc mb --ignore-existing local/aqao-evidence &&
       echo 'minio bootstrap done'
       "
     restart: "no"
@@ -65,12 +65,12 @@ services:
       context: ../..
       dockerfile: infra/docker/Dockerfile.api
     environment:
-      QAFORGE_ENV: local
-      QAFORGE_DATABASE_URL: postgresql+psycopg://qaforge:qaforge@postgres:5432/qaforge
-      QAFORGE_REDIS_URL: redis://redis:6379/0
-      QAFORGE_S3_ENDPOINT_URL: http://minio:9000
-      QAFORGE_S3_ACCESS_KEY: minioadmin
-      QAFORGE_S3_SECRET_KEY: minioadmin
+      AQAO_ENV: local
+      AQAO_DATABASE_URL: postgresql+psycopg://aqao:aqao@postgres:5432/aqao
+      AQAO_REDIS_URL: redis://redis:6379/0
+      AQAO_S3_ENDPOINT_URL: http://minio:9000
+      AQAO_S3_ACCESS_KEY: minioadmin
+      AQAO_S3_SECRET_KEY: minioadmin
     ports:
       - "8000:8000"
     depends_on:

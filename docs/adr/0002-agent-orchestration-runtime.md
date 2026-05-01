@@ -20,7 +20,7 @@ A custom state machine is feasible but pulls in checkpointing, retry semantics, 
 
 ## Decision
 
-Use **LangGraph (>= 0.2)** as the agent orchestration runtime, wrapped behind an internal `qaforge_agents.runtime` facade so consumers depend on our types, not LangGraph's. Key choices:
+Use **LangGraph (>= 0.2)** as the agent orchestration runtime, wrapped behind an internal `aqao_agents.runtime` facade so consumers depend on our types, not LangGraph's. Key choices:
 
 - One graph per workflow type (PR analysis, scheduled regression, approval-gated DB run).
 - State is a Pydantic model; checkpointer is the **PostgresCheckpointSaver** (same Postgres as the Control Plane).

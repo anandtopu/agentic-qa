@@ -6,12 +6,12 @@ import uuid
 
 import pytest
 
-from qaforge_agents.release_risk import (
+from aqao_agents.release_risk import (
     ReleaseRiskScorer,
     ReleaseRiskScoringStep,
     RiskFeatures,
 )
-from qaforge_agents.runtime import StepContext
+from aqao_agents.runtime import StepContext
 
 
 @pytest.mark.asyncio

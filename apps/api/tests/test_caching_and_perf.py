@@ -24,12 +24,12 @@ from pathlib import Path
 
 import pytest
 
-from qaforge_api.caching import (
+from aqao_api.caching import (
     EmbeddingCache,
     LruCache,
     PlanReuseCache,
 )
-from qaforge_api.perf import (
+from aqao_api.perf import (
     DEFAULT_PERF_BUDGETS,
     PerfBudget,
     PerfBudgetReport,
@@ -37,7 +37,7 @@ from qaforge_api.perf import (
     perf_budget_by_name,
     time_call,
 )
-from qaforge_api.perf.budgets import BudgetVerdict
+from aqao_api.perf.budgets import BudgetVerdict
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 

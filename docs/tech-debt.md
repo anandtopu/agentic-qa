@@ -27,8 +27,8 @@ violation per the implementation plan and should be escalated.
 |---|---|---|---|---|---|---|
 | TD-001 | Beta onboarding (Epic 5.5) deferred until platform is hosted | P2 | Phase 5 / Epic 5.5 | @unassigned | 2026-04-29 | A staging or production deployment is reachable; invite list + NPS survey can be exercised end-to-end. |
 | TD-002 | Demo video, screenshots, and live evidence-report not recorded | P2 | Phase 5 / Story 5.4 | @unassigned | 2026-04-29 | Hosted environment + a green run on the sample app to film against. |
-| TD-003 | SDKs not published to npm / PyPI | P2 | Phase 5 / Story 5.3 | @unassigned | 2026-04-29 | First external consumer needs `pip install qaforge-sdk` / `npm i @qaforge/sdk`; until then the workspace-only install is fine. |
-| TD-004 | Real 10× concurrency perf runs deferred | P2 | Phase 4 / Epic 4.5 | @unassigned | 2026-04-29 | Hosted infra with capacity to drive k6 at 10× the baseline; budgets in `qaforge_api.perf` already enforced in CI smoke. |
+| TD-003 | SDKs not published to npm / PyPI | P2 | Phase 5 / Story 5.3 | @unassigned | 2026-04-29 | First external consumer needs `pip install aqao-sdk` / `npm i @aqao/sdk`; until then the workspace-only install is fine. |
+| TD-004 | Real 10× concurrency perf runs deferred | P2 | Phase 4 / Epic 4.5 | @unassigned | 2026-04-29 | Hosted infra with capacity to drive k6 at 10× the baseline; budgets in `aqao_api.perf` already enforced in CI smoke. |
 | TD-005 | Postgres-backed integration tests not run on this machine | P3 | Phase 0 / Story 0.3.6 | @unassigned | 2026-04-29 | Docker daemon available locally or in CI; unit suite is fully green. |
 | TD-006 | `agent_feedback` snapshot provider returns only the resource pointer | P2 | Phase 6 / Epic 6.3 | @unassigned | 2026-04-29 | Replace `_default_snapshot_provider` with one that pulls the actual prompt/context off the evidence store per `resource_type` (test plan, classification, evidence report). Until then operators fill `expected` by hand at conversion time. |
 | TD-007 | Feedback ↔ eval-baseline auto-promotion not wired | P3 | Phase 6 / Epic 6.3 | @unassigned | 2026-04-29 | Feedback cases land in `feedback_cases.jsonl`; promoting them to the pinned baseline still requires a manual `make eval --promote`. Wire to a scheduled nightly once volume warrants. |
@@ -42,8 +42,8 @@ violation per the implementation plan and should be escalated.
 
 | ID | Title | Closed | Where |
 |---|---|---|---|
-| TD-008 | `PROVIDER_DECISION_OVERDUE` alert kind wired | 2026-04-30 | `qaforge_api.incident.AlertKind.PROVIDER_DECISION_OVERDUE` + `qaforge_api.services.lifecycle_alerts.ModelLifecycleAlertService` bridges `awaiting_decision()` to the incident router. Runbook stub at `docs/runbooks/provider-decision-overdue.md`; routes to SEV4 alongside `APPROVAL_OVERDUE`. Tests in `apps/api/tests/test_lifecycle_alerts.py` + new case in `test_incident.py`. |
-| TD-011 | DSAR-driven access-review escalation wired | 2026-04-30 | New `qaforge_api.notifications.DormantUserNotifier` Protocol + `LogDormantUserNotifier` reference impl, `qaforge_api.services.dormant_user_review.DormantUserReviewService` bridges `AccessReviewService.snapshot()` to the notifier and audits the aggregate action. Tests in `apps/api/tests/test_dormant_user_review.py`. |
+| TD-008 | `PROVIDER_DECISION_OVERDUE` alert kind wired | 2026-04-30 | `aqao_api.incident.AlertKind.PROVIDER_DECISION_OVERDUE` + `aqao_api.services.lifecycle_alerts.ModelLifecycleAlertService` bridges `awaiting_decision()` to the incident router. Runbook stub at `docs/runbooks/provider-decision-overdue.md`; routes to SEV4 alongside `APPROVAL_OVERDUE`. Tests in `apps/api/tests/test_lifecycle_alerts.py` + new case in `test_incident.py`. |
+| TD-011 | DSAR-driven access-review escalation wired | 2026-04-30 | New `aqao_api.notifications.DormantUserNotifier` Protocol + `LogDormantUserNotifier` reference impl, `aqao_api.services.dormant_user_review.DormantUserReviewService` bridges `AccessReviewService.snapshot()` to the notifier and audits the aggregate action. Tests in `apps/api/tests/test_dormant_user_review.py`. |
 
 When archiving older entries, move them to `docs/tech-debt-archive.md`
 once this list grows past ~20 rows.

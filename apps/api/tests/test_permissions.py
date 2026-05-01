@@ -21,7 +21,7 @@ import uuid
 import pytest
 from fastapi import HTTPException
 
-from qaforge_api.auth import (
+from aqao_api.auth import (
     PERMISSION_MATRIX,
     Permission,
     RequestContext,
@@ -142,9 +142,9 @@ def test_require_permission_passes_through_when_role_allowed() -> None:
 
 
 def test_role_header_unknown_value_is_rejected_by_context_parser() -> None:
-    """X-QAForge-Role with an unknown value should not silently
+    """X-AQAO-Role with an unknown value should not silently
     downgrade to viewer — that would mask a misconfigured client."""
-    from qaforge_api.auth.context import _parse_role
+    from aqao_api.auth.context import _parse_role
 
     with pytest.raises(HTTPException) as exc:
         _parse_role("super_admin")
@@ -153,6 +153,6 @@ def test_role_header_unknown_value_is_rejected_by_context_parser() -> None:
 
 def test_role_header_absent_resolves_to_none() -> None:
     """No header == no role; downstream require_permission then 403s."""
-    from qaforge_api.auth.context import _parse_role
+    from aqao_api.auth.context import _parse_role
 
     assert _parse_role(None) is None

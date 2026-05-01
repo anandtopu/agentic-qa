@@ -1,4 +1,4 @@
-# QAForge AI
+# Agentic QA Orchestrator
 
 Agentic software QA platform. Ten specialised AI agents plan, execute, validate, triage, and report software testing across modern release pipelines, with human approval gates and an evaluation harness baked in.
 

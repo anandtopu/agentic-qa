@@ -6,7 +6,7 @@ import asyncio
 
 import pytest
 
-from qaforge_tools.router import (
+from aqao_tools.router import (
     ToolBudgetExceeded,
     ToolDescriptor,
     ToolNotFoundError,

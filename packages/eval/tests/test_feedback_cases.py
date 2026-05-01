@@ -7,7 +7,7 @@ import uuid
 from datetime import UTC, datetime
 from pathlib import Path
 
-from qaforge_eval.feedback_cases import (
+from aqao_eval.feedback_cases import (
     FEEDBACK_DATASET_FILENAME,
     append_feedback_case,
     build_feedback_case,
@@ -126,7 +126,7 @@ def test_redactor_scrubs_inputs_expected_and_comment() -> None:
 
 
 def test_loader_can_round_trip_appended_case(tmp_path: Path) -> None:
-    from qaforge_eval.datasets import load_jsonl
+    from aqao_eval.datasets import load_jsonl
 
     case = _build_case()
     append_feedback_case(base_dir=tmp_path, case=case, agent_kind="classifier")

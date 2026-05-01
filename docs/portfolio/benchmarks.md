@@ -17,7 +17,7 @@ hit them.
 | Evidence report generation | 30 s | 24 s |
 
 The same numbers live in
-`apps/api/src/qaforge_api/perf/budgets.py` and
+`apps/api/src/aqao_api/perf/budgets.py` and
 `perf-tests/lib/checks.js`; the drift-guard test asserts they
 match.
 

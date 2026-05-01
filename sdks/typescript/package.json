@@ -1,7 +1,7 @@
 {
-  "name": "@qaforge/sdk",
+  "name": "@aqao/sdk",
   "version": "0.1.0",
-  "description": "QAForge AI TypeScript SDK — thin wrapper over the REST surface.",
+  "description": "Agentic QA Orchestrator TypeScript SDK — thin wrapper over the REST surface.",
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",

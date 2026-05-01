@@ -15,10 +15,10 @@ from uuid import UUID
 
 import pytest
 
-from qaforge_api.auth.context import RequestContext
-from qaforge_api.db.models import AuditEvent, PromptPin
-from qaforge_api.services.errors import ResourceNotFoundError
-from qaforge_api.services.prompt_pin import PromptPinService
+from aqao_api.auth.context import RequestContext
+from aqao_api.db.models import AuditEvent, PromptPin
+from aqao_api.services.errors import ResourceNotFoundError
+from aqao_api.services.prompt_pin import PromptPinService
 
 
 class _StubSession:

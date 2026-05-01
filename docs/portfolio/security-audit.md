@@ -1,6 +1,6 @@
 # Security & audit design
 
-QAForge ships **enterprise-grade auditability** as a non-negotiable
+Agentic QA Orchestrator ships **enterprise-grade auditability** as a non-negotiable
 constraint (PRD §14.4). This page is the portfolio walkthrough; the
 full STRIDE matrix is at
 [`docs/security/threat-model.md`](../security/threat-model.md).
@@ -22,7 +22,7 @@ full STRIDE matrix is at
 
 1. **App layer**: `tenant_scoped_session` sets
    `app.current_tenant_id` for the lifetime of one request
-   (`apps/api/src/qaforge_api/db/session.py`).
+   (`apps/api/src/aqao_api/db/session.py`).
 2. **DB layer**: every tenant-scoped table has Postgres RLS +
    `FORCE ROW LEVEL SECURITY` so even the table owner respects the
    policy.
