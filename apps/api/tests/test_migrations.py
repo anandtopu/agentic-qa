@@ -13,6 +13,7 @@ Two layers:
 
 from __future__ import annotations
 
+import os
 from pathlib import Path
 
 import pytest
@@ -53,6 +54,9 @@ def test_metadata_contains_phase_1_core_entities() -> None:
 def test_upgrade_head_then_downgrade_base() -> None:
     """Full round-trip against the docker-compose Postgres."""
     from alembic import command
+
+    if not os.getenv("AQAO_DATABASE_URL"):
+        pytest.skip("AQAO_DATABASE_URL not set; skipping migration integration test")
 
     cfg = _alembic_config()
     command.upgrade(cfg, "head")

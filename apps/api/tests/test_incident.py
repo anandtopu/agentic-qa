@@ -110,6 +110,14 @@ def test_dlq_depth_escalates_at_threshold() -> None:
     assert high.severity is Severity.SEV2
 
 
+def test_dlq_depth_rejects_invalid_values() -> None:
+    router = IncidentRouter()
+    with pytest.raises(ValueError, match="invalid DLQ depth"):
+        router.route(_alert(AlertKind.DLQ_DEPTH, tags={"depth": "many"}))
+    with pytest.raises(ValueError, match="negative DLQ depth"):
+        router.route(_alert(AlertKind.DLQ_DEPTH, tags={"depth": "-1"}))
+
+
 def test_provider_budget_exhausted_is_sev2() -> None:
     decision = IncidentRouter().route(_alert(AlertKind.PROVIDER_BUDGET_EXHAUSTED))
     assert decision.severity is Severity.SEV2
@@ -148,6 +156,12 @@ def test_tag_severity_override_is_honoured() -> None:
         )
     )
     assert decision.severity is Severity.SEV1
+
+
+def test_tag_severity_override_accepts_lowercase_values() -> None:
+    router = IncidentRouter()
+    decision = router.route(_alert(AlertKind.APPROVAL_OVERDUE, tags={"severity": "sev2"}))
+    assert decision.severity is Severity.SEV2
 
 
 def test_tag_severity_override_rejects_unknown_value() -> None:

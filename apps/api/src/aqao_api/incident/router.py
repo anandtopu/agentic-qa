@@ -64,7 +64,7 @@ class IncidentRouter:
         forced = alert.tags.get("severity")
         if forced is not None:
             try:
-                return self._decide(alert, Severity(forced))
+                return self._decide(alert, Severity(forced.upper()))
             except ValueError as exc:
                 raise ValueError(
                     f"alert {alert.kind.value!r} requested unknown severity {forced!r}"
@@ -84,7 +84,7 @@ class IncidentRouter:
         if alert.kind is AlertKind.LLM_PROVIDER_DOWN:
             return Severity.SEV2
         if alert.kind is AlertKind.DLQ_DEPTH:
-            depth = int(alert.tags.get("depth", "0"))
+            depth = self._parse_dlq_depth(alert)
             return Severity.SEV2 if depth >= self.dlq_critical_depth else Severity.SEV3
         if alert.kind is AlertKind.PROVIDER_BUDGET_EXHAUSTED:
             return Severity.SEV2
@@ -101,6 +101,19 @@ class IncidentRouter:
     def _decide(self, alert: Alert, severity: Severity) -> RoutingDecision:
         rule = self.matrix[severity]
         return RoutingDecision(alert=alert, severity=severity, rule=rule)
+
+    @staticmethod
+    def _parse_dlq_depth(alert: Alert) -> int:
+        raw_depth = alert.tags.get("depth", "0")
+        try:
+            depth = int(raw_depth)
+        except ValueError as exc:
+            raise ValueError(
+                f"alert {alert.kind.value!r} has invalid DLQ depth {raw_depth!r}"
+            ) from exc
+        if depth < 0:
+            raise ValueError(f"alert {alert.kind.value!r} has negative DLQ depth {depth!r}")
+        return depth
 
 
 __all__ = ["IncidentRouter", "RoutingDecision"]
