@@ -126,6 +126,16 @@ def test_approval_overdue_and_external_tracker_down_are_sev4() -> None:
     assert router.route(_alert(AlertKind.EXTERNAL_TRACKER_DOWN)).severity is Severity.SEV4
 
 
+def test_provider_decision_overdue_is_sev4() -> None:
+    """Story 6.2 / TD-008: a stalled go/no-go is a process miss, not an
+    outage — files a ticket via SEV4 like the other queue-piling-up
+    alerts. The bridge service in `services.lifecycle_alerts` only
+    fires this kind when `breach_count > 0`."""
+    decision = IncidentRouter().route(_alert(AlertKind.PROVIDER_DECISION_OVERDUE))
+    assert decision.severity is Severity.SEV4
+    assert decision.alert.runbook_path.endswith("provider-decision-overdue.md")
+
+
 def test_tag_severity_override_is_honoured() -> None:
     """A tag-driven manual escalation forces severity even when the
     inferred level would be lower — supports the "this is actually

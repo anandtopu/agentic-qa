@@ -93,6 +93,7 @@ class IncidentRouter:
         if alert.kind in {
             AlertKind.APPROVAL_OVERDUE,
             AlertKind.EXTERNAL_TRACKER_DOWN,
+            AlertKind.PROVIDER_DECISION_OVERDUE,
         }:
             return Severity.SEV4
         return Severity.SEV3  # safe default — a missed alert should still rouse someone

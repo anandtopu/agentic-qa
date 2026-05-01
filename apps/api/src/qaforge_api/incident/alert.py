@@ -26,6 +26,7 @@ class AlertKind(StrEnum):
     APPROVAL_OVERDUE = "approval_overdue"  # Epic 2.1 expired approvals piling up
     EXTERNAL_TRACKER_DOWN = "external_tracker_down"  # Epic 3.2 webhook flooding errors
     PROVIDER_BUDGET_EXHAUSTED = "provider_budget_exhausted"  # Epic 2.5 budget enforcer kill-switch
+    PROVIDER_DECISION_OVERDUE = "provider_decision_overdue"  # Epic 6.2 model registry SLA breached
 
 
 # Each alert kind carries an opinion about the runbook a human should
@@ -41,6 +42,7 @@ RUNBOOK_INDEX: dict[AlertKind, str] = {
     AlertKind.APPROVAL_OVERDUE: "docs/runbooks/approval-overdue.md",
     AlertKind.EXTERNAL_TRACKER_DOWN: "docs/runbooks/external-tracker-down.md",
     AlertKind.PROVIDER_BUDGET_EXHAUSTED: "docs/runbooks/provider-budget-exhausted.md",
+    AlertKind.PROVIDER_DECISION_OVERDUE: "docs/runbooks/provider-decision-overdue.md",
 }
 
 

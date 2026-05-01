@@ -27,6 +27,7 @@ machine-readable copy of this table; keep them in sync.
 | `eval_regression` | SEV3 | [eval-regression.md](eval-regression.md) |
 | `approval_overdue` | SEV4 | [approval-overdue.md](approval-overdue.md) |
 | `external_tracker_down` | SEV4 | [external-tracker-down.md](external-tracker-down.md) |
+| `provider_decision_overdue` | SEV4 | [provider-decision-overdue.md](provider-decision-overdue.md) |
 
 Per-runbook bodies fill in as the alerts prove out under real load —
 the index is the contract; the procedure is iterative.

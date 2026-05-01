@@ -1,6 +1,6 @@
 # QAForge AI — Progress Dashboard
 
-**Last updated:** 2026-04-29
+**Last updated:** 2026-04-30
 
 Single source of truth for "what's actually done." For the design
 intent see [`AgenticQA_PRD.md`](../AgenticQA_PRD.md); for the phase /
@@ -27,13 +27,13 @@ the published SDK packages, the SOC-2 audit walkthrough). Each is
 captured in [`tech-debt.md`](tech-debt.md) with a clear "removal
 trigger" so they're easy to pick up later.
 
-## Verification snapshot (last run 2026-04-29)
+## Verification snapshot (last run 2026-04-30)
 
 | Check | Result |
 |---|---|
 | `ruff check apps packages` | ✅ clean |
-| `mypy --strict` (5 packages) | ✅ clean across **247 source files** |
-| `pytest` unit suite | ✅ **705 passed**, 1 deselected |
+| `mypy --strict` (5 packages) | ✅ clean across **250 source files** |
+| `pytest` unit suite | ✅ **728 passed**, 51 deselected |
 | Integration suite | ⏳ not run on this machine — Docker daemon unavailable (TD-005) |
 
 ## Per-phase detail
@@ -123,7 +123,8 @@ trigger" so they're easy to pick up later.
 | End of Phase 5.4 | 658 |
 | End of Phase 6.3 + 6.4 | 677 |
 | End of Phase 6.2 | 692 |
-| **Today (Phase 6.5 code surface complete)** | **705** |
+| Phase 6.5 code surface complete | 705 |
+| **Today (TD-008 + TD-011 wired)** | **728** |
 
 ## Source-file growth (mypy strict)
 
@@ -132,7 +133,8 @@ trigger" so they're easy to pick up later.
 | End of Phase 4 | 228 |
 | Phase 6 epics 6.3 / 6.4 | 239 |
 | Phase 6 epic 6.2 | 243 |
-| **Today (epic 6.5 added)** | **247** |
+| Epic 6.5 added | 247 |
+| **Today (TD-008 + TD-011 wired)** | **250** |
 
 ## What's left, honestly
 
@@ -143,18 +145,22 @@ Three buckets, in roughly descending impact:
    on npm + PyPI, the live evidence-report screenshot, the actual
    SOC-2 walkthrough. Each entry exists in
    [`tech-debt.md`](tech-debt.md) with the trigger that closes it.
-2. **Wiring of newly-shipped state into the alerting layer** —
-   TD-008 (`PROVIDER_DECISION_OVERDUE`) and TD-011 (dormant-user
-   notifier) both reference services that already exist; they need
-   one alert kind + a scheduled job to bridge.
-3. **Per-workspace overrides** — TD-009 (retention windows in
+2. **Per-workspace overrides** — TD-009 (retention windows in
    policy YAML) and the per-workspace snapshot-provider for
    feedback (TD-006). Both are upgrades to existing services, not
    new features.
-4. **Multi-cloud parity** — TD-012 (GCP Terraform modules),
+3. **Multi-cloud parity** — TD-012 (GCP Terraform modules),
    TD-013 (first real cloud apply), TD-014 (Helm `extraContainers`
    for the Cloud SQL Auth Proxy sidecar). The GCP install runbook
    already documents the workaround flow.
+
+TD-008 (`PROVIDER_DECISION_OVERDUE` alert kind) and TD-011
+(dormant-user notifier) landed 2026-04-30 — both bridge
+already-shipped state into the alerting and notifier layers via
+in-process service classes that an external scheduler invokes on
+a cadence (same pattern as the retention sweep). Their previous
+"wiring" entry in this list is now resolved in
+[`tech-debt.md`](tech-debt.md).
 
 Operational cadences (Epic 6.1) live in `/schedule`, not in the
 repo. They'll appear in this dashboard as routine entries once a
