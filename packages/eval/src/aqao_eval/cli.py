@@ -16,6 +16,9 @@ Usage
     python -m aqao_eval.cli set-baseline \\
         --scorecard=.scorecards/branch.json \\
         --baseline=docs/eval/baseline.json
+
+    python -m aqao_eval.cli promote-feedback \\
+        --datasets=packages/eval/datasets   # all agents; --agent for one
 """
 
 from __future__ import annotations
@@ -27,6 +30,7 @@ from pathlib import Path
 
 from aqao_eval.datasets import load_dataset
 from aqao_eval.gate import BaselineGate
+from aqao_eval.promotion import promote_all_feedback_cases, promote_feedback_cases
 from aqao_eval.runner import AgentInvocation, EvalRunner
 from aqao_eval.scorers import (
     CostBudgetScorer,
@@ -96,6 +100,43 @@ def _set_baseline(args: argparse.Namespace) -> int:
     return 0
 
 
+def _promote_feedback(args: argparse.Namespace) -> int:
+    base_dir: Path = args.datasets
+    if args.agent:
+        results = [
+            promote_feedback_cases(
+                base_dir=base_dir,
+                agent_kind=args.agent,
+                dataset_version=args.dataset_version,
+            )
+        ]
+    else:
+        results = promote_all_feedback_cases(
+            base_dir=base_dir, dataset_version=args.dataset_version
+        )
+
+    if not results:
+        print("no feedback cases found to promote")
+        return 0
+
+    total = 0
+    for result in results:
+        total += result.promoted_count
+        if result.promoted_count:
+            print(
+                f"{result.agent_kind}: promoted {result.promoted_count} case(s) "
+                f"into {result.dataset_path} "
+                f"(skipped {result.skipped_existing} already present)"
+            )
+        else:
+            print(
+                f"{result.agent_kind}: nothing to promote "
+                f"({result.feedback_case_total} feedback case(s), all present)"
+            )
+    print(f"total promoted: {total}")
+    return 0
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="aqao-eval")
     sub = parser.add_subparsers(dest="cmd", required=True)
@@ -124,6 +165,22 @@ def _build_parser() -> argparse.ArgumentParser:
     sb.add_argument("--scorecard", type=Path, required=True)
     sb.add_argument("--baseline", type=Path, required=True)
 
+    pf = sub.add_parser(
+        "promote-feedback",
+        help="Merge feedback regression cases into the scored dataset (TD-007).",
+    )
+    pf.add_argument(
+        "--agent",
+        default=None,
+        help="Promote one agent's feedback; omit to promote every agent.",
+    )
+    pf.add_argument("--dataset-version", default="v1")
+    pf.add_argument(
+        "--datasets",
+        type=Path,
+        default=Path("packages/eval/datasets"),
+    )
+
     return parser
 
 
@@ -134,6 +191,8 @@ def main(argv: list[str] | None = None) -> int:
         return asyncio.run(_run(args))
     if args.cmd == "set-baseline":
         return _set_baseline(args)
+    if args.cmd == "promote-feedback":
+        return _promote_feedback(args)
     raise SystemExit(parser.error(f"unknown command: {args.cmd}"))
 
 

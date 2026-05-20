@@ -504,7 +504,7 @@ Production (regional Memorystore STANDARD_HA, Cloud SQL HA,
 | Step | Status |
 |---|---|
 | Procedure documented | ✅ this page |
-| Native Terraform modules for GCP | ⏳ deferred (TD-012) |
+| Native Terraform modules for GCP | ✅ `infra/terraform/modules/gcp/` + `environments/gcp-dev` (TD-012); `terraform validate` green. This `gcloud` walkthrough remains the credential-free reference. |
 | Helm chart `extraContainers` for Cloud SQL Auth Proxy | ✅ templated (TD-014) |
 | First real apply against a GCP project | ⏳ deferred (TD-013) |
 

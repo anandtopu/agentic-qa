@@ -21,6 +21,7 @@ All workflows route through the root `Makefile`. Run `make help` to list targets
 | `make typecheck` | `mypy --strict` over the five `aqao_*` packages (by module, not path); `tsc --noEmit` for web. |
 | `make migrate` / `make seed` | `alembic -c apps/api/alembic.ini upgrade head` / `scripts/seed.py` demo workspace. |
 | `make eval` | Run the agent evaluation harness (`aqao_eval.cli run --baseline=docs/eval/baseline.json`). |
+| `make eval-promote` | Merge converted feedback regression cases into the scored datasets (`aqao_eval.cli promote-feedback`). |
 | `make playwright-install` | Install Chromium for the UI agent / Playwright tools (needed before UI tests run). |
 | `make hooks` | Install pre-commit hooks. |
 

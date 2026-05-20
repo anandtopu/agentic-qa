@@ -172,3 +172,34 @@ def test_terraform_dev_environment_composes_every_module() -> None:
     )
     for module_name in ("vpc", "eks", "rds", "redis", "evidence", "secrets", "iam"):
         assert f'module "{module_name}"' in main, module_name
+
+
+# ---------------------------------------------------------------- gcp terraform (TD-012)
+
+
+def test_terraform_gcp_modules_have_versions_pinned() -> None:
+    """Every GCP module declares required_version + a google provider pin."""
+    tf_root = CHART_ROOT.parents[1] / "terraform"
+    main_files = list(tf_root.glob("modules/gcp/*/main.tf"))
+    assert main_files, "expected at least one GCP terraform module"
+    for path in main_files:
+        body = path.read_text(encoding="utf-8")
+        assert "required_version" in body, f"{path} missing required_version"
+        assert "hashicorp/google" in body, f"{path} missing google provider pin"
+
+
+def test_terraform_gcp_environment_composes_every_module() -> None:
+    """gcp-dev mirrors the AWS dev env: one module block per GCP resource."""
+    main = (
+        CHART_ROOT.parents[1] / "terraform" / "environments" / "gcp-dev" / "main.tf"
+    ).read_text(encoding="utf-8")
+    for module_name in (
+        "vpc",
+        "gke",
+        "cloud_sql",
+        "memorystore",
+        "evidence",
+        "secrets",
+        "workload_identity",
+    ):
+        assert f'module "{module_name}"' in main, module_name

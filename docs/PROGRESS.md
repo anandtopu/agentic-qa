@@ -32,8 +32,8 @@ trigger" so they're easy to pick up later.
 | Check | Result |
 |---|---|
 | `ruff check apps packages` | ✅ clean |
-| `mypy --strict` (5 packages) | ✅ clean across **251 source files** |
-| `pytest` unit suite | ✅ **749 passed**, 51 deselected |
+| `mypy --strict` (5 packages) | ✅ clean across **252 source files** |
+| `pytest` unit suite | ✅ **760 passed**, 51 deselected |
 | Integration suite | ⏳ not run on this machine — Docker daemon unavailable (TD-005) |
 
 ## Per-phase detail
@@ -128,7 +128,9 @@ trigger" so they're easy to pick up later.
 | Coverage top-ups (2026-05-20) | 730 |
 | TD-009 per-workspace retention overrides | 741 |
 | TD-014 Helm `extraContainers` | 743 |
-| **TD-006 evidence-backed feedback snapshots** | **749** |
+| TD-006 evidence-backed feedback snapshots | 749 |
+| TD-007 feedback-case promotion | 758 |
+| **TD-012 GCP Terraform modules** | **760** |
 
 ## Source-file growth (mypy strict)
 
@@ -139,7 +141,8 @@ trigger" so they're easy to pick up later.
 | Phase 6 epic 6.2 | 243 |
 | Epic 6.5 added | 247 |
 | TD-008 + TD-011 wired | 250 |
-| **TD-006 feedback snapshot provider** | **251** |
+| TD-006 feedback snapshot provider | 251 |
+| **TD-007 feedback-case promotion** | **252** |
 
 ## What's left, honestly
 
@@ -150,16 +153,19 @@ Three buckets, in roughly descending impact:
    on npm + PyPI, the live evidence-report screenshot, the actual
    SOC-2 walkthrough. Each entry exists in
    [`tech-debt.md`](tech-debt.md) with the trigger that closes it.
-2. **Per-workspace overrides** — both shipped 2026-05-20: TD-009
-   (per-workspace retention windows) and TD-006 (evidence-backed
-   feedback input snapshots). The only remaining code item is TD-007
-   (P3 — feedback → eval-baseline auto-promotion), deferred until
-   feedback volume warrants a nightly job.
-3. **Multi-cloud parity** — TD-012 (GCP Terraform modules) and
-   TD-013 (first real cloud apply) remain; both need a billable GCP
-   project. (TD-014, Helm `extraContainers` for the Cloud SQL Auth
-   Proxy sidecar, shipped 2026-05-20 — the GCP runbook now installs
-   in one `helm upgrade`.)
+2. **Per-workspace overrides + feedback loop** — all shipped
+   2026-05-20: TD-009 (per-workspace retention windows), TD-006
+   (evidence-backed feedback input snapshots), and TD-007
+   (feedback-case promotion into the scored dataset).
+3. **Multi-cloud parity** — TD-012 (GCP Terraform modules) shipped
+   2026-05-20 (`modules/gcp/` + `environments/gcp-dev`, `terraform
+   validate` green; TD-014's Helm `extraContainers` landed earlier
+   the same day). Only TD-013 (first real `terraform apply`) remains,
+   and it needs a billable GCP project.
+
+**With TD-012 done, the tech-debt code backlog is fully cleared.**
+Every open item now requires a hosted environment, a billable cloud
+account, or an external decision (the DSAR Q-001 call).
 
 TD-008 (`PROVIDER_DECISION_OVERDUE` alert kind) and TD-011
 (dormant-user notifier) landed 2026-04-30 — both bridge

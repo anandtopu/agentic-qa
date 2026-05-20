@@ -28,6 +28,11 @@ from aqao_eval.nightly import (
     NightlyTarget,
     run_nightly,
 )
+from aqao_eval.promotion import (
+    FeedbackPromotionResult,
+    promote_all_feedback_cases,
+    promote_feedback_cases,
+)
 from aqao_eval.runner import AgentInvocation, EvalRunner
 from aqao_eval.scorers import (
     CategoricalAccuracyScorer,
@@ -65,6 +70,7 @@ __all__ = [
     "EvalDataset",
     "EvalRunner",
     "FeedbackCaseAppendResult",
+    "FeedbackPromotionResult",
     "FieldExactMatchScorer",
     "FilesystemTrendStore",
     "GateReport",
@@ -89,5 +95,7 @@ __all__ = [
     "load_dataset",
     "load_jsonl",
     "make_case_id",
+    "promote_all_feedback_cases",
+    "promote_feedback_cases",
     "run_nightly",
 ]

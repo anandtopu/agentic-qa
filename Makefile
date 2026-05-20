@@ -92,6 +92,10 @@ seed:  ## Seed a demo workspace.
 eval:  ## Run the agent evaluation harness.
 	$(UV) run python -m aqao_eval.cli run --baseline=docs/eval/baseline.json
 
+.PHONY: eval-promote
+eval-promote:  ## Promote feedback regression cases into the scored datasets.
+	$(UV) run python -m aqao_eval.cli promote-feedback --datasets=packages/eval/datasets
+
 # ---------- Browsers ----------
 
 .PHONY: playwright-install
