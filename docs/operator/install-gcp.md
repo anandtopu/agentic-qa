@@ -316,8 +316,9 @@ EOF
 ## Step 11 — Deploy the Cloud SQL Auth Proxy as a sidecar
 
 The Helm chart in this repo expects the API to reach Postgres via
-`127.0.0.1:5432`. We add the Cloud SQL Auth Proxy as a sidecar
-through a small values override:
+`127.0.0.1:5432`. The chart exposes an `extraContainers` field
+(TD-014), so the Cloud SQL Auth Proxy is declared **inline** in the
+values overlay — no post-render patch:
 
 ```yaml
 # values-dev.yaml — GCP dev environment overrides
@@ -357,42 +358,29 @@ env:
   github_webhook_secret_name: aqao-${ENV}-github-webhook-secret
   anthropic_api_key_secret_name: aqao-${ENV}-anthropic-api-key
 
-# Cloud SQL Auth Proxy sidecar — added via Helm `extraContainers` (not yet
-# templated in the chart; tracked as TD-014). Until then, post-process the
-# rendered deployment with the patch in `infra/helm/aqao-api/patches/gcp-sqlproxy.yaml`.
+# Cloud SQL Auth Proxy sidecar — declared inline via the chart's
+# `extraContainers` field (TD-014). The API reaches Postgres on
+# 127.0.0.1:5432; keep the proxy's securityContext PSS-"restricted".
+extraContainers:
+  - name: cloud-sql-proxy
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.13.0
+    args:
+      - "--structured-logs"
+      - "--port=5432"
+      - "${PROJECT_ID}:${REGION}:${DB_INSTANCE}"
+    securityContext:
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      capabilities: { drop: ["ALL"] }
+    resources:
+      requests: { cpu: 50m, memory: 64Mi }
+      limits:   { cpu: 500m, memory: 256Mi }
 ```
 
-> The Helm chart does not yet expose `extraContainers` — until that
-> lands (**TD-014**), the workaround is to render the chart, append
-> the sidecar via `kubectl patch`, and apply. Procedure:
-
-```bash
-helm template aqao ./infra/helm/aqao-api \
-  --namespace aqao \
-  --values values-dev.yaml > /tmp/aqao.yaml
-
-# Patch the Deployment to add the Cloud SQL Auth Proxy sidecar.
-kubectl patch -f /tmp/aqao.yaml --local --type=strategic --patch "$(cat <<EOF
-spec:
-  template:
-    spec:
-      containers:
-        - name: cloud-sql-proxy
-          image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.13.0
-          args:
-            - "--structured-logs"
-            - "--port=5432"
-            - "${PROJECT_ID}:${REGION}:${DB_INSTANCE}"
-          securityContext:
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
-            capabilities: { drop: ["ALL"] }
-          resources:
-            requests: { cpu: 50m, memory: 64Mi }
-            limits:   { cpu: 500m, memory: 256Mi }
-EOF
-)" -o yaml > /tmp/aqao-patched.yaml
-```
+The proxy authenticates as the bound GSA via Workload Identity
+(`roles/cloudsql.client`, granted in Step 9), so no credentials volume
+is required. `helm upgrade --install` (Step 13) now renders the
+Deployment with both the `api` and `cloud-sql-proxy` containers.
 
 ## Step 12 — Reserve a static IP + managed certificate for ingress
 
@@ -421,12 +409,10 @@ kubectl create namespace aqao                                               # (m
 kubectl label namespace aqao \
   pod-security.kubernetes.io/enforce=restricted                                # (mutates)
 
-# Once TD-014 lands, this will be a single command:
-# helm upgrade --install aqao ./infra/helm/aqao-api \
-#   --namespace aqao --values values-dev.yaml --set image.tag=$(git rev-parse HEAD)
-
-# For now, apply the patched manifest:
-kubectl apply -n aqao -f /tmp/aqao-patched.yaml                          # (mutates)
+helm upgrade --install aqao ./infra/helm/aqao-api \
+  --namespace aqao \
+  --values values-dev.yaml \
+  --set image.tag=$(git rev-parse HEAD)                                      # (mutates)
 
 kubectl rollout status -n aqao deployment/aqao-api --timeout=5m
 ```
@@ -519,7 +505,7 @@ Production (regional Memorystore STANDARD_HA, Cloud SQL HA,
 |---|---|
 | Procedure documented | ✅ this page |
 | Native Terraform modules for GCP | ⏳ deferred (TD-012) |
-| Helm chart `extraContainers` for Cloud SQL Auth Proxy | ⏳ deferred (TD-014) |
+| Helm chart `extraContainers` for Cloud SQL Auth Proxy | ✅ templated (TD-014) |
 | First real apply against a GCP project | ⏳ deferred (TD-013) |
 
 ## Troubleshooting

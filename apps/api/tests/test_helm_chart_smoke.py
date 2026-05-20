@@ -101,6 +101,14 @@ def test_values_resource_limits_are_set() -> None:
     assert "memory" in resources["limits"]
 
 
+def test_values_expose_extra_containers_and_volumes() -> None:
+    """TD-014 — the chart exposes sidecar/volume escape hatches that default
+    to empty (inert) so the GCP Cloud SQL Auth Proxy can be declared inline."""
+    values = _load_yaml(CHART_ROOT / "values.yaml")
+    assert values["extraContainers"] == []
+    assert values["extraVolumes"] == []
+
+
 # ---------------------------------------------------------------- per-template structural
 
 
@@ -112,6 +120,19 @@ def test_deployment_template_references_security_context_blocks() -> None:
     assert ".Values.podSecurityContext" in body
     assert ".Values.containerSecurityContext" in body
     assert "checksum/values" in body  # rolls pods on config change
+
+
+def test_deployment_template_renders_extra_containers_and_volumes() -> None:
+    """TD-014 — both escape hatches must actually be wired into the pod spec.
+
+    A live `helm template` round-trip (verified manually) confirms the sidecar
+    lands under `containers:` after `api` and the extra volume under `volumes:`;
+    this static check guards the template wiring without requiring the binary."""
+    body = (CHART_ROOT / "templates" / "deployment.yaml").read_text(encoding="utf-8")
+    assert ".Values.extraContainers" in body
+    assert ".Values.extraVolumes" in body
+    # The volumes block must render when either tmp or extra volumes are set.
+    assert "or .Values.tmpVolume.enabled .Values.extraVolumes" in body
 
 
 def test_networkpolicy_template_denies_by_default_for_egress() -> None:

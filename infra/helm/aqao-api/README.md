@@ -62,6 +62,31 @@ autoscaling:
   targetCPUUtilizationPercentage: 60
 ```
 
+## Sidecars and extra volumes
+
+`extraContainers` and `extraVolumes` are rendered verbatim into the pod
+spec (after the `api` container / `tmp` volume). This is the supported
+way to add a sidecar — notably the **GCP Cloud SQL Auth Proxy** — inline
+in a values overlay instead of a post-render `kubectl patch`:
+
+```yaml
+extraContainers:
+  - name: cloud-sql-proxy
+    image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.13.0
+    args: ["--structured-logs", "--port=5432", "PROJECT:REGION:INSTANCE"]
+    securityContext:            # keep sidecars PSS-"restricted" too
+      runAsNonRoot: true
+      allowPrivilegeEscalation: false
+      capabilities: { drop: ["ALL"] }
+    resources:
+      requests: { cpu: 50m, memory: 64Mi }
+      limits:   { cpu: 500m, memory: 256Mi }
+```
+
+The full GCP walkthrough is in
+[`docs/operator/install-gcp.md`](../../../docs/operator/install-gcp.md).
+Both fields default to `[]`, so they are inert unless set.
+
 ## Acceptance criteria
 
 Story 3.6.2 AC: pen-test pass clean. The defaults satisfy the PSS

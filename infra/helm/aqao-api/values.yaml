@@ -63,6 +63,26 @@ tmpVolume:
   enabled: true
   sizeLimit: 64Mi
 
+# Escape hatch for sidecars and the volumes they need, rendered verbatim into
+# the pod spec. The motivating case is the GCP Cloud SQL Auth Proxy: an env
+# overlay (e.g. values-gcp.yaml) can declare the sidecar inline instead of a
+# post-render `kubectl patch`. Keep each sidecar's securityContext aligned with
+# the PSS "restricted" profile (runAsNonRoot, drop ALL, no privilege escalation).
+# extraContainers:
+#   - name: cloud-sql-proxy
+#     image: gcr.io/cloud-sql-connectors/cloud-sql-proxy:2.13.0
+#     args: ["--structured-logs", "--port=5432", "PROJECT:REGION:INSTANCE"]
+#     securityContext:
+#       runAsNonRoot: true
+#       allowPrivilegeEscalation: false
+#       capabilities: { drop: ["ALL"] }
+#     resources:
+#       requests: { cpu: 50m, memory: 64Mi }
+#       limits:   { cpu: 500m, memory: 256Mi }
+extraContainers: []
+# Extra pod volumes (paired with a sidecar's volumeMounts when one is needed).
+extraVolumes: []
+
 service:
   type: ClusterIP
   port: 80

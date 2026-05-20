@@ -33,7 +33,7 @@ trigger" so they're easy to pick up later.
 |---|---|
 | `ruff check apps packages` | ✅ clean |
 | `mypy --strict` (5 packages) | ✅ clean across **250 source files** |
-| `pytest` unit suite | ✅ **741 passed**, 51 deselected |
+| `pytest` unit suite | ✅ **743 passed**, 51 deselected |
 | Integration suite | ⏳ not run on this machine — Docker daemon unavailable (TD-005) |
 
 ## Per-phase detail
@@ -126,7 +126,8 @@ trigger" so they're easy to pick up later.
 | Phase 6.5 code surface complete | 705 |
 | TD-008 + TD-011 wired (2026-04-30) | 728 |
 | Coverage top-ups (2026-05-20) | 730 |
-| **TD-009 per-workspace retention overrides** | **741** |
+| TD-009 per-workspace retention overrides | 741 |
+| **TD-014 Helm `extraContainers`** | **743** |
 
 ## Source-file growth (mypy strict)
 
@@ -151,10 +152,11 @@ Three buckets, in roughly descending impact:
    for feedback (TD-006) is the remaining upgrade to an existing
    service. (TD-009, per-workspace retention windows, shipped
    2026-05-20.)
-3. **Multi-cloud parity** — TD-012 (GCP Terraform modules),
-   TD-013 (first real cloud apply), TD-014 (Helm `extraContainers`
-   for the Cloud SQL Auth Proxy sidecar). The GCP install runbook
-   already documents the workaround flow.
+3. **Multi-cloud parity** — TD-012 (GCP Terraform modules) and
+   TD-013 (first real cloud apply) remain; both need a billable GCP
+   project. (TD-014, Helm `extraContainers` for the Cloud SQL Auth
+   Proxy sidecar, shipped 2026-05-20 — the GCP runbook now installs
+   in one `helm upgrade`.)
 
 TD-008 (`PROVIDER_DECISION_OVERDUE` alert kind) and TD-011
 (dormant-user notifier) landed 2026-04-30 — both bridge
