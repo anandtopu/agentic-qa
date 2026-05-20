@@ -1,6 +1,6 @@
 # Agentic QA Orchestrator — Progress Dashboard
 
-**Last updated:** 2026-04-30
+**Last updated:** 2026-05-20
 
 Single source of truth for "what's actually done." For the design
 intent see [`AgenticQA_PRD.md`](../AgenticQA_PRD.md); for the phase /
@@ -27,13 +27,13 @@ the published SDK packages, the SOC-2 audit walkthrough). Each is
 captured in [`tech-debt.md`](tech-debt.md) with a clear "removal
 trigger" so they're easy to pick up later.
 
-## Verification snapshot (last run 2026-04-30)
+## Verification snapshot (last run 2026-05-20)
 
 | Check | Result |
 |---|---|
 | `ruff check apps packages` | ✅ clean |
 | `mypy --strict` (5 packages) | ✅ clean across **250 source files** |
-| `pytest` unit suite | ✅ **728 passed**, 51 deselected |
+| `pytest` unit suite | ✅ **741 passed**, 51 deselected |
 | Integration suite | ⏳ not run on this machine — Docker daemon unavailable (TD-005) |
 
 ## Per-phase detail
@@ -124,7 +124,9 @@ trigger" so they're easy to pick up later.
 | End of Phase 6.3 + 6.4 | 677 |
 | End of Phase 6.2 | 692 |
 | Phase 6.5 code surface complete | 705 |
-| **Today (TD-008 + TD-011 wired)** | **728** |
+| TD-008 + TD-011 wired (2026-04-30) | 728 |
+| Coverage top-ups (2026-05-20) | 730 |
+| **TD-009 per-workspace retention overrides** | **741** |
 
 ## Source-file growth (mypy strict)
 
@@ -145,10 +147,10 @@ Three buckets, in roughly descending impact:
    on npm + PyPI, the live evidence-report screenshot, the actual
    SOC-2 walkthrough. Each entry exists in
    [`tech-debt.md`](tech-debt.md) with the trigger that closes it.
-2. **Per-workspace overrides** — TD-009 (retention windows in
-   policy YAML) and the per-workspace snapshot-provider for
-   feedback (TD-006). Both are upgrades to existing services, not
-   new features.
+2. **Per-workspace overrides** — the per-workspace snapshot-provider
+   for feedback (TD-006) is the remaining upgrade to an existing
+   service. (TD-009, per-workspace retention windows, shipped
+   2026-05-20.)
 3. **Multi-cloud parity** — TD-012 (GCP Terraform modules),
    TD-013 (first real cloud apply), TD-014 (Helm `extraContainers`
    for the Cloud SQL Auth Proxy sidecar). The GCP install runbook

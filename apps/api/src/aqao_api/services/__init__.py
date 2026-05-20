@@ -52,6 +52,7 @@ from aqao_api.services.retention import (
     RetentionConfigurationError,
     RetentionSweepService,
     SweepReport,
+    load_active_retention_overrides,
 )
 from aqao_api.services.test_plan import TestPlanService
 from aqao_api.services.test_run import (
@@ -108,5 +109,6 @@ __all__ = [
     "WeeklyReview",
     "WorkspaceService",
     "default_pr_analysis_graph",
+    "load_active_retention_overrides",
     "new_idempotency_key",
 ]

@@ -19,10 +19,14 @@ import pytest
 
 from aqao_api.auth.context import RequestContext
 from aqao_api.db.models import AgentFeedback, AuditEvent, TestRun
+from aqao_api.policies.schema import OVERRIDABLE_RETENTION_CLASSES
 from aqao_api.services.retention import (
+    DEFAULT_RETENTION_CLASSES,
     SEVEN_YEARS_DAYS,
     RetentionClass,
     RetentionSweepService,
+    _SweepBucket,
+    load_active_retention_overrides,
 )
 
 _TENANT = uuid.UUID("aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa")
@@ -148,6 +152,7 @@ def _build(
     *,
     present: dict[str, list[datetime]],
     audit: Any | None = None,
+    override_provider: Any | None = None,
 ) -> tuple[RetentionSweepService, _StubSession]:
     session = _StubSession(present=present)
     svc = RetentionSweepService(
@@ -155,6 +160,9 @@ def _build(
         audit=audit,
         classes=_classes_for_test(),
         clock=lambda: fixed_clock,
+        # Default to "no overrides"; the real provider would query the DB, which
+        # the stub session can't serve. Override-specific tests pass their own.
+        override_provider=override_provider or (lambda _session: {}),
     )
     return svc, session
 
@@ -313,3 +321,111 @@ def test_zero_rows_present_is_clean(fixed_clock: datetime) -> None:
     report = svc.sweep(context=_ctx())
     assert report.total_deleted == 0
     assert all(c.would_delete == 0 for c in report.classes)
+
+
+# ------------------------------------------- per-workspace overrides (TD-009)
+
+
+def test_overridable_classes_are_a_valid_subset_of_the_registry() -> None:
+    """Guard against drift between the policy schema and the sweep registry.
+
+    Every overridable class must (a) exist in the registry, (b) not be
+    compliance-locked, and (c) carry a direct ``workspace_id`` column so a
+    per-workspace cutoff can be applied without a join.
+    """
+    by_name = {c.name: c for c in DEFAULT_RETENTION_CLASSES}
+    for name in OVERRIDABLE_RETENTION_CLASSES:
+        assert name in by_name, f"{name!r} is not a known retention class"
+        cls = by_name[name]
+        assert not cls.compliance_locked, f"{name!r} is compliance-locked"
+        assert hasattr(cls.model, "workspace_id"), f"{name!r} lacks workspace_id"
+
+
+def test_plan_buckets_default_only_when_no_overrides(fixed_clock: datetime) -> None:
+    buckets = RetentionSweepService._plan_buckets(
+        now=fixed_clock, default_days=90, class_overrides={}
+    )
+    assert buckets == [_SweepBucket(cutoff=fixed_clock - timedelta(days=90))]
+
+
+def test_plan_buckets_partitions_overriding_workspaces(fixed_clock: datetime) -> None:
+    ws_a = uuid.uuid4()
+    ws_b = uuid.uuid4()
+    buckets = RetentionSweepService._plan_buckets(
+        now=fixed_clock,
+        default_days=90,
+        class_overrides={ws_a: 200, ws_b: 30},
+    )
+    # default bucket + one bucket per overriding workspace
+    assert len(buckets) == 3
+    default = buckets[0]
+    assert default.workspace_id is None
+    assert default.cutoff == fixed_clock - timedelta(days=90)
+    assert set(default.exclude_workspace_ids) == {ws_a, ws_b}
+    by_ws = {b.workspace_id: b for b in buckets[1:]}
+    assert by_ws[ws_a].cutoff == fixed_clock - timedelta(days=200)
+    assert by_ws[ws_b].cutoff == fixed_clock - timedelta(days=30)
+    # Override buckets carry no exclude list.
+    assert all(b.exclude_workspace_ids == () for b in buckets[1:])
+
+
+def test_override_workspaces_is_surfaced_per_class(fixed_clock: datetime) -> None:
+    ws = uuid.uuid4()
+    present: dict[str, list[datetime]] = {
+        "audit_events": [],
+        "test_runs": [fixed_clock - timedelta(days=200)],
+        "agent_feedback": [],
+    }
+    svc, _ = _build(
+        fixed_clock,
+        present=present,
+        override_provider=lambda _session: {ws: {"test_runs": 300}},
+    )
+    report = svc.sweep(context=_ctx())
+    by = {c.name: c for c in report.classes}
+    assert by["test_runs"].override_workspaces == 1
+    # Classes without an override (and the locked class) report zero.
+    assert by["agent_feedback"].override_workspaces == 0
+    assert by["audit_events"].override_workspaces == 0
+
+
+def test_override_workspaces_recorded_in_audit_payload(fixed_clock: datetime) -> None:
+    captured: list[dict[str, Any]] = []
+
+    class _RecordingAudit:
+        def record(self, **kwargs: Any) -> None:
+            captured.append(kwargs)
+
+    ws = uuid.uuid4()
+    present: dict[str, list[datetime]] = {
+        "audit_events": [],
+        "test_runs": [],
+        "agent_feedback": [],
+    }
+    svc, _ = _build(
+        fixed_clock,
+        present=present,
+        audit=_RecordingAudit(),
+        override_provider=lambda _session: {ws: {"test_runs": 120}},
+    )
+    svc.sweep(context=_ctx())
+    payload_classes = {c["name"]: c for c in captured[0]["payload"]["classes"]}
+    assert payload_classes["test_runs"]["override_workspaces"] == 1
+
+
+def test_load_active_retention_overrides_filters_and_skips() -> None:
+    ws1 = uuid.uuid4()
+    ws2 = uuid.uuid4()
+    ws3 = uuid.uuid4()
+
+    class _PolicySession:
+        def execute(self, _stmt: Any) -> list[tuple[uuid.UUID, dict[str, Any]]]:
+            return [
+                # audit_events is non-overridable → dropped; test_runs kept.
+                (ws1, {"retention": {"test_runs": 200, "audit_events": 999}}),
+                (ws2, {"retention": {}}),  # empty map → workspace skipped
+                (ws3, {"max_runtime_minutes": 30}),  # no retention key → skipped
+            ]
+
+    result = load_active_retention_overrides(_PolicySession())  # type: ignore[arg-type]
+    assert result == {ws1: {"test_runs": 200}}

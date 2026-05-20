@@ -30,6 +30,15 @@ class ClassSweepResultResponse(BaseModel):
     deleted: int = Field(ge=0)
     would_delete: int = Field(ge=0)
     skipped_reason: str | None
+    override_workspaces: int = Field(
+        default=0,
+        ge=0,
+        description=(
+            "Number of workspaces whose own retention window was applied to "
+            "this class (0 = default window only). The cutoff shown is the "
+            "default-window cutoff; override buckets use their own windows."
+        ),
+    )
 
 
 class SweepReportResponse(BaseModel):

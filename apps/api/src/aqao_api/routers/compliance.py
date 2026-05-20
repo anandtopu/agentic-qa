@@ -75,6 +75,7 @@ def run_retention_sweep(
                 deleted=c.deleted,
                 would_delete=c.would_delete,
                 skipped_reason=c.skipped_reason,
+                override_workspaces=c.override_workspaces,
             )
             for c in report.classes
         ],

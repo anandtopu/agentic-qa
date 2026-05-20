@@ -26,6 +26,14 @@ Security; updated when new data types or integrations land.
 | Audit events | 7 years | Compliance-locked; never shorter |
 | Telemetry | 30 days hot / 365 days cold | Fixed |
 
+Per-workspace overrides are set under the `retention` key of the
+workspace policy (see [`docs/user/policy.md`](../user/policy.md)) and
+honoured by the retention sweep (`RetentionSweepService`). Overrides
+are bounded to a 365-day maximum and may only target classes with a
+direct workspace owner (`test_runs`, `flakiness_observations`,
+`agent_feedback`, `external_issues`, `usage_records`). Compliance-locked
+classes (audit events) cannot be overridden.
+
 ## Residency
 
 - Default region: `us-east-1` for the demo / portfolio deployment.

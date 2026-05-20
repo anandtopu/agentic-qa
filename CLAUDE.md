@@ -13,36 +13,49 @@ All workflows route through the root `Makefile`. Run `make help` to list targets
 | Command | What it does |
 |---|---|
 | `make install` | `uv sync --all-packages` + `pnpm install`. |
-| `make dev` | Bring up the local stack (Postgres + Redis + MinIO + API) via `infra/docker/docker-compose.yml`. |
-| `make api` | Run API outside docker with `uvicorn --reload`. |
-| `make test` | Run all tests. |
-| `make test-unit` / `make test-int` | Unit / integration only. Integration requires `make dev`. |
+| `make dev` | Bring up the local stack (Postgres + Redis + MinIO + API + Web) via `infra/docker/docker-compose.yml`. `make down` / `make logs` to stop / tail. |
+| `make api` | Run the API outside docker: `uvicorn aqao_api.main:app --reload` on `:8000`. |
+| `make test` | Run all tests (`pytest`). |
+| `make test-unit` / `make test-int` | `-m "not integration"` / `-m integration`. Integration requires `make dev`. |
 | `make lint` / `make format` | `ruff` + `eslint` / `ruff format` + `prettier`. |
-| `make typecheck` | `mypy --strict` over `apps` and `packages`; `tsc --noEmit` for web. |
-| `make migrate` / `make seed` | Alembic upgrade / demo workspace seed (Phase 1). |
-| `make eval` | Run the agent evaluation harness (Phase 2). |
+| `make typecheck` | `mypy --strict` over the five `aqao_*` packages (by module, not path); `tsc --noEmit` for web. |
+| `make migrate` / `make seed` | `alembic -c apps/api/alembic.ini upgrade head` / `scripts/seed.py` demo workspace. |
+| `make eval` | Run the agent evaluation harness (`aqao_eval.cli run --baseline=docs/eval/baseline.json`). |
+| `make playwright-install` | Install Chromium for the UI agent / Playwright tools (needed before UI tests run). |
+| `make hooks` | Install pre-commit hooks. |
 
 Run a single test: `uv run pytest packages/redaction/tests/test_redactor.py::TestBuiltinPatterns::test_url_userinfo_is_redacted`.
 
+Tooling config lives in the root `pyproject.toml`: ruff line-length 100 (rich rule set incl. `S`/bandit), `mypy --strict` + pydantic plugin, pytest with `--strict-markers` and `--cov-fail-under=80` (coverage gate). Markers: `integration`, `slow`.
+
 ## Repo layout
 
+Python is a `uv` workspace; each member uses a `src/` layout, so code lives under
+`apps/api/src/aqao_api/`, `packages/<x>/src/aqao_<x>/`, and imports use the `aqao_*` prefix.
+
 ```
-apps/api/                 FastAPI backend — Control Plane (PRD §13)
+apps/api/src/aqao_api/    FastAPI backend — Control Plane (PRD §13)
+apps/api/migrations/      Alembic migrations (alembic.ini at apps/api/)
 apps/web/                 Next.js dashboard (Phase 1+)
 packages/agents/          Specialised agents (Planner, API, UI, DB, …)
 packages/tools/           Tool wrappers (Playwright, Newman, pytest, SQL)
-packages/eval/            Evaluation harness + golden datasets
+packages/eval/            Evaluation harness + golden datasets (datasets/)
 packages/redaction/       Secret redaction utility used by every text sink
+sdks/python, sdks/typescript   Client SDKs (unpublished — TD-003)
 infra/docker/             docker-compose + Dockerfile.api
 infra/helm/               Production Helm chart (Phase 3)
+perf-tests/               k6 scenarios + perf harness
+scripts/seed.py           Demo-workspace seeder (make seed)
 apis/openapi.yaml         API contract (PRD §13)
-docs/adr/                 Architecture decision records
-docs/architecture/        C4 diagrams + ERD
-docs/journeys/            Persona user journeys
 docs/IMPLEMENTATION_PLAN.md  Phased SDLC plan
+docs/PROGRESS.md          Delivery status (single source of truth)
+docs/adr/                 Architecture decision records (template: _template.md)
+docs/architecture/        C4 diagrams + ERD
 docs/scope-baseline.md    What's in / out of each MVP
 docs/prd-questions.md     Open questions log
 docs/security/            Data handling, threat model
+docs/{user,operator,api,runbooks,journeys,portfolio}/  Phase 5 docs + persona journeys
+docs/tech-debt.md         Deferred work, each with a removal trigger (TD-NNN)
 .github/workflows/        CI/CD
 ```
 
@@ -78,4 +91,5 @@ These come from the PRD and apply to every change:
 - Confirm MVP phase + plane before starting work — `docs/scope-baseline.md` is the gatekeeper.
 - Architectural changes need an ADR in `docs/adr/` (template at `_template.md`).
 - Open questions go in `docs/prd-questions.md`; resolve in place rather than deleting.
+- Deferred work is tracked as `TD-NNN` entries in `docs/tech-debt.md`, each with an explicit removal trigger. Most open items are blocked only on a hosted environment (publishing SDKs, beta onboarding, real cloud apply).
 - The repo has no remote yet — `gh` operations and force-push concerns don't apply until one is added.

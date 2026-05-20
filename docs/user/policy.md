@@ -16,6 +16,9 @@ policy:
   redact_secrets: true
   max_cost_usd_per_run: 5.00
   max_runtime_minutes: 30
+  retention:          # optional — per-class overrides, in days
+    test_runs: 180
+    agent_feedback: 365
 ```
 
 Each field is the **default**; raise or lower based on your team's
@@ -28,6 +31,35 @@ risk tolerance.
 | `redact_secrets` | Runs every text sink through the redactor | `aqao_redaction` |
 | `max_cost_usd_per_run` | Mid-flight kill switch with 5% slack | Epic 2.5 |
 | `max_runtime_minutes` | Wallclock budget per run | Epic 2.5 |
+| `retention` | Per-data-class retention windows for this workspace | see below |
+
+## Retention overrides
+
+By default each data class is pruned on the platform schedule (test
+runs after 90 days, feedback after 365, and so on). A workspace can
+keep — or shed — its own data on a different cadence with the
+`retention` map: keys are data-class names, values are the window in
+**days**.
+
+```yaml
+policy:
+  retention:
+    test_runs: 180          # keep run history twice as long
+    flakiness_observations: 30
+```
+
+Rules the validator enforces (a bad value gives a `422` with the
+offending field):
+
+- **Bounded to 365 days.** The data-handling policy commits to a
+  365-day maximum; you cannot opt into "forever".
+- **Overridable classes only:** `test_runs`,
+  `flakiness_observations`, `agent_feedback`, `external_issues`,
+  `usage_records`. Other classes inherit the platform default.
+- **Audit events can't be overridden** — they are compliance-locked
+  at 7 years.
+
+Omit the `retention` key entirely to keep every default.
 
 ## Apply it
 

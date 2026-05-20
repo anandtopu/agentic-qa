@@ -10,12 +10,16 @@ from aqao_api.policies.errors import PolicyParseError, PolicyValidationError
 from aqao_api.policies.loader import load_policy_yaml
 from aqao_api.policies.schema import (
     DEFAULT_POLICY_YAML,
+    OVERRIDABLE_RETENTION_CLASSES,
+    RETENTION_MAX_DAYS,
     AgentPolicy,
     ApprovalGate,
 )
 
 __all__ = [
     "DEFAULT_POLICY_YAML",
+    "OVERRIDABLE_RETENTION_CLASSES",
+    "RETENTION_MAX_DAYS",
     "AgentPolicy",
     "ApprovalGate",
     "PolicyParseError",

@@ -101,6 +101,55 @@ def test_loader_rejects_duplicate_approval_gates() -> None:
     assert any("duplicate" in e.message.lower() for e in exc_info.value.errors)
 
 
+def test_retention_overrides_round_trip() -> None:
+    yaml_doc = """
+    policy:
+      retention:
+        test_runs: 200
+        agent_feedback: 365
+    """
+    policy = load_policy_yaml(yaml_doc)
+    assert policy.retention == {"test_runs": 200, "agent_feedback": 365}
+
+
+def test_retention_defaults_to_empty_map() -> None:
+    policy = load_policy_yaml(DEFAULT_POLICY_YAML)
+    assert policy.retention == {}
+
+
+def test_retention_rejects_non_overridable_class() -> None:
+    # audit_events is compliance-locked → not in the overridable set.
+    yaml_doc = """
+    policy:
+      retention:
+        audit_events: 100
+    """
+    with pytest.raises(PolicyValidationError) as exc_info:
+        load_policy_yaml(yaml_doc)
+    assert any("overridable" in e.message.lower() for e in exc_info.value.errors)
+
+
+def test_retention_rejects_window_above_max() -> None:
+    yaml_doc = """
+    policy:
+      retention:
+        test_runs: 9999
+    """
+    with pytest.raises(PolicyValidationError) as exc_info:
+        load_policy_yaml(yaml_doc)
+    assert any("365" in e.message for e in exc_info.value.errors)
+
+
+def test_retention_rejects_non_positive_window() -> None:
+    yaml_doc = """
+    policy:
+      retention:
+        test_runs: 0
+    """
+    with pytest.raises(PolicyValidationError):
+        load_policy_yaml(yaml_doc)
+
+
 def test_loader_raises_parse_error_on_malformed_yaml() -> None:
     with pytest.raises(PolicyParseError):
         load_policy_yaml("policy: [unterminated")
