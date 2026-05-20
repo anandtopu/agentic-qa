@@ -42,6 +42,7 @@ from aqao_api.services.agent_feedback import (
 )
 from aqao_api.services.audit import AuditService
 from aqao_api.services.errors import ResourceNotFoundError
+from aqao_api.services.feedback_snapshot import EvidenceStoreSnapshotProvider
 
 router = APIRouter(prefix="/api/v1", tags=["feedback"])
 
@@ -54,6 +55,9 @@ def _service(
         session,
         audit=AuditService(session),
         eval_dataset_dir=Path(settings.eval_dataset_dir),
+        # Pull the agent's real inputs off the owning store at conversion
+        # time (TD-006); falls back to the pointer for unknown resources.
+        snapshot_provider=EvidenceStoreSnapshotProvider(session),
     )
 
 

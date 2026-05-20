@@ -38,6 +38,11 @@ from aqao_api.services.failure_classification import (
     FailureClassificationOutput,
     FailureClassificationService,
 )
+from aqao_api.services.feedback_snapshot import (
+    DEFAULT_SNAPSHOT_RESOLVERS,
+    EvidenceStoreSnapshotProvider,
+    ResourceSnapshotResolver,
+)
 from aqao_api.services.model_lifecycle import (
     AwaitingDecisionRow,
     InvalidLifecycleTransitionError,
@@ -69,6 +74,7 @@ from aqao_api.services.ui_test_generation import (
 from aqao_api.services.workspace import WorkspaceService
 
 __all__ = [
+    "DEFAULT_SNAPSHOT_RESOLVERS",
     "AccessReviewEntry",
     "AccessReviewService",
     "AccessReviewSnapshot",
@@ -83,6 +89,7 @@ __all__ = [
     "DuplicateResourceError",
     "EnvironmentService",
     "EvidenceReportService",
+    "EvidenceStoreSnapshotProvider",
     "FailureClassificationOutput",
     "FailureClassificationService",
     "FeedbackNotConvertibleError",
@@ -96,6 +103,7 @@ __all__ = [
     "RepositoryService",
     "RequirementService",
     "ResourceNotFoundError",
+    "ResourceSnapshotResolver",
     "RetentionClass",
     "RetentionConfigurationError",
     "RetentionSweepService",

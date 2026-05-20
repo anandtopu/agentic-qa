@@ -32,8 +32,8 @@ trigger" so they're easy to pick up later.
 | Check | Result |
 |---|---|
 | `ruff check apps packages` | ✅ clean |
-| `mypy --strict` (5 packages) | ✅ clean across **250 source files** |
-| `pytest` unit suite | ✅ **743 passed**, 51 deselected |
+| `mypy --strict` (5 packages) | ✅ clean across **251 source files** |
+| `pytest` unit suite | ✅ **749 passed**, 51 deselected |
 | Integration suite | ⏳ not run on this machine — Docker daemon unavailable (TD-005) |
 
 ## Per-phase detail
@@ -127,7 +127,8 @@ trigger" so they're easy to pick up later.
 | TD-008 + TD-011 wired (2026-04-30) | 728 |
 | Coverage top-ups (2026-05-20) | 730 |
 | TD-009 per-workspace retention overrides | 741 |
-| **TD-014 Helm `extraContainers`** | **743** |
+| TD-014 Helm `extraContainers` | 743 |
+| **TD-006 evidence-backed feedback snapshots** | **749** |
 
 ## Source-file growth (mypy strict)
 
@@ -137,7 +138,8 @@ trigger" so they're easy to pick up later.
 | Phase 6 epics 6.3 / 6.4 | 239 |
 | Phase 6 epic 6.2 | 243 |
 | Epic 6.5 added | 247 |
-| **Today (TD-008 + TD-011 wired)** | **250** |
+| TD-008 + TD-011 wired | 250 |
+| **TD-006 feedback snapshot provider** | **251** |
 
 ## What's left, honestly
 
@@ -148,10 +150,11 @@ Three buckets, in roughly descending impact:
    on npm + PyPI, the live evidence-report screenshot, the actual
    SOC-2 walkthrough. Each entry exists in
    [`tech-debt.md`](tech-debt.md) with the trigger that closes it.
-2. **Per-workspace overrides** — the per-workspace snapshot-provider
-   for feedback (TD-006) is the remaining upgrade to an existing
-   service. (TD-009, per-workspace retention windows, shipped
-   2026-05-20.)
+2. **Per-workspace overrides** — both shipped 2026-05-20: TD-009
+   (per-workspace retention windows) and TD-006 (evidence-backed
+   feedback input snapshots). The only remaining code item is TD-007
+   (P3 — feedback → eval-baseline auto-promotion), deferred until
+   feedback volume warrants a nightly job.
 3. **Multi-cloud parity** — TD-012 (GCP Terraform modules) and
    TD-013 (first real cloud apply) remain; both need a billable GCP
    project. (TD-014, Helm `extraContainers` for the Cloud SQL Auth
